@@ -27,7 +27,8 @@ const addressSchema = new mongoose.Schema({
     required: [true, 'Please enter an Phone Number'], 
   },
   userId: {
-    type: mongoose.Schema.Types.ObjectId
+    type: mongoose.Schema.Types.ObjectId,
+    ref: "User"
   }
 });
 

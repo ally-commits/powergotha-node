@@ -1,4 +1,4 @@
-const User = require("../models/User");
+const User = require("../../models/User");
 const bcrypt = require('bcrypt');
 
  
@@ -29,7 +29,7 @@ module.exports.login = async (req,res) => {
             if(auth) { 
                 res.status(200).json({ user,message: "Succesfully Logged In"});
             }
-            throw Error('Incorrect Password');
+            throw Error('Incorrect');
         }
         throw Error('User Not Found');
     }
