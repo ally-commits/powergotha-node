@@ -35,7 +35,8 @@ module.exports.updateAddress = async (req, res) => {
     try {
         const address = await Address.findByIdAndUpdate({_id: addressId},{userId, addressType,address1,address2, pincode,phoneNumber}); 
         if(address) {
-            res.status(201).json({ message: "Address Updated Successfully",address}); 
+            const adr = await Address.findById(addressId);
+            res.status(201).json({ message: "Address Updated Successfully",address: adr}); 
         }
         throw Error("No Address Found")
     }
