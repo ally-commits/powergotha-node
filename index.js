@@ -1,8 +1,7 @@
 const express = require('express');
 const mongoose = require('mongoose'); 
 const authRoute = require("./routes/authRoute") 
-
-// const {checkPermission} = require("./middleware/checkPermission")
+const userRoute = require("./routes/userRoute")
 
 const cors = require('cors')
 
@@ -16,7 +15,7 @@ const PORT = 9000;
 
 const dbURI = 'mongodb+srv://ally:Asd@1234@cluster0.e694a.mongodb.net/yopaan-node?retryWrites=true&w=majority';
 
-mongoose.connect(dbURI, { useNewUrlParser: true, useUnifiedTopology: true, useCreateIndex:true })
+mongoose.connect(dbURI, { useNewUrlParser: true, useUnifiedTopology: true, useCreateIndex:true ,useFindAndModify: false})
     .then((result) => {
         app.listen(PORT,() => {
             console.log("Application Started in Port " + PORT)
@@ -27,6 +26,5 @@ mongoose.connect(dbURI, { useNewUrlParser: true, useUnifiedTopology: true, useCr
 
 // ROUTES
 app.use("/api/auth",authRoute);
-
-// app.use("/api/agent/",checkPermission("USER"),agentRoute); 
-// app.use("/api/admin",checkPermission("ADMIN"),adminRoute)
+app.use("/api/user",userRoute);
+ 
