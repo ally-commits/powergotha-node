@@ -3,7 +3,7 @@ const Order = require("../../models/Order");
 module.exports.getAllOrder = async (req, res) => {
     const {userId} = req.body;
     try {
-        const orders = await Order.find({userId: userId}).populate("addressId");
+        const orders = await Order.find({userId: userId}).populate("addressId").populate("orderedProducts.product");
         if(orders) {
             res.status(201).json({ orders});
         } 
