@@ -1,9 +1,10 @@
 const express = require('express');
 const mongoose = require('mongoose'); 
+
 const authRoute = require("./routes/userRoutes/authRoute") 
 const userRoute = require("./routes/userRoutes/userRoute")
 const productRoute = require("./routes/userRoutes/productRoute")
-
+const orderRoute = require("./routes/userRoutes/orderRoute")
 const adminProductRoute = require("./routes/adminRoutes/adminProductRoute")
 
 
@@ -32,6 +33,7 @@ mongoose.connect(dbURI, { useNewUrlParser: true, useUnifiedTopology: true, useCr
 app.use("/api/auth",authRoute);
 app.use("/api/user",userRoute);
 app.use("/api/product",productRoute)
+app.use("/api/order",orderRoute)
 
 // ADMIN - LEVEL - ROUTES
 app.use("/api/admin/product",adminProductRoute)
