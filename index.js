@@ -5,11 +5,11 @@ const authRoute = require("./routes/userRoutes/authRoute")
 const userRoute = require("./routes/userRoutes/userRoute")
 const productRoute = require("./routes/userRoutes/productRoute")
 const orderRoute = require("./routes/userRoutes/orderRoute")
+const cartRoute = require("./routes/userRoutes/cartRoute")
+
 const adminProductRoute = require("./routes/adminRoutes/adminProductRoute")
 
-
 const cors = require('cors')
-
 const app = express();
 
 app.use(cors())
@@ -34,6 +34,7 @@ app.use("/api/auth",authRoute);
 app.use("/api/user",userRoute);
 app.use("/api/product",productRoute)
 app.use("/api/order",orderRoute)
+app.use("/api/cart",cartRoute)
 
 // ADMIN - LEVEL - ROUTES
 app.use("/api/admin/product",adminProductRoute)

@@ -6,15 +6,8 @@ const orderSchema = new mongoose.Schema({
     default: Date.now() 
   },
   orderedProducts: [{
-    product: {
-        type: mongoose.Schema.Types.ObjectId,
-        required: [true, "Enter Valid Product"],
-        ref: "Product"
-    },
-    quantity: {
-        type: Number,
-        required: [true, "Enter Valid quantity"]
-    }
+    type: mongoose.Schema.Types.ObjectId,
+    ref: "Cart"
   }], 
   orderStatus: {
     type: String,

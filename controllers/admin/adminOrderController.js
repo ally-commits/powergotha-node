@@ -1,10 +1,13 @@
-module.exports.getAllProduct = async (req, res) => {
+const Order = require("../../models/Order"); 
+
+module.exports.getAllOrder = async (req, res) => {
+    const {userId} = req.body;
     try {
-        const product = await Product.find();
-        if(product) {
-            res.status(201).json({ product});
+        const orders = await Order.find({userId: userId}).populate("addressId").populate("orderedProducts.product");
+        if(orders) {
+            res.status(201).json({ orders});
         } 
-        throw Error("Product Not Found");
+        throw Error("Orders Not Found");
     }
     catch(err) { 
         let error = err.message 

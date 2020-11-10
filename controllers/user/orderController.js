@@ -1,9 +1,10 @@
+const { populate } = require("../../models/Order");
 const Order = require("../../models/Order"); 
 
 module.exports.getAllOrder = async (req, res) => {
     const {userId} = req.body;
     try {
-        const orders = await Order.find({userId: userId}).populate("addressId").populate("orderedProducts.product");
+        const orders = await Order.find({userId: userId}).populate("addressId").populate({path: "orderedProducts",populate: {path: "productId"}});
         if(orders) {
             res.status(201).json({ orders});
         } 
