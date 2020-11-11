@@ -24,6 +24,10 @@ const userSchema = new mongoose.Schema({
     required: true,
     enum: ["USER","ADMIN"], 
   }, 
+  dob: {
+    type: Date,
+    required: true,
+  }
 });
 
  

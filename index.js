@@ -6,8 +6,10 @@ const userRoute = require("./routes/userRoutes/userRoute")
 const productRoute = require("./routes/userRoutes/productRoute")
 const orderRoute = require("./routes/userRoutes/orderRoute")
 const cartRoute = require("./routes/userRoutes/cartRoute")
+const categoryRoute = require("./routes/userRoutes/categoryRoute")
 
 const adminProductRoute = require("./routes/adminRoutes/adminProductRoute")
+const adminCategoryRoute = require("./routes/adminRoutes/adminCategoryRoute")
 
 const cors = require('cors');
 const { checkPermission } = require('./middleware/checkPermission');
@@ -29,16 +31,20 @@ mongoose.connect(dbURI, { useNewUrlParser: true, useUnifiedTopology: true, useCr
     })
     .catch((err) => console.log(err));
  
+// LOGIN - REGISTER NON-AUTH ROUTES
+app.use("/api/auth", authRoute);
 
 // USER - LEVEL - ROUTES
-app.use("/api/auth", authRoute);
 app.use("/api/user", checkPermission(["USER"]), userRoute);
 app.use("/api/product", checkPermission(["USER"]), productRoute)
+app.use("/api/category", checkPermission(["USER"]), categoryRoute)
 app.use("/api/order", checkPermission(["USER"]), orderRoute)
 app.use("/api/cart", checkPermission(["USER"]), cartRoute)
 
+
 // ADMIN - LEVEL - ROUTES
 app.use("/api/admin/product",adminProductRoute)
+app.use("/api/admin/category",adminCategoryRoute)
 
 
  

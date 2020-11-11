@@ -2,11 +2,11 @@ const Product = require("../../models/Product");
 
 module.exports.getAllProduct = async (req, res) => {
     try {
-        const product = await Product.find();
+        const product = await Product.find().populate("categoryId   ");
         if(product) {
             res.status(201).json({ product});
-        } 
-        throw Error("Product Not Found");
+        } else 
+            throw Error("Product Not Found");
     }
     catch(err) { 
         let error = err.message 
@@ -15,9 +15,9 @@ module.exports.getAllProduct = async (req, res) => {
 }
 
 module.exports.addProduct = async (req, res) => {
-    const {productImages,productName,productPrice } = req.body;
+    const {productImages,productName,productPrice,categoryId} = req.body;
     try {
-        const product = await Product.create({productImages,productName,productPrice}); 
+        const product = await Product.create({productImages,productName,productPrice,categoryId}); 
         res.status(201).json({ product, message: "Product Added Successfully"}); 
     }
     catch(err) { 
@@ -33,8 +33,8 @@ module.exports.editProduct = async (req, res) => {
         if(product) {
             const prod = await Product.findById(productId);
             res.status(201).json({ message: "Product Updated Successfully",product: prod}); 
-        }
-        throw Error("No Product Found")
+        } else 
+            throw Error("No Product Found")
     }
     catch(err) { 
         let error = err.message 
@@ -48,8 +48,8 @@ module.exports.deleteProduct = async (req, res) => {
         const product = await Product.findByIdAndRemove(productId); 
         if(product) {
             res.status(201).json({ message: "Product Removed Successfully"}); 
-        }
-        throw Error("No Product Found") 
+        } else 
+            throw Error("No Product Found") 
     }
     catch(err) { 
         let error = err.message 
