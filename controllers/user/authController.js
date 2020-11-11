@@ -1,5 +1,6 @@
 const User = require("../../models/User");
 const bcrypt = require('bcrypt');
+const { createToken } = require("../../middleware/createToken");
 
  
 
@@ -7,7 +8,8 @@ module.exports.register = async (req, res) => {
     const { email, password ,name} = req.body;
     try {
         const user = await User.create({ email, password,name,userType: "USER" });
-        res.status(201).json({ user: user, message: "Succesfully Registered"});
+        const token = await createToken(user);
+        res.status(201).json({ user: user, message: "Succesfully Registered",token});
     }
     catch(err) { 
         let error = err.message
@@ -24,14 +26,15 @@ module.exports.login = async (req,res) => {
 
     try {
         const user = await User.findOne({ email });
-        if (user) {
+        if(user) {
             const auth = await bcrypt.compare(password, user.password);
             if(auth) { 
-                res.status(200).json({ user,message: "Succesfully Logged In"});
-            }
-            throw Error('Incorrect');
-        }
-        throw Error('User Not Found');
+                const token = await createToken(user);
+                res.status(200).json({ user,message: "Succesfully Logged In",token});
+            } else 
+                throw Error('Incorrect Password');
+        } else
+            throw Error('User Not Found');
     }
     catch(err) { 
         let error = err.message 

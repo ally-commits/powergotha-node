@@ -5,8 +5,8 @@ module.exports.getAllProduct = async (req, res) => {
         const product = await Product.find();
         if(product) {
             res.status(201).json({ product});
-        } 
-        throw Error("Product Not Found");
+        } else
+            throw Error("Product Not Found");
     }
     catch(err) { 
         let error = err.message 

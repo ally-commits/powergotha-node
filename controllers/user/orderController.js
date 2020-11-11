@@ -1,14 +1,13 @@
-const { populate } = require("../../models/Order");
 const Order = require("../../models/Order"); 
 
 module.exports.getAllOrder = async (req, res) => {
-    const {userId} = req.body;
+    const userId = req.user._id;
     try {
-        const orders = await Order.find({userId: userId}).populate("addressId").populate({path: "orderedProducts",populate: {path: "productId"}});
+        const orders = await Order.find({userId: userId}).populate("addressId").populate({path: "orderItems",populate: {path: "productId"}});
         if(orders) {
             res.status(201).json({ orders});
-        } 
-        throw Error("Orders Not Found");
+        } else
+            throw Error("Orders Not Found");
     }
     catch(err) { 
         let error = err.message 
@@ -17,12 +16,13 @@ module.exports.getAllOrder = async (req, res) => {
 }
 
 module.exports.addOrder = async (req, res) => {
-    const {orderedProducts,userId,addressId} = req.body;
+    const userId = req.user._id;
+    const {orderItems,addressId} = req.body;
     try {
-        if(orderedProducts == undefined || orderedProducts.length == 0) 
+        if(orderItems == undefined || orderItems.length == 0) 
             throw Error("Order Should cantain atleast 1 product")
         else {
-            const order = await Order.create({orderedProducts,userId,addressId,orderStatus: "ORDERED"}); 
+            const order = await Order.create({orderItems,userId,addressId,orderStatus: "ORDERED"}); 
             res.status(201).json({ order, message: "Order Placed"});    
         }
     }
@@ -34,15 +34,24 @@ module.exports.addOrder = async (req, res) => {
 
 
 module.exports.cancelOrder = async (req, res) => {
-    const {userId,orderId} = req.body;
+    const userId = req.user._id;
+    const {orderId} = req.body;
     try { 
-        const order = await Order.findByIdAndUpdate({_id: orderId},{orderStatus: "CANCELLED"}); 
-        if(order) {
-            const orderData = await Order.findById(orderId).populate("addressId");
-            res.status(201).json({ message: "Order Cancelled",order: orderData}); 
-        } 
-
-        throw Error("No Orders Found")
+        const orderData = await Order.findOne({_id: orderId,userId}).populate("addressId");
+        if(orderData) {
+            if(orderData.orderStatus == "CANCELLED") {
+                res.status(400).json({ error: "Order Already Cancelled" });
+            } else {
+                const order = await Order.findByIdAndUpdate(orderId,{orderStatus: "CANCELLED"}); 
+                if(order) { 
+                    res.status(201).json({ message: "Order Cancelled",order: {...orderData,orderStatus: "CANCELLED"}}); 
+                } else {
+                    res.status(400).json({ error: "Connot Update Order Status"});
+                }
+            }
+        } else {
+            throw Error("No Orders Found")
+        }
     }
     catch(err) { 
         let error = err.message 

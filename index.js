@@ -9,7 +9,8 @@ const cartRoute = require("./routes/userRoutes/cartRoute")
 
 const adminProductRoute = require("./routes/adminRoutes/adminProductRoute")
 
-const cors = require('cors')
+const cors = require('cors');
+const { checkPermission } = require('./middleware/checkPermission');
 const app = express();
 
 app.use(cors())
@@ -30,11 +31,11 @@ mongoose.connect(dbURI, { useNewUrlParser: true, useUnifiedTopology: true, useCr
  
 
 // USER - LEVEL - ROUTES
-app.use("/api/auth",authRoute);
-app.use("/api/user",userRoute);
-app.use("/api/product",productRoute)
-app.use("/api/order",orderRoute)
-app.use("/api/cart",cartRoute)
+app.use("/api/auth", authRoute);
+app.use("/api/user", checkPermission(["USER"]), userRoute);
+app.use("/api/product", checkPermission(["USER"]), productRoute)
+app.use("/api/order", checkPermission(["USER"]), orderRoute)
+app.use("/api/cart", checkPermission(["USER"]), cartRoute)
 
 // ADMIN - LEVEL - ROUTES
 app.use("/api/admin/product",adminProductRoute)

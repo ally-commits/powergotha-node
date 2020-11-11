@@ -2,15 +2,15 @@ const Address = require("../../models/Address");
 const User = require("../../models/User"); 
 
 module.exports.getUserDetails = async (req, res) => {
-    const { userId} = req.body;
+    const userId = req.user._id;
     try {
         const user = await User.findById(userId);
         if(user) {
             const address = await Address.find({userId});
-
             res.status(201).json({ user, address});
-        } 
-        throw Error("User Not Found");
+        } else {
+            throw Error("User Not Found");
+        }
     }
     catch(err) { 
         let error = err.message 
@@ -19,7 +19,8 @@ module.exports.getUserDetails = async (req, res) => {
 }
 
 module.exports.addAddress = async (req, res) => {
-    const { userId, addressType,address1,address2, pincode,phoneNumber } = req.body;
+    const userId = req.user._id;
+    const {addressType,address1,address2, pincode,phoneNumber } = req.body;
     try {
         const address = await Address.create({userId, addressType,address1,address2, pincode,phoneNumber}); 
         res.status(201).json({ address, message: "Address Added Successfully"}); 
@@ -31,14 +32,16 @@ module.exports.addAddress = async (req, res) => {
 }
 
 module.exports.updateAddress = async (req, res) => {
-    const { userId, addressType,address1,address2, pincode,phoneNumber,addressId} = req.body;
+    const userId = req.user._id;
+    const {addressType,address1,address2, pincode,phoneNumber,addressId} = req.body;
     try {
-        const address = await Address.findByIdAndUpdate({_id: addressId},{userId, addressType,address1,address2, pincode,phoneNumber}); 
+        const address = await Address.findOneAndUpdate({_id: addressId,userId},{userId, addressType,address1,address2, pincode,phoneNumber}); 
         if(address) {
             const adr = await Address.findById(addressId);
             res.status(201).json({ message: "Address Updated Successfully",address: adr}); 
+        } else {
+            throw Error("No Address Found")
         }
-        throw Error("No Address Found")
     }
     catch(err) { 
         let error = err.message 
@@ -47,13 +50,15 @@ module.exports.updateAddress = async (req, res) => {
 }
 
 module.exports.deleteAddress = async (req, res) => {
-    const { userId, addressId} = req.body;
+    const userId = req.user._id;
+    const {addressId} = req.body;
     try {
-        const address = await Address.findByIdAndRemove(addressId); 
+        const address = await Address.findOneAndRemove({_id:addressId,userId}); 
         if(address) {
             res.status(201).json({ message: "Address Removed Successfully"}); 
+        } else {
+            throw Error("No Address Found") 
         }
-        throw Error("No Address Found") 
     }
     catch(err) { 
         let error = err.message 
