@@ -6,8 +6,14 @@ const orderSchema = new mongoose.Schema({
     default: Date.now() 
   },
   orderItems: [{
-    type: mongoose.Schema.Types.ObjectId,
-    ref: "Cart"
+    productId: {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: "Product"
+    },
+    quantity: {
+      type:Number,
+      required: true
+    }
   }], 
   orderStatus: {
     type: String,
