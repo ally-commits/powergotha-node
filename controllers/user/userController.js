@@ -1,5 +1,7 @@
 const Address = require("../../models/Address"); 
 const User = require("../../models/User"); 
+const Order = require("../../models/Order");
+const Product = require("../../models/Product");
 
 module.exports.getUserDetails = async (req, res) => {
     const userId = req.user._id;
@@ -66,3 +68,62 @@ module.exports.deleteAddress = async (req, res) => {
     }   
 }
    
+
+module.exports.productRecommendations = async (req,res) => {
+    const userId = req.user._id;
+    try {
+        const orders = await Order.find();
+
+        const orderProducts = {};
+        const mostOrdered = {};
+
+        new Promise((resolve,reject) => {
+            orders.forEach((order,index) => { 
+                if(order.userId.toString() == userId.toString()){
+                    order.orderItems.forEach((val,subIndex) => {
+
+                        orderProducts[val.productId.toString()] == null
+                            ?
+                        orderProducts[val.productId.toString()] = val.quantity
+                            :
+                        orderProducts[val.productId.toString()] += val.quantity;
+
+                        // RETURN AFTER ALL LOOP EVEN SUB LOOP
+                        index == orders.length - 1 && subIndex == order.orderItems.length - 1 && resolve();
+                    })
+                } else {
+                    order.orderItems.forEach((val,subIndex) => { 
+                        mostOrdered[val.productId.toString()] == null
+                            ?
+                        mostOrdered[val.productId.toString()] = val.quantity
+                            :
+                        mostOrdered[val.productId.toString()] += val.quantity;
+
+                        // RETURN AFTER ALL LOOP EVEN SUB LOOP
+                        index == orders.length - 1 && subIndex == order.orderItems.length - 1 && resolve();
+                    })
+                }
+                // RETURN AFTER ALL LOOP
+                index == orders.length - 1 && resolve();
+            });
+        }).then(async () => {
+            let arr1 = await Object.keys(orderProducts).sort((a,b)=>orderProducts[a]>orderProducts[b]?1:-1).reduce((a,b)=> {a[b]=orderProducts[b]; return a},{})
+            let arr2 = await Object.keys(mostOrdered).sort((a,b)=>mostOrdered[a]>mostOrdered[b]?1:-1).reduce((a,b)=> {a[b]=mostOrdered[b]; return a},{})
+
+            const products = await Product.find().where('_id').in([...Object.keys(arr1),...Object.keys(arr2)]).exec();
+
+            res.status(201).json({ products });                     
+
+        }).catch(err => {
+            console.log(err)
+            res.status(400).json({ error: "Something went wrong Try Again" });
+        })
+    }
+    catch(err) {
+        let error = err.message 
+        res.status(400).json({ error: error });
+    }
+}
+
+
+// PRODUCT ID'S

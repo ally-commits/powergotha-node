@@ -10,6 +10,8 @@ const categoryRoute = require("./routes/userRoutes/categoryRoute")
 
 const adminProductRoute = require("./routes/adminRoutes/adminProductRoute")
 const adminCategoryRoute = require("./routes/adminRoutes/adminCategoryRoute")
+const adminDataRoute = require("./routes/adminRoutes/adminDataRoute")
+
 
 const cors = require('cors');
 const { checkPermission } = require('./middleware/checkPermission');
@@ -47,4 +49,5 @@ app.use("/api/admin/product",adminProductRoute)
 app.use("/api/admin/category",adminCategoryRoute)
 
 
- 
+//  DATA -MAKER
+app.use("/api/admin/data/",adminDataRoute)
