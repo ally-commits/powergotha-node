@@ -1,4 +1,5 @@
 const Order = require("../../models/Order"); 
+const Cart = require("../../models/Cart");
 
 module.exports.getAllOrder = async (req, res) => {
     const userId = req.user._id;
@@ -23,6 +24,7 @@ module.exports.addOrder = async (req, res) => {
             throw Error("Order Should cantain atleast 1 product")
         else {
             const order = await Order.create({orderItems,userId,addressId,orderStatus: "ORDERED"}); 
+            const removeCart = await Cart.deleteMany({userId}); 
             res.status(201).json({ order, message: "Order Placed"});    
         }
     }
