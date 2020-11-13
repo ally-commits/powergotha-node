@@ -37,7 +37,7 @@ mongoose.connect(dbURI, { useNewUrlParser: true, useUnifiedTopology: true, useCr
 app.use("/api/auth", authRoute);
 
 // USER - LEVEL - ROUTES
-app.use("/api/user", checkPermission(["USER"]), userRoute);
+app.use("/api/user", checkPermission(["USER","ADMIN"]), userRoute);
 app.use("/api/product", checkPermission(["USER"]), productRoute)
 app.use("/api/category", checkPermission(["USER"]), categoryRoute)
 app.use("/api/order", checkPermission(["USER"]), orderRoute)
