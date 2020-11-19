@@ -1,5 +1,5 @@
 const {Router} = require('express')
-const adminCategoryController = require('../../controllers/admin/adminCategoryController')
+const adminCategoryController = require('../../controllers/dashboard/adminCategoryController')
 
 const router = Router();
  

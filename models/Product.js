@@ -21,6 +21,16 @@ const productSchema = new mongoose.Schema({
   active: {
     type: Boolean,
     default: true
+  },
+  warehouseId: {
+    type: mongoose.Schema.Types.ObjectId,
+    ref: "Warehouse",
+    required: true
+  },
+  addedBy: {
+    type: mongoose.Schema.Types.ObjectId,
+    ref: "Warehouse",
+    required: true
   }
 });
 

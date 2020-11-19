@@ -7,7 +7,7 @@ module.exports.checkPermission = (permission) => {
             await getUser(token,(user) => { 
                 if(user == "INVALID_TOKEN") {
                     res.status(401).json({error: "Authentication Error: Invalid Token"})
-                } else  {
+                } else  { 
                     if(user && permission.includes(user.userType)) {
                         req.user = user;
                         next(); 

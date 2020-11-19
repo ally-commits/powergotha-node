@@ -1,17 +1,18 @@
 const express = require('express');
 const mongoose = require('mongoose'); 
 
-const authRoute = require("./routes/userRoutes/authRoute") 
-const userRoute = require("./routes/userRoutes/userRoute")
-const productRoute = require("./routes/userRoutes/productRoute")
-const orderRoute = require("./routes/userRoutes/orderRoute")
-const cartRoute = require("./routes/userRoutes/cartRoute")
-const categoryRoute = require("./routes/userRoutes/categoryRoute")
+const authRoute = require("./routes/userAppRoutes/authRoute") 
+const userRoute = require("./routes/userAppRoutes/userRoute")
+const productRoute = require("./routes/userAppRoutes/productRoute")
+const orderRoute = require("./routes/userAppRoutes/orderRoute")
+const cartRoute = require("./routes/userAppRoutes/cartRoute")
+const categoryRoute = require("./routes/userAppRoutes/categoryRoute")
 
-const adminProductRoute = require("./routes/adminRoutes/adminProductRoute")
-const adminCategoryRoute = require("./routes/adminRoutes/adminCategoryRoute")
-const adminDataRoute = require("./routes/adminRoutes/adminDataRoute")
-
+const adminProductRoute = require("./routes/dashboardRoutes/adminProductRoute")
+const adminCategoryRoute = require("./routes/dashboardRoutes/adminCategoryRoute")
+const adminDataRoute = require("./routes/dashboardRoutes/adminDataRoute")
+const warehouseRoute = require("./routes/dashboardRoutes/warehouseRoute")
+const managerRoute = require("./routes/dashboardRoutes/managerRoute") 
 
 const cors = require('cors');
 const { checkPermission } = require('./middleware/checkPermission');
@@ -49,6 +50,8 @@ app.use("/api/cart", checkPermission(["USER"]), cartRoute)
 app.use("/api/admin/product",adminProductRoute)
 app.use("/api/admin/category",adminCategoryRoute)
 
+ 
+// ONLY ADMIN ACCESSS
 
-//  DATA -MAKER
-app.use("/api/admin/data/",adminDataRoute)
+app.use("/api/admin/warehouse", checkPermission(["ADMIN"]), warehouseRoute)
+app.use("/api/admin/manager", checkPermission(["ADMIN"]), managerRoute)

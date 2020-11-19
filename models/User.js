@@ -1,5 +1,4 @@
 const mongoose = require('mongoose');
-const { isEmail,isEmpty } = require('validator');
 const bcrypt = require('bcrypt');
 
 const userSchema = new mongoose.Schema({
@@ -22,12 +21,16 @@ const userSchema = new mongoose.Schema({
   userType: {
     type: String,
     required: true,
-    enum: ["USER","ADMIN"], 
+    enum: ["USER","ADMIN","MANAGER","DELIVERY-BOY","STORE"], 
   }, 
   dob: {
     type: Date,
     required: true,
-  }
+  },
+  assignedWarehouse: [{
+    type: mongoose.Schema.Types.ObjectId,
+    ref: "Warehouse"
+  }]
 });
 
  
