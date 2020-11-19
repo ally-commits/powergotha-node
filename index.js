@@ -8,9 +8,8 @@ const orderRoute = require("./routes/userAppRoutes/orderRoute")
 const cartRoute = require("./routes/userAppRoutes/cartRoute")
 const categoryRoute = require("./routes/userAppRoutes/categoryRoute")
 
-const adminProductRoute = require("./routes/dashboardRoutes/adminProductRoute")
-const adminCategoryRoute = require("./routes/dashboardRoutes/adminCategoryRoute")
-const adminDataRoute = require("./routes/dashboardRoutes/adminDataRoute")
+const dashboardProductRoute = require("./routes/dashboardRoutes/productRoute")
+const dashboardCategoryRoute = require("./routes/dashboardRoutes/categoryRoute")
 const warehouseRoute = require("./routes/dashboardRoutes/warehouseRoute")
 const managerRoute = require("./routes/dashboardRoutes/managerRoute") 
 
@@ -45,13 +44,12 @@ app.use("/api/category", checkPermission(["USER"]), categoryRoute)
 app.use("/api/order", checkPermission(["USER"]), orderRoute)
 app.use("/api/cart", checkPermission(["USER"]), cartRoute)
 
-
-// ADMIN - LEVEL - ROUTES
-app.use("/api/admin/product",adminProductRoute)
-app.use("/api/admin/category",adminCategoryRoute)
-
+ 
  
 // ONLY ADMIN ACCESSS
-
 app.use("/api/admin/warehouse", checkPermission(["ADMIN"]), warehouseRoute)
 app.use("/api/admin/manager", checkPermission(["ADMIN"]), managerRoute)
+
+// ADMINN _ MANAGER ACCESS ROUTES
+app.use("/api/dashboard/product",checkPermission(["ADMIN","MANAGER"]) ,dashboardProductRoute)
+app.use("/api/dashboard/category",checkPermission(["ADMIN","MANAGER"]),dashboardCategoryRoute)
