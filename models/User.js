@@ -3,12 +3,12 @@ const { isEmail,isEmpty } = require('validator');
 const bcrypt = require('bcrypt');
 
 const userSchema = new mongoose.Schema({
-  email: {
+  phoneNumber: {
     type: String,
-    required: [true, 'Please enter an email'],
-    unique: true,
-    lowercase: true,
-    validate: [isEmail, 'Please enter a valid email']
+    required: [true, 'Please enter an PhoneNumber'],
+    unique: true, 
+    min: [1000000000, "Enter valid 10 digit phonenumber"],
+    max: [9999999999, "Enter valid 10 digit phonenumber"],
   },
   password: {
     type: String,

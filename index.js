@@ -23,7 +23,8 @@ app.use(express.json());
  
 const PORT = 9000;
 
-const dbURI = 'mongodb+srv://ally:Asd@1234@cluster0.e694a.mongodb.net/yopaan-node?retryWrites=true&w=majority';
+// const dbURI = 'mongodb+srv://ally:Asd@1234@cluster0.e694a.mongodb.net/yopaan-node?retryWrites=true&w=majority';
+const dbURI = 'mongodb://root:BqYtiYJDgtA9@52.66.209.53:27017/yopaan-node?authSource=admin';
 
 mongoose.connect(dbURI, { useNewUrlParser: true, useUnifiedTopology: true, useCreateIndex:true ,useFindAndModify: false})
     .then((result) => {

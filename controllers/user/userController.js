@@ -2,6 +2,7 @@ const Address = require("../../models/Address");
 const User = require("../../models/User"); 
 const Order = require("../../models/Order");
 const Product = require("../../models/Product");
+const { body, validationResult } = require('express-validator');
 
 module.exports.getUserDetails = async (req, res) => {
     const userId = req.user._id;
@@ -9,7 +10,9 @@ module.exports.getUserDetails = async (req, res) => {
         const user = await User.findById(userId);
         if(user) {
             const address = await Address.find({userId});
-            res.status(201).json({ user, address});
+            const cartItems = await Cart.find({userId}).populate("productId");
+
+            res.status(201).json({ user, address,cartItems});
         } else {
             throw Error("User Not Found");
         }
@@ -20,53 +23,89 @@ module.exports.getUserDetails = async (req, res) => {
     }   
 }
 
-module.exports.addAddress = async (req, res) => {
-    const userId = req.user._id;
-    const {addressType,address1,address2, pincode,phoneNumber } = req.body;
-    try {
-        const address = await Address.create({userId, addressType,address1,address2, pincode,phoneNumber}); 
-        res.status(201).json({ address, message: "Address Added Successfully"}); 
-    }
-    catch(err) { 
-        let error = err.message 
-        res.status(400).json({ error: error });
-    }   
-}
+module.exports.addAddress = [
+    body('addressType').not().isEmpty().withMessage("addressType is required"),
+    body('address1').not().isEmpty().withMessage("address1 is required"),
+    body('address2').not().isEmpty().withMessage("address2 is required"),
+    body('phoneNumber').not().isEmpty().withMessage("phoneNumber is required"),
+    body('pincode').not().isEmpty().withMessage("pincode is required"),
 
-module.exports.updateAddress = async (req, res) => {
-    const userId = req.user._id;
-    const {addressType,address1,address2, pincode,phoneNumber,addressId} = req.body;
-    try {
-        const address = await Address.findOneAndUpdate({_id: addressId,userId},{userId, addressType,address1,address2, pincode,phoneNumber}); 
-        if(address) {
-            const adr = await Address.findById(addressId);
-            res.status(201).json({ message: "Address Updated Successfully",address: adr}); 
-        } else {
-            throw Error("No Address Found")
+    async (req, res) => {
+        const errors = validationResult(req);
+        if (!errors.isEmpty()) {
+            return res.status(400).json({ errors: errors.array() });
         }
-    }
-    catch(err) { 
-        let error = err.message 
-        res.status(400).json({ error: error });
-    }   
-}
 
-module.exports.deleteAddress = async (req, res) => {
-    const userId = req.user._id;
-    const {addressId} = req.body;
-    try {
-        const address = await Address.findOneAndRemove({_id:addressId,userId}); 
-        if(address) {
-            res.status(201).json({ message: "Address Removed Successfully"}); 
-        } else {
-            throw Error("No Address Found") 
+        const userId = req.user._id;
+        const {addressType,address1,address2, pincode,phoneNumber } = req.body;
+        try {
+            const address = await Address.create({userId, addressType,address1,address2, pincode,phoneNumber}); 
+            res.status(201).json({ address, message: "Address Added Successfully"}); 
         }
+        catch(err) { 
+            let error = err.message 
+            res.status(400).json({ error: error });
+        }   
     }
-    catch(err) { 
-        let error = err.message 
-        res.status(400).json({ error: error });
-    }   
-}
+];
+
+module.exports.updateAddress = [
+    body('addressType').not().isEmpty().withMessage("addressType is required"),
+    body('address1').not().isEmpty().withMessage("address1 is required"),
+    body('address2').not().isEmpty().withMessage("address2 is required"),
+    body('phoneNumber').not().isEmpty().withMessage("phoneNumber is required"),
+    body('pincode').not().isEmpty().withMessage("pincode is required"),
+    body('addressId').not().isEmpty().withMessage("addressId is required"),
+
+    async (req, res) => {
+        const errors = validationResult(req);
+        if (!errors.isEmpty()) {
+            return res.status(400).json({ errors: errors.array() });
+        }
+
+        const userId = req.user._id;
+        const {addressType,address1,address2, pincode,phoneNumber,addressId} = req.body;
+        try {
+            const address = await Address.findOneAndUpdate({_id: addressId,userId},{userId, addressType,address1,address2, pincode,phoneNumber}); 
+            if(address) {
+                const adr = await Address.findById(addressId);
+                res.status(201).json({ message: "Address Updated Successfully",address: adr}); 
+            } else {
+                throw Error("No Address Found")
+            }
+        }
+        catch(err) { 
+            let error = err.message 
+            res.status(400).json({ error: error });
+        }   
+    }
+];
+
+module.exports.deleteAddress = [
+    body('addressId').not().isEmpty().withMessage("addressId is required"),
+    
+    async (req, res) => {
+        const errors = validationResult(req);
+        if (!errors.isEmpty()) {
+            return res.status(400).json({ errors: errors.array() });
+        }
+
+        const userId = req.user._id;
+        const {addressId} = req.body;
+        try {
+            const address = await Address.findOneAndRemove({_id:addressId,userId}); 
+            if(address) {
+                res.status(201).json({ message: "Address Removed Successfully"}); 
+            } else {
+                throw Error("No Address Found") 
+            }
+        }
+        catch(err) { 
+            let error = err.message 
+            res.status(400).json({ error: error });
+        }   
+    }
+];
    
 
 module.exports.productRecommendations = async (req,res) => {
@@ -125,5 +164,4 @@ module.exports.productRecommendations = async (req,res) => {
     }
 }
 
-
-// PRODUCT ID'S
+ 

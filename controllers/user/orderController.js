@@ -1,5 +1,6 @@
 const Order = require("../../models/Order"); 
 const Cart = require("../../models/Cart");
+const { body, validationResult } = require('express-validator');
 
 module.exports.getAllOrder = async (req, res) => {
     const userId = req.user._id;
@@ -16,47 +17,65 @@ module.exports.getAllOrder = async (req, res) => {
     }   
 }
 
-module.exports.addOrder = async (req, res) => {
-    const userId = req.user._id;
-    const {orderItems,addressId} = req.body;
-    try {
-        if(orderItems == undefined || orderItems.length == 0) 
-            throw Error("Order Should cantain atleast 1 product")
-        else {
-            const order = await Order.create({orderItems,userId,addressId,orderStatus: "ORDERED"}); 
-            const removeCart = await Cart.deleteMany({userId}); 
-            res.status(201).json({ order, message: "Order Placed"});    
+module.exports.addOrder = [
+    body('orderItems').not().isEmpty().withMessage("orderItems is required"),
+    body('addressId').not().isEmpty().withMessage("addressId is required"),
+
+    async (req, res) => {
+        const errors = validationResult(req);
+        if (!errors.isEmpty()) {
+            return res.status(400).json({ errors: errors.array() });
         }
-    }
-    catch(err) { 
-        let error = err.message 
-        res.status(400).json({ error: error });
-    }   
-}
 
-
-module.exports.cancelOrder = async (req, res) => {
-    const userId = req.user._id;
-    const {orderId} = req.body;
-    try { 
-        const orderData = await Order.findOne({_id: orderId,userId}).populate("addressId");
-        if(orderData) {
-            if(orderData.orderStatus == "CANCELLED") {
-                res.status(400).json({ error: "Order Already Cancelled" });
-            } else {
-                const order = await Order.findByIdAndUpdate(orderId,{orderStatus: "CANCELLED"}); 
-                if(order) { 
-                    res.status(201).json({ message: "Order Cancelled",order: {...orderData,orderStatus: "CANCELLED"}}); 
-                } else {
-                    res.status(400).json({ error: "Connot Update Order Status"});
-                }
+        const userId = req.user._id;
+        const {orderItems,addressId} = req.body;
+        try {
+            if(orderItems == undefined || orderItems.length == 0) 
+                throw Error("Order Should cantain atleast 1 product")
+            else {
+                const order = await Order.create({orderItems,userId,addressId,orderStatus: "ORDERED"}); 
+                const removeCart = await Cart.deleteMany({userId}); 
+                res.status(201).json({ order, message: "Order Placed"});    
             }
-        } else {
-            throw Error("No Orders Found")
         }
+        catch(err) { 
+            let error = err.message 
+            res.status(400).json({ error: error });
+        }   
     }
-    catch(err) { 
-        let error = err.message 
-        res.status(400).json({ error: error });
-    }   
-}
+];
+
+
+module.exports.cancelOrder = [
+    body('orderId').not().isEmpty().withMessage("orderId is required"),
+    async (req, res) => {
+        const errors = validationResult(req);
+        if (!errors.isEmpty()) {
+            return res.status(400).json({ errors: errors.array() });
+        }
+
+        const userId = req.user._id;
+        const {orderId} = req.body;
+        try { 
+            const orderData = await Order.findOne({_id: orderId,userId}).populate("addressId");
+            if(orderData) {
+                if(orderData.orderStatus == "CANCELLED") {
+                    res.status(400).json({ error: "Order Already Cancelled" });
+                } else {
+                    const order = await Order.findByIdAndUpdate(orderId,{orderStatus: "CANCELLED"}); 
+                    if(order) { 
+                        res.status(201).json({ message: "Order Cancelled",order: {...orderData,orderStatus: "CANCELLED"}}); 
+                    } else {
+                        res.status(400).json({ error: "Connot Update Order Status"});
+                    }
+                }
+            } else {
+                throw Error("No Orders Found")
+            }
+        }
+        catch(err) { 
+            let error = err.message 
+            res.status(400).json({ error: error });
+        }   
+    }
+];
