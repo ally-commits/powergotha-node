@@ -7,9 +7,9 @@ module.exports.getAllProduct = async (req, res) => {
         let product = [];
 
         if(user.userType == "ADMIN") 
-            product = await Product.find().populate("categoryId").populate("warehouseId");
+            product = await Product.find().populate("categoryId").populate("warehouseId").populate("addedBy");
         else
-            product = await Product.find({addedBy: userId}).populate("categoryId").populate("warehouseId");
+            product = await Product.find({addedBy: user._id}).populate("categoryId").populate("warehouseId").populate("addedBy");
 
         if(product) {
             res.status(201).json({ product});

@@ -2,13 +2,19 @@ const User = require("../../models/User");
 const { body, validationResult } = require('express-validator');
 
 
-module.exports.getAllManagers = async (req, res) => {
+module.exports.getAllUsers = async (req, res) => {
     try {
-        const managers = await User.find({userType: "MANAGER"}).populate("assignedWarehouse");
-        if(managers) {
-            res.status(201).json({ managers});
+        const user = req.user;
+        let users = [];
+        if(user.userType == "ADMIN") 
+            users = await User.find({userType: "DELIVERY-BOY"}).populate("assignedWarehouse");
+        else
+            users = await User.find({userType: "DELIVERY-BOY",assignedWarehouse: {$in: req.user.assignedWarehouse}}).populate("assignedWarehouse");
+
+        if(users) {
+            res.status(201).json({ users});
         } else 
-            throw Error("Managers Not Found");
+            throw Error("Users Not Found");
     }
     catch(err) { 
         let error = err.message 
@@ -16,22 +22,22 @@ module.exports.getAllManagers = async (req, res) => {
     }   
 }
 
-module.exports.addManager = [
+module.exports.addUser = [
     body('name').not().isEmpty().withMessage("name field is required"),
     body('phoneNumber').not().isEmpty().withMessage("phoneNumber field is required"),
-    body('dob').not().isEmpty().withMessage("dob field is required"),
-    body('assignedWarehouse').not().isEmpty().withMessage("assignedWarehouse field is required"),
+    body('dob').not().isEmpty().withMessage("dob field is required"), 
     body('password').isLength({ min: 8 }).withMessage("Password must be atleast 8 Characters"),
-    
+    body('assignedWarehouse').not().isEmpty().withMessage("assignedWarehouse field is required"),
+
     async (req, res) => {
         const errors = validationResult(req);
         if (!errors.isEmpty()) {
-            return res.status(400).json({ errors: errors.array() });
+            return res.status(400).json({ errors: errors.array()});
         }
         const {phoneNumber, password ,name,dob,assignedWarehouse} = req.body;
         try {
-            const user = await User.create({ phoneNumber, password,name,userType: "MANAGER",dob,assignedWarehouse});
-            res.status(201).json({ user: user, message: "Manager Added Successfully"});
+            const user = await User.create({ phoneNumber, password,name,userType: "DELIVERY-BOY",dob,assignedWarehouse});
+            res.status(201).json({ user: user, message: "User Added Successfully"});
         }
         catch(err) { 
             let error = err.message
@@ -43,12 +49,12 @@ module.exports.addManager = [
     }
 ];
 
-module.exports.editManager = [
+module.exports.editUser = [
     body('name').not().isEmpty().withMessage("name field is required"),
     body('phoneNumber').not().isEmpty().withMessage("phoneNumber field is required"),
-    body('dob').not().isEmpty().withMessage("dob field is required"),
-    body('assignedWarehouse').not().isEmpty().withMessage("assignedWarehouse field is required"),
+    body('dob').not().isEmpty().withMessage("dob field is required"), 
     body('userId').not().isEmpty().withMessage("userId field is required"), 
+    body('assignedWarehouse').not().isEmpty().withMessage("assignedWarehouse field is required"),
 
     async (req, res) => {
         const errors = validationResult(req);
@@ -56,19 +62,18 @@ module.exports.editManager = [
             return res.status(400).json({ errors: errors.array()});
         }
 
-        let {phoneNumber ,name,dob,assignedWarehouse,userId} = req.body;
+        let {phoneNumber ,name,dob,userId,assignedWarehouse} = req.body;
 
         try { 
-
-            const user = await User.findByIdAndUpdate({_id: userId},{ phoneNumber,name,userType: "MANAGER",dob,assignedWarehouse}); 
+            const user = await User.findByIdAndUpdate({_id: userId},{ phoneNumber,name,dob,assignedWarehouse}); 
             if(user) {
                 const userN = await User.findById(userId);
-                res.status(201).json({ message: "Manager Updated Successfully",user: userN}); 
+                res.status(201).json({ message: "User Updated Successfully",user: userN}); 
             } else 
-                throw Error("No Manager Data Found")
+                throw Error("No User Data Found")
         }
         catch(err) { 
-            let error = err.message 
+            let error = err.message ;
             if(err.code == 11000) {
                 error = "Phone Number already exists"
             }
@@ -77,7 +82,7 @@ module.exports.editManager = [
     }
 ]
 
-module.exports.deleteManager = [
+module.exports.deleteUser = [
     body('userId').not().isEmpty().withMessage("userId must be atleast 8 Characters"),
 
     async (req, res) => {
