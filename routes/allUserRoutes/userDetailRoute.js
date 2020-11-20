@@ -5,5 +5,6 @@ const router = Router();
 
 router.get("/getUserDetails", userController.getUserDetails); 
 router.put("/updateUserDetails", userController.updateUserDetails); 
+router.put("/changePassword", userController.changePassword); 
 
 module.exports = router;
