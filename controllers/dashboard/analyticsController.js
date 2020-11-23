@@ -1,12 +1,12 @@
 const User = require("../../models/User");  
 const Order = require("../../models/Order");  
-
+const Product = require("../../models/Product")
 
 module.exports.getDetails = async (req, res) => {
     try {
-        const users = await User.find({}, 'createdAt');
-        const orders = await Order.find({}, 'createdAt');
-        const ordersDelv = await Order.find({orderStatus: "DELIVERED"}, 'createdAt');
+        const users = await User.find({}, 'createdAt').sort("createdAt");
+        const orders = await Order.find({}, 'createdAt').sort("createdAt");
+        const ordersDelv = await Order.find({orderStatus: "DELIVERED"}, 'createdAt').sort("createdAt");
         let currentMonthData = {};
 
         currentMonthData.users = await User.aggregate([
@@ -21,8 +21,10 @@ module.exports.getDetails = async (req, res) => {
             {$project: {"month" : {$month: '$createdAt'},"orderStatus": "$orderStatus","createdAt": "$createdAt"}},
             {$match: { month: new Date().getMonth() + 1, orderStatus: "DELIVERED"}},
         ]);
+
+        const warehouse = await Product.find().populate("warehouseId").select("warehouseId")
          
-        res.status(201).json({ currentMonthData, users,orders,ordersDelv}); 
+        res.status(201).json({ warehouse, currentMonthData,users,orders,ordersDelv}); 
     }
     catch(err) { 
         let error = err.message 
