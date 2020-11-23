@@ -31,7 +31,7 @@ const addressSchema = new mongoose.Schema({
     ref: "User",
     required: [true, "Enter valid userId"]
   }
-});
+},{ timestamps: true });
 
   
 

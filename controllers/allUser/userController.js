@@ -36,7 +36,6 @@ module.exports.updateUserDetails = [
         const userId = req.user._id;
         let {phoneNumber ,name,dob} = req.body;
          
-
         try { 
             const user = await User.findByIdAndUpdate({_id: userId},{ phoneNumber,name,dob}); 
             if(user) {

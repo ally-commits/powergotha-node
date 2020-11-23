@@ -1,5 +1,6 @@
 const Product = require("../../models/Product"); 
 const { body, validationResult } = require('express-validator');
+const mongooose = require("mongoose");
 
 module.exports.getAllProduct = async (req, res) => {
     try {
@@ -28,12 +29,14 @@ module.exports.addProduct = [
     body('productPrice').not().isEmpty().withMessage("productPrice field is required"),
     body('categoryId').not().isEmpty().withMessage("categoryId field is required"),
     body('warehouseId').not().isEmpty().withMessage("warehouseId field is required"),
+    body('stockLeft').not().isEmpty().withMessage("stockLeft field is required"),
      
     async (req, res) => {
         const addedBy = req.user._id;
-        const {productImages,productName,productPrice,categoryId,warehouseId} = req.body;
+        const {productImages,productName,productPrice,categoryId,warehouseId,stockLeft} = req.body;
+        
         try {
-            const product = await Product.create({productImages,productName,productPrice,categoryId,warehouseId,addedBy}); 
+            const product = await Product.create({productImages,productName,productPrice,categoryId,warehouseId,addedBy,stockLeft}); 
             res.status(201).json({ product, message: "Product Added Successfully"}); 
         }
         catch(err) { 
@@ -50,11 +53,12 @@ module.exports.editProduct = [
     body('categoryId').not().isEmpty().withMessage("categoryId field is required"),
     body('warehouseId').not().isEmpty().withMessage("warehouseId field is required"),
     body('productId').not().isEmpty().withMessage("productId field is required"),
+    body('stockLeft').not().isEmpty().withMessage("stockLeft field is required"),
     
     async (req, res) => {
-        const {productImages,productName,productPrice,productId,categoryId,warehouseId,active} = req.body;
+        const {productImages,productName,productPrice,productId,categoryId,warehouseId,active,stockLeft} = req.body;
         try {
-            const product = await Product.findByIdAndUpdate({_id: productId},{productImages,productName,productPrice,productId,categoryId,warehouseId,active}); 
+            const product = await Product.findByIdAndUpdate({_id: productId},{productImages,productName,productPrice,productId,categoryId,warehouseId,active,stockLeft}); 
             if(product) {
                 const prod = await Product.findById(productId);
                 res.status(201).json({ message: "Product Updated Successfully",product: prod}); 

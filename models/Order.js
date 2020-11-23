@@ -31,7 +31,7 @@ const orderSchema = new mongoose.Schema({
     ref: "Address",
     require: [true, "Enter Valid Address"]
   }
-});
+},{ timestamps: true });
   
 
 const Order = mongoose.model('Order', orderSchema);

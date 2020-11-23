@@ -16,7 +16,7 @@ const cartSchema = new mongoose.Schema({
     required: true,
     ref: "User"
   }
-});
+},{ timestamps: true });
 
 
 const Cart = mongoose.model('Cart', cartSchema);

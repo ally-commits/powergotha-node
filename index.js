@@ -15,6 +15,8 @@ const dashboardCategoryRoute = require("./routes/dashboardRoutes/categoryRoute")
 const warehouseRoute = require("./routes/dashboardRoutes/warehouseRoute")
 const managerRoute = require("./routes/dashboardRoutes/managerRoute") 
 const delvBoyRoute = require("./routes/dashboardRoutes/delvBoyRoute");
+const ordersRoute = require("./routes/dashboardRoutes/ordersRoute");
+const analyticsRoute = require("./routes/dashboardRoutes/analyticsRoute");
 
 const cors = require('cors');
 const { checkPermission } = require('./middleware/checkPermission');
@@ -26,8 +28,8 @@ app.use(express.json());
  
 const PORT = 9000;
  
-const dbURI = 'mongodb://root:BqYtiYJDgtA9@52.66.209.53:27017/yopaan-node?authSource=admin';
-
+// const dbURI = 'mongodb://root:BqYtiYJDgtA9@52.66.209.53:27017/yopaan-node?authSource=admin';
+const dbURI = "mongodb+srv://root:Asd@1234@cluster0.3dpaa.mongodb.net/yopaan?retryWrites=true&w=majority"
 mongoose.connect(dbURI, { useNewUrlParser: true, useUnifiedTopology: true, useCreateIndex:true ,useFindAndModify: false})
     .then((result) => {
         app.listen(PORT,() => {
@@ -55,3 +57,6 @@ app.use("/api/admin/manager", checkPermission(["ADMIN"]), managerRoute)
 app.use("/api/dashboard/product",checkPermission(["ADMIN","MANAGER"]) ,dashboardProductRoute)
 app.use("/api/dashboard/category",checkPermission(["ADMIN","MANAGER"]),dashboardCategoryRoute)
 app.use("/api/dashboard/delivery", checkPermission(["ADMIN","MANAGER"]), delvBoyRoute)
+app.use("/api/dashboard/orders", checkPermission(["ADMIN","MANAGER"]), ordersRoute)
+
+app.use("/api/dashboard/analytics", checkPermission(["ADMIN","MANAGER"]), analyticsRoute)
