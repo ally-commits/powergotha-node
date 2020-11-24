@@ -31,6 +31,7 @@ module.exports.updateUserDetails = [
     body('phoneNumber').not().isEmpty().withMessage("phoneNumber Feild is required"),
     body('name').not().isEmpty().withMessage("name Feild is required"), 
     body('dob').not().isEmpty().withMessage("dob Feild is required"),
+    body('profilePicture').not().isEmpty().withMessage("profilePicture Feild is required"),
     
     async (req, res) => {
         const errors = validationResult(req);
@@ -38,10 +39,10 @@ module.exports.updateUserDetails = [
             return res.status(400).json({ errors: errors.array()});
         }
         const userId = req.user._id;
-        let {phoneNumber ,name,dob} = req.body;
+        let {phoneNumber ,name,dob,profilePicture} = req.body;
          
         try { 
-            const user = await User.findByIdAndUpdate({_id: userId},{ phoneNumber,name,dob}); 
+            const user = await User.findByIdAndUpdate({_id: userId},{ phoneNumber,name,dob, profilePicture}); 
             if(user) {
                 const userN = await User.findById(userId);
                 logger.info("User details updated")
