@@ -4,8 +4,7 @@ const logger = require("../logger/logger")
 module.exports.checkPermission = (permission) => {
     return async (req, res, next) => {
         const token = req.headers.authorization;
-        if(token) { 
-            logger.info("******AUTHENTICATION - PART ***************")
+        if(token) {  
             logger.info("TOKEN:" + token);
             await getUser(token,(user) => { 
                 if(user == "INVALID_TOKEN") {
@@ -16,20 +15,17 @@ module.exports.checkPermission = (permission) => {
                     logger.info("USER TYPE:"+ user.userType)
 
                     if(user && permission.includes(user.userType)) {
-                        logger.info("Content can be accessed by:" + permission)
-                        logger.info("******AUTHENTICATION - PART --END ***************")
+                        logger.info("Content can be accessed by:" + permission) 
                         req.user = user;
                         next(); 
                     } else {
-                        logger.error("Forbidden: user don't have enough access to this content")
-                        logger.info("******AUTHENTICATION - PART --END ***************")
+                        logger.error("Forbidden: user don't have enough access to this content") 
                         res.status(403).json({error: "Forbidden: you don't have enough access to this content"});  
                     }
                 }
             })
         } else {
-            logger.error("No Token Received")
-            logger.info("******AUTHENTICATION - PART --END ***************")
+            logger.error("No Token Received " + token) 
             res.status(401).json({error: "Unauthorized Request"})
         }
     }

@@ -1,1 +1,435 @@
- 
+ 2020-11-24 11:46:03:463 info: REGISTER: User Created:{ assignedWarehouse: [],
+  _id: 5fbca5226cfcbd37c99e66f4,
+  phoneNumber: '9876543220',
+  password:
+   '$2b$10$htkGR5VTCINc3IZ/m7VMmeJeGsD6.E9I2Hcbm021HMWdm7la//2W2',
+  name: 'Mobile App',
+  userType: 'USER',
+  dob: 1999-09-19T00:00:00.000Z,
+  createdAt: 2020-11-24T06:16:02.972Z,
+  updatedAt: 2020-11-24T06:16:02.972Z,
+  __v: 0 }
+2020-11-24 11:46:03:463 info: REGISTER: Token Created:eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiI1ZmJjYTUyMjZjZmNiZDM3Yzk5ZTY2ZjQiLCJpYXQiOjE2MDYxOTg1NjMsImV4cCI6MTYwNjQ1Nzc2M30.3vKpHRqqIthegYR6FA7HsTG6UnCQ7sGyx27c76GgM1M
+2020-11-24 11:46:03:463 info: 
+********REQUEST_STARTED*********
+POST /api/auth/register 201 216.811 ms - 546
+2020-11-24 11:46:11:4611 info: LOGIN: User FOUND:{ assignedWarehouse: [],
+  _id: 5fbb8a780ce8278764fb875e,
+  phoneNumber: '9901969930',
+  password:
+   '$2b$10$eH2c7i.awkmfvw75y6yJTOpSc.44bVk5jl3WQbq6fc1P889sMcMyW',
+  name: 'Admin',
+  userType: 'ADMIN',
+  dob: 1999-09-19T00:00:00.000Z,
+  createdAt: 2020-11-13T10:10:00.257Z,
+  updatedAt: 2020-11-23T10:10:00.257Z,
+  __v: 0 }
+2020-11-24 11:46:11:4611 info: Login: User validated 
+2020-11-24 11:46:11:4611 info: 
+********REQUEST_STARTED*********
+POST /api/auth/login 200 240.361 ms - 541
+2020-11-24 11:46:28:4628 info: ******AUTHENTICATION - PART ***************
+2020-11-24 11:46:28:4628 info: TOKEN:Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiI1ZmJiOGE3ODBjZTgyNzg3NjRmYjg3NWUiLCJpYXQiOjE2MDYxOTg1NzEsImV4cCI6MTYwNjQ1Nzc3MX0.tXF1ssECr-cR30MwQ6hWnRUOCBQvRgX72Hl9TArvK00
+2020-11-24 11:46:28:4628 info: USER TYPE:ADMIN
+2020-11-24 11:46:28:4628 info: Content can be accessed by:USER,ADMIN,MANAGER,DELIVERY-BOY,STORE
+2020-11-24 11:46:28:4628 info: ******AUTHENTICATION - PART --END ***************
+2020-11-24 11:46:28:4628 info: ******AUTHENTICATION - PART ***************
+2020-11-24 11:46:28:4628 info: TOKEN:Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiI1ZmJiOGE3ODBjZTgyNzg3NjRmYjg3NWUiLCJpYXQiOjE2MDYxOTg1NzEsImV4cCI6MTYwNjQ1Nzc3MX0.tXF1ssECr-cR30MwQ6hWnRUOCBQvRgX72Hl9TArvK00
+2020-11-24 11:46:28:4628 info: USER TYPE:ADMIN
+2020-11-24 11:46:28:4628 error: Forbidden: user don't have enough access to this content
+2020-11-24 11:46:28:4628 info: ******AUTHENTICATION - PART --END ***************
+2020-11-24 11:46:28:4628 info: 
+********REQUEST_STARTED*********
+POST /api/user/addAddress 403 68.457 ms - 67
+2020-11-24 11:46:48:4648 info: LOGIN: User FOUND:{ assignedWarehouse: [ 5fbb8afc0ce8278764fb8767 ],
+  _id: 5fbb8b2f0ce8278764fb876c,
+  phoneNumber: '9901969901',
+  password:
+   '$2b$10$n/Yz5.qluYcT6ksJSdPN6.TRKak1Eykdw.UlT.Os3nuep/1/aqDLq',
+  name: 'Manager 1',
+  userType: 'MANAGER',
+  dob: 2020-11-24T00:00:00.000Z,
+  createdAt: 2020-11-12T10:13:03.068Z,
+  updatedAt: 2020-11-23T10:13:03.068Z,
+  __v: 0 }
+2020-11-24 11:46:49:4649 info: LOGIN: wrong password:{ assignedWarehouse: [ 5fbb8afc0ce8278764fb8767 ],
+  _id: 5fbb8b2f0ce8278764fb876c,
+  phoneNumber: '9901969901',
+  password:
+   '$2b$10$n/Yz5.qluYcT6ksJSdPN6.TRKak1Eykdw.UlT.Os3nuep/1/aqDLq',
+  name: 'Manager 1',
+  userType: 'MANAGER',
+  dob: 2020-11-24T00:00:00.000Z,
+  createdAt: 2020-11-12T10:13:03.068Z,
+  updatedAt: 2020-11-23T10:13:03.068Z,
+  __v: 0 }
+2020-11-24 11:46:49:4649 error: Incorrect Password
+2020-11-24 11:46:49:4649 info: 
+********REQUEST_STARTED*********
+POST /api/auth/login 400 151.300 ms - 30
+2020-11-24 11:47:08:478 info: ******AUTHENTICATION - PART ***************
+2020-11-24 11:47:08:478 info: TOKEN:Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiI1ZmJjYTUyMjZjZmNiZDM3Yzk5ZTY2ZjQiLCJpYXQiOjE2MDYxOTg1NjMsImV4cCI6MTYwNjQ1Nzc2M30.3vKpHRqqIthegYR6FA7HsTG6UnCQ7sGyx27c76GgM1M
+2020-11-24 11:47:08:478 info: USER TYPE:USER
+2020-11-24 11:47:08:478 info: Content can be accessed by:USER,ADMIN,MANAGER,DELIVERY-BOY,STORE
+2020-11-24 11:47:08:478 info: ******AUTHENTICATION - PART --END ***************
+2020-11-24 11:47:08:478 info: ******AUTHENTICATION - PART ***************
+2020-11-24 11:47:08:478 info: TOKEN:Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiI1ZmJjYTUyMjZjZmNiZDM3Yzk5ZTY2ZjQiLCJpYXQiOjE2MDYxOTg1NjMsImV4cCI6MTYwNjQ1Nzc2M30.3vKpHRqqIthegYR6FA7HsTG6UnCQ7sGyx27c76GgM1M
+2020-11-24 11:47:08:478 info: USER TYPE:USER
+2020-11-24 11:47:08:478 info: Content can be accessed by:USER
+2020-11-24 11:47:08:478 info: ******AUTHENTICATION - PART --END ***************
+2020-11-24 11:47:08:478 info: 
+********REQUEST_STARTED*********
+POST /api/user/addAddress 201 119.378 ms - 318
+2020-11-24 11:47:19:4719 info: ******AUTHENTICATION - PART ***************
+2020-11-24 11:47:19:4719 info: TOKEN:Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiI1ZmI2MGE3YjMxMmNlMTM5NGMyYWQ0YzIiLCJpYXQiOjE2MDU3NjY0NjksImV4cCI6MTYwNjAyNTY2OX0.-vEWLVsTDg8mqDFqCHSrILnRn5nLET8m5xDvxclSxs8
+2020-11-24 11:47:19:4719 error: Authentication Error: Invalid Token
+2020-11-24 11:47:19:4719 info: 
+********REQUEST_STARTED*********
+PUT /api/user/editAddress 401 3.653 ms - 47
+2020-11-24 11:47:32:4732 info: ******AUTHENTICATION - PART ***************
+2020-11-24 11:47:32:4732 info: TOKEN:Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiI1ZmJjYTUyMjZjZmNiZDM3Yzk5ZTY2ZjQiLCJpYXQiOjE2MDYxOTg1NjMsImV4cCI6MTYwNjQ1Nzc2M30.3vKpHRqqIthegYR6FA7HsTG6UnCQ7sGyx27c76GgM1M
+2020-11-24 11:47:32:4732 info: USER TYPE:USER
+2020-11-24 11:47:32:4732 info: Content can be accessed by:USER,ADMIN,MANAGER,DELIVERY-BOY,STORE
+2020-11-24 11:47:32:4732 info: ******AUTHENTICATION - PART --END ***************
+2020-11-24 11:47:32:4732 info: ******AUTHENTICATION - PART ***************
+2020-11-24 11:47:32:4732 info: TOKEN:Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiI1ZmJjYTUyMjZjZmNiZDM3Yzk5ZTY2ZjQiLCJpYXQiOjE2MDYxOTg1NjMsImV4cCI6MTYwNjQ1Nzc2M30.3vKpHRqqIthegYR6FA7HsTG6UnCQ7sGyx27c76GgM1M
+2020-11-24 11:47:32:4732 info: USER TYPE:USER
+2020-11-24 11:47:32:4732 info: Content can be accessed by:USER
+2020-11-24 11:47:32:4732 info: ******AUTHENTICATION - PART --END ***************
+2020-11-24 11:47:32:4732 info: 
+********REQUEST_STARTED*********
+PUT /api/user/editAddress 201 131.512 ms - 309
+2020-11-24 11:47:43:4743 info: ******AUTHENTICATION - PART ***************
+2020-11-24 11:47:43:4743 info: TOKEN:Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiI1ZmJjYTUyMjZjZmNiZDM3Yzk5ZTY2ZjQiLCJpYXQiOjE2MDYxOTg1NjMsImV4cCI6MTYwNjQ1Nzc2M30.3vKpHRqqIthegYR6FA7HsTG6UnCQ7sGyx27c76GgM1M
+2020-11-24 11:47:43:4743 info: USER TYPE:USER
+2020-11-24 11:47:43:4743 info: Content can be accessed by:USER,ADMIN,MANAGER,DELIVERY-BOY,STORE
+2020-11-24 11:47:43:4743 info: ******AUTHENTICATION - PART --END ***************
+2020-11-24 11:47:43:4743 info: ******AUTHENTICATION - PART ***************
+2020-11-24 11:47:43:4743 info: TOKEN:Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiI1ZmJjYTUyMjZjZmNiZDM3Yzk5ZTY2ZjQiLCJpYXQiOjE2MDYxOTg1NjMsImV4cCI6MTYwNjQ1Nzc2M30.3vKpHRqqIthegYR6FA7HsTG6UnCQ7sGyx27c76GgM1M
+2020-11-24 11:47:43:4743 info: USER TYPE:USER
+2020-11-24 11:47:43:4743 info: Content can be accessed by:USER
+2020-11-24 11:47:43:4743 info: ******AUTHENTICATION - PART --END ***************
+2020-11-24 11:47:43:4743 error: Delete Address:Error: No Address Found
+2020-11-24 11:47:43:4743 info: 
+********REQUEST_STARTED*********
+DELETE /api/user/deleteAddress 400 89.011 ms - 28
+2020-11-24 11:47:58:4758 info: ******AUTHENTICATION - PART ***************
+2020-11-24 11:47:58:4758 info: TOKEN:Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiI1ZmJjYTUyMjZjZmNiZDM3Yzk5ZTY2ZjQiLCJpYXQiOjE2MDYxOTg1NjMsImV4cCI6MTYwNjQ1Nzc2M30.3vKpHRqqIthegYR6FA7HsTG6UnCQ7sGyx27c76GgM1M
+2020-11-24 11:47:58:4758 info: USER TYPE:USER
+2020-11-24 11:47:58:4758 info: Content can be accessed by:USER,ADMIN,MANAGER,DELIVERY-BOY,STORE
+2020-11-24 11:47:58:4758 info: ******AUTHENTICATION - PART --END ***************
+2020-11-24 11:47:58:4758 info: ******AUTHENTICATION - PART ***************
+2020-11-24 11:47:58:4758 info: TOKEN:Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiI1ZmJjYTUyMjZjZmNiZDM3Yzk5ZTY2ZjQiLCJpYXQiOjE2MDYxOTg1NjMsImV4cCI6MTYwNjQ1Nzc2M30.3vKpHRqqIthegYR6FA7HsTG6UnCQ7sGyx27c76GgM1M
+2020-11-24 11:47:58:4758 info: USER TYPE:USER
+2020-11-24 11:47:58:4758 info: Content can be accessed by:USER
+2020-11-24 11:47:58:4758 info: ******AUTHENTICATION - PART --END ***************
+2020-11-24 11:47:58:4758 info: 
+********REQUEST_STARTED*********
+DELETE /api/user/deleteAddress 201 88.192 ms - 42
+2020-11-24 11:48:12:4812 info: ******AUTHENTICATION - PART ***************
+2020-11-24 11:48:12:4812 info: TOKEN:Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiI1ZmJjYTUyMjZjZmNiZDM3Yzk5ZTY2ZjQiLCJpYXQiOjE2MDYxOTg1NjMsImV4cCI6MTYwNjQ1Nzc2M30.3vKpHRqqIthegYR6FA7HsTG6UnCQ7sGyx27c76GgM1M
+2020-11-24 11:48:12:4812 info: USER TYPE:USER
+2020-11-24 11:48:12:4812 info: Content can be accessed by:USER
+2020-11-24 11:48:12:4812 info: ******AUTHENTICATION - PART --END ***************
+2020-11-24 11:48:12:4812 info: 
+********REQUEST_STARTED*********
+GET /api/product/getAllProduct 201 261.423 ms - 4000
+2020-11-24 11:48:45:4845 info: ******AUTHENTICATION - PART ***************
+2020-11-24 11:48:45:4845 info: TOKEN:Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiI1ZmJjYTUyMjZjZmNiZDM3Yzk5ZTY2ZjQiLCJpYXQiOjE2MDYxOTg1NjMsImV4cCI6MTYwNjQ1Nzc2M30.3vKpHRqqIthegYR6FA7HsTG6UnCQ7sGyx27c76GgM1M
+2020-11-24 11:48:45:4845 info: USER TYPE:USER
+2020-11-24 11:48:45:4845 info: Content can be accessed by:USER
+2020-11-24 11:48:45:4845 info: ******AUTHENTICATION - PART --END ***************
+2020-11-24 11:48:45:4845 info: cart items added{ _id: 5fbca5c56cfcbd37c99e66f6,
+  productId: 5fbb8b840ce8278764fb8771,
+  userId: 5fbca5226cfcbd37c99e66f4,
+  quantity: 2,
+  createdAt: 2020-11-24T06:18:45.400Z,
+  updatedAt: 2020-11-24T06:18:45.400Z,
+  __v: 0 }
+2020-11-24 11:48:45:4845 info: 
+********REQUEST_STARTED*********
+POST /api/cart/addToCart 201 94.528 ms - 258
+2020-11-24 11:48:47:4847 info: ******AUTHENTICATION - PART ***************
+2020-11-24 11:48:47:4847 info: TOKEN:Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiI1ZmJjYTUyMjZjZmNiZDM3Yzk5ZTY2ZjQiLCJpYXQiOjE2MDYxOTg1NjMsImV4cCI6MTYwNjQ1Nzc2M30.3vKpHRqqIthegYR6FA7HsTG6UnCQ7sGyx27c76GgM1M
+2020-11-24 11:48:47:4847 info: USER TYPE:USER
+2020-11-24 11:48:47:4847 info: Content can be accessed by:USER
+2020-11-24 11:48:47:4847 info: ******AUTHENTICATION - PART --END ***************
+2020-11-24 11:48:47:4847 error: ADD TO CART: Error: Product Already exists in Cart
+2020-11-24 11:48:47:4847 info: 
+********REQUEST_STARTED*********
+POST /api/cart/addToCart 400 71.723 ms - 42
+2020-11-24 11:49:07:497 info: ******AUTHENTICATION - PART ***************
+2020-11-24 11:49:07:497 info: TOKEN:Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiI1ZmJjYTUyMjZjZmNiZDM3Yzk5ZTY2ZjQiLCJpYXQiOjE2MDYxOTg1NjMsImV4cCI6MTYwNjQ1Nzc2M30.3vKpHRqqIthegYR6FA7HsTG6UnCQ7sGyx27c76GgM1M
+2020-11-24 11:49:07:497 info: USER TYPE:USER
+2020-11-24 11:49:07:497 info: Content can be accessed by:USER
+2020-11-24 11:49:07:497 info: ******AUTHENTICATION - PART --END ***************
+2020-11-24 11:49:07:497 info: Cart items found{ _id: 5fbca5c56cfcbd37c99e66f6,
+  productId:
+   { productImages:
+      [ 'https://firebasestorage.googleapis.com/v0/b/fireapp-7cada.appspot.com/o/product-images%2Fphonepe%402x.png?alt=media&token=e6979d9c-74f6-43eb-a020-2ffa60127d00' ],
+     active: true,
+     _id: 5fbb8b840ce8278764fb8771,
+     productName: 'Product 1',
+     productPrice: 100,
+     categoryId: 5fbb8b5e0ce8278764fb876e,
+     warehouseId: 5fbb8afc0ce8278764fb8767,
+     addedBy: 5fbb8a780ce8278764fb875e,
+     stockLeft: 85,
+     __v: 0,
+     updatedAt: 2020-11-23T20:47:17.413Z },
+  userId: 5fbca5226cfcbd37c99e66f4,
+  quantity: 2,
+  createdAt: 2020-11-24T06:18:45.400Z,
+  updatedAt: 2020-11-24T06:18:45.400Z,
+  __v: 0 }
+2020-11-24 11:49:07:497 info: 
+********REQUEST_STARTED*********
+GET /api/cart/getCartItems 201 102.886 ms - 645
+2020-11-24 11:49:17:4917 info: ******AUTHENTICATION - PART ***************
+2020-11-24 11:49:17:4917 info: TOKEN:Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiI1ZmJjYTUyMjZjZmNiZDM3Yzk5ZTY2ZjQiLCJpYXQiOjE2MDYxOTg1NjMsImV4cCI6MTYwNjQ1Nzc2M30.3vKpHRqqIthegYR6FA7HsTG6UnCQ7sGyx27c76GgM1M
+2020-11-24 11:49:17:4917 info: USER TYPE:USER
+2020-11-24 11:49:17:4917 info: Content can be accessed by:USER
+2020-11-24 11:49:17:4917 info: ******AUTHENTICATION - PART --END ***************
+2020-11-24 11:49:17:4917 info: Cart item modified{ _id: 5fbca5c56cfcbd37c99e66f6,
+  productId: 5fbb8b840ce8278764fb8771,
+  userId: 5fbca5226cfcbd37c99e66f4,
+  quantity: 1000,
+  createdAt: 2020-11-24T06:18:45.400Z,
+  updatedAt: 2020-11-24T06:19:17.169Z,
+  __v: 0 }
+2020-11-24 11:49:17:4917 info: 
+********REQUEST_STARTED*********
+PUT /api/cart/modifyQuantity 201 100.838 ms - 258
+2020-11-24 11:49:23:4923 info: ******AUTHENTICATION - PART ***************
+2020-11-24 11:49:23:4923 info: TOKEN:Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiI1ZmJjYTUyMjZjZmNiZDM3Yzk5ZTY2ZjQiLCJpYXQiOjE2MDYxOTg1NjMsImV4cCI6MTYwNjQ1Nzc2M30.3vKpHRqqIthegYR6FA7HsTG6UnCQ7sGyx27c76GgM1M
+2020-11-24 11:49:23:4923 info: USER TYPE:USER
+2020-11-24 11:49:23:4923 info: Content can be accessed by:USER
+2020-11-24 11:49:23:4923 info: ******AUTHENTICATION - PART --END ***************
+2020-11-24 11:49:23:4923 info: Cart item deleted:5fbca5c56cfcbd37c99e66f6
+2020-11-24 11:49:23:4923 info: 
+********REQUEST_STARTED*********
+DELETE /api/cart/removeFromCart 201 59.118 ms - 44
+2020-11-24 11:49:25:4925 info: ******AUTHENTICATION - PART ***************
+2020-11-24 11:49:25:4925 info: TOKEN:Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiI1ZmJjYTUyMjZjZmNiZDM3Yzk5ZTY2ZjQiLCJpYXQiOjE2MDYxOTg1NjMsImV4cCI6MTYwNjQ1Nzc2M30.3vKpHRqqIthegYR6FA7HsTG6UnCQ7sGyx27c76GgM1M
+2020-11-24 11:49:25:4925 info: USER TYPE:USER
+2020-11-24 11:49:25:4925 info: Content can be accessed by:USER
+2020-11-24 11:49:25:4925 info: ******AUTHENTICATION - PART --END ***************
+2020-11-24 11:49:25:4925 error: DELETE CART: Error: No Cart Item Found
+2020-11-24 11:49:25:4925 info: 
+********REQUEST_STARTED*********
+DELETE /api/cart/removeFromCart 400 56.756 ms - 30
+2020-11-24 11:49:49:4949 info: ******AUTHENTICATION - PART ***************
+2020-11-24 11:49:49:4949 info: TOKEN:Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiI1ZmJjYTUyMjZjZmNiZDM3Yzk5ZTY2ZjQiLCJpYXQiOjE2MDYxOTg1NjMsImV4cCI6MTYwNjQ1Nzc2M30.3vKpHRqqIthegYR6FA7HsTG6UnCQ7sGyx27c76GgM1M
+2020-11-24 11:49:49:4949 info: USER TYPE:USER
+2020-11-24 11:49:49:4949 info: Content can be accessed by:USER
+2020-11-24 11:49:49:4949 info: ******AUTHENTICATION - PART --END ***************
+2020-11-24 11:49:49:4949 info: 
+********REQUEST_STARTED*********
+GET /api/category/getAllCategory 201 195.244 ms - 586
+2020-11-24 11:49:57:4957 info: ******AUTHENTICATION - PART ***************
+2020-11-24 11:49:57:4957 info: TOKEN:Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiI1ZmJjYTUyMjZjZmNiZDM3Yzk5ZTY2ZjQiLCJpYXQiOjE2MDYxOTg1NjMsImV4cCI6MTYwNjQ1Nzc2M30.3vKpHRqqIthegYR6FA7HsTG6UnCQ7sGyx27c76GgM1M
+2020-11-24 11:49:57:4957 info: USER TYPE:USER
+2020-11-24 11:49:57:4957 info: Content can be accessed by:USER,ADMIN,MANAGER,DELIVERY-BOY,STORE
+2020-11-24 11:49:57:4957 info: ******AUTHENTICATION - PART --END ***************
+2020-11-24 11:49:57:4957 info: USER FOUND: { assignedWarehouse: [],
+  _id: 5fbca5226cfcbd37c99e66f4,
+  phoneNumber: '9876543220',
+  password:
+   '$2b$10$htkGR5VTCINc3IZ/m7VMmeJeGsD6.E9I2Hcbm021HMWdm7la//2W2',
+  name: 'Mobile App',
+  userType: 'USER',
+  dob: 1999-09-19T00:00:00.000Z,
+  createdAt: 2020-11-24T06:16:02.972Z,
+  updatedAt: 2020-11-24T06:16:02.972Z,
+  __v: 0 }
+2020-11-24 11:49:57:4957 info: Request sent back
+2020-11-24 11:49:57:4957 info: 
+********REQUEST_STARTED*********
+GET /api/user/getUserDetails 201 113.666 ms - 352
+2020-11-24 11:50:04:504 info: ******AUTHENTICATION - PART ***************
+2020-11-24 11:50:04:504 info: TOKEN:Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiI1ZmJjYTUyMjZjZmNiZDM3Yzk5ZTY2ZjQiLCJpYXQiOjE2MDYxOTg1NjMsImV4cCI6MTYwNjQ1Nzc2M30.3vKpHRqqIthegYR6FA7HsTG6UnCQ7sGyx27c76GgM1M
+2020-11-24 11:50:04:504 info: USER TYPE:USER
+2020-11-24 11:50:04:504 info: Content can be accessed by:USER,ADMIN,MANAGER,DELIVERY-BOY,STORE
+2020-11-24 11:50:04:504 info: ******AUTHENTICATION - PART --END ***************
+2020-11-24 11:50:04:504 info: ******AUTHENTICATION - PART ***************
+2020-11-24 11:50:04:504 info: TOKEN:Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiI1ZmJjYTUyMjZjZmNiZDM3Yzk5ZTY2ZjQiLCJpYXQiOjE2MDYxOTg1NjMsImV4cCI6MTYwNjQ1Nzc2M30.3vKpHRqqIthegYR6FA7HsTG6UnCQ7sGyx27c76GgM1M
+2020-11-24 11:50:04:504 info: USER TYPE:USER
+2020-11-24 11:50:04:504 info: Content can be accessed by:USER
+2020-11-24 11:50:04:504 info: ******AUTHENTICATION - PART --END ***************
+2020-11-24 11:50:05:505 info: 
+********REQUEST_STARTED*********
+GET /api/user/productRecommendations 201 426.023 ms - 467
+2020-11-24 11:50:14:5014 info: ******AUTHENTICATION - PART ***************
+2020-11-24 11:50:14:5014 info: TOKEN:Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiI1ZmJjYTUyMjZjZmNiZDM3Yzk5ZTY2ZjQiLCJpYXQiOjE2MDYxOTg1NjMsImV4cCI6MTYwNjQ1Nzc2M30.3vKpHRqqIthegYR6FA7HsTG6UnCQ7sGyx27c76GgM1M
+2020-11-24 11:50:14:5014 info: USER TYPE:USER
+2020-11-24 11:50:14:5014 info: Content can be accessed by:USER,ADMIN,MANAGER,DELIVERY-BOY,STORE
+2020-11-24 11:50:14:5014 info: ******AUTHENTICATION - PART --END ***************
+2020-11-24 11:50:14:5014 info: User details updated
+2020-11-24 11:50:14:5014 info: 
+********REQUEST_STARTED*********
+PUT /api/user/updateUserDetails 201 340.713 ms - 358
+2020-11-24 11:50:21:5021 info: ******AUTHENTICATION - PART ***************
+2020-11-24 11:50:21:5021 info: TOKEN:Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiI1ZmJjYTUyMjZjZmNiZDM3Yzk5ZTY2ZjQiLCJpYXQiOjE2MDYxOTg1NjMsImV4cCI6MTYwNjQ1Nzc2M30.3vKpHRqqIthegYR6FA7HsTG6UnCQ7sGyx27c76GgM1M
+2020-11-24 11:50:21:5021 info: USER TYPE:USER
+2020-11-24 11:50:21:5021 info: Content can be accessed by:USER,ADMIN,MANAGER,DELIVERY-BOY,STORE
+2020-11-24 11:50:21:5021 info: ******AUTHENTICATION - PART --END ***************
+2020-11-24 11:50:22:5022 error: CHANGE PASSWORD: Error: Incorrect Password
+2020-11-24 11:50:22:5022 info: 
+********REQUEST_STARTED*********
+PUT /api/user/changePassword 400 286.769 ms - 30
+2020-11-24 11:50:35:5035 info: ******AUTHENTICATION - PART ***************
+2020-11-24 11:50:35:5035 info: TOKEN:Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiI1ZmJjYTUyMjZjZmNiZDM3Yzk5ZTY2ZjQiLCJpYXQiOjE2MDYxOTg1NjMsImV4cCI6MTYwNjQ1Nzc2M30.3vKpHRqqIthegYR6FA7HsTG6UnCQ7sGyx27c76GgM1M
+2020-11-24 11:50:35:5035 info: USER TYPE:USER
+2020-11-24 11:50:35:5035 info: Content can be accessed by:USER
+2020-11-24 11:50:35:5035 info: ******AUTHENTICATION - PART --END ***************
+2020-11-24 11:50:35:5035 info: 
+********REQUEST_STARTED*********
+POST /api/order/addOrder 201 354.854 ms - 397
+2020-11-24 11:50:45:5045 info: ******AUTHENTICATION - PART ***************
+2020-11-24 11:50:45:5045 info: TOKEN:Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiI1ZmJjYTUyMjZjZmNiZDM3Yzk5ZTY2ZjQiLCJpYXQiOjE2MDYxOTg1NjMsImV4cCI6MTYwNjQ1Nzc2M30.3vKpHRqqIthegYR6FA7HsTG6UnCQ7sGyx27c76GgM1M
+2020-11-24 11:50:45:5045 info: USER TYPE:USER
+2020-11-24 11:50:45:5045 info: Content can be accessed by:USER
+2020-11-24 11:50:45:5045 info: ******AUTHENTICATION - PART --END ***************
+2020-11-24 11:50:45:5045 info: 
+********REQUEST_STARTED*********
+GET /api/order/getAllOrders 201 133.239 ms - 1040
+2020-11-24 11:51:00:510 info: ******AUTHENTICATION - PART ***************
+2020-11-24 11:51:00:510 info: TOKEN:Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiI1ZmJjYTUyMjZjZmNiZDM3Yzk5ZTY2ZjQiLCJpYXQiOjE2MDYxOTg1NjMsImV4cCI6MTYwNjQ1Nzc2M30.3vKpHRqqIthegYR6FA7HsTG6UnCQ7sGyx27c76GgM1M
+2020-11-24 11:51:00:510 info: USER TYPE:USER
+2020-11-24 11:51:00:510 info: Content can be accessed by:USER
+2020-11-24 11:51:00:510 info: ******AUTHENTICATION - PART --END ***************
+2020-11-24 11:51:00:510 info: 
+********REQUEST_STARTED*********
+PUT /api/order/cancelOrder 201 211.091 ms - 29
+2020-11-24 11:57:30:5730 info: 
+********REQUEST_STARTED*********
+OPTIONS /api/user/getUserDetails 204 50.548 ms - 0
+2020-11-24 11:57:30:5730 info: ******AUTHENTICATION - PART ***************
+2020-11-24 11:57:30:5730 info: TOKEN:eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiI1ZmJiOGE3ODBjZTgyNzg3NjRmYjg3NWUiLCJpYXQiOjE2MDYxOTY3NjIsImV4cCI6MTYwNjQ1NTk2Mn0.xmrU5m4l_sCihNNmNQC9wAt3ur8TZa6lWkpC5BVCuZY
+2020-11-24 11:57:30:5730 info: USER TYPE:ADMIN
+2020-11-24 11:57:30:5730 info: Content can be accessed by:USER,ADMIN,MANAGER,DELIVERY-BOY,STORE
+2020-11-24 11:57:30:5730 info: ******AUTHENTICATION - PART --END ***************
+2020-11-24 11:57:31:5731 info: USER FOUND: { assignedWarehouse: [],
+  _id: 5fbb8a780ce8278764fb875e,
+  phoneNumber: '9901969930',
+  password:
+   '$2b$10$eH2c7i.awkmfvw75y6yJTOpSc.44bVk5jl3WQbq6fc1P889sMcMyW',
+  name: 'Admin',
+  userType: 'ADMIN',
+  dob: 1999-09-19T00:00:00.000Z,
+  createdAt: 2020-11-13T10:10:00.257Z,
+  updatedAt: 2020-11-23T10:10:00.257Z,
+  __v: 0 }
+2020-11-24 11:57:31:5731 info: Request sent back
+2020-11-24 11:57:31:5731 info: 
+********REQUEST_STARTED*********
+GET /api/user/getUserDetails 201 329.675 ms - 348
+2020-11-24 11:57:31:5731 info: 
+********REQUEST_STARTED*********
+OPTIONS /api/dashboard/analytics/getDetails 204 0.312 ms - 0
+2020-11-24 11:57:31:5731 info: ******AUTHENTICATION - PART ***************
+2020-11-24 11:57:31:5731 info: TOKEN:eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiI1ZmJiOGE3ODBjZTgyNzg3NjRmYjg3NWUiLCJpYXQiOjE2MDYxOTY3NjIsImV4cCI6MTYwNjQ1NTk2Mn0.xmrU5m4l_sCihNNmNQC9wAt3ur8TZa6lWkpC5BVCuZY
+2020-11-24 11:57:31:5731 info: USER TYPE:ADMIN
+2020-11-24 11:57:31:5731 info: Content can be accessed by:ADMIN,MANAGER
+2020-11-24 11:57:31:5731 info: ******AUTHENTICATION - PART --END ***************
+2020-11-24 11:57:31:5731 info: GET DETAILS: Response sent back to user
+2020-11-24 11:57:31:5731 info: 
+********REQUEST_STARTED*********
+GET /api/dashboard/analytics/getDetails 201 442.658 ms - 9633
+2020-11-24 11:58:11:5811 info: 
+********REQUEST_STARTED*********
+OPTIONS /api/user/getUserDetails 204 1.260 ms - 0
+2020-11-24 11:58:11:5811 info: ******AUTHENTICATION - PART ***************
+2020-11-24 11:58:11:5811 info: TOKEN:eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiI1ZmJiOGE3ODBjZTgyNzg3NjRmYjg3NWUiLCJpYXQiOjE2MDYxOTY3NjIsImV4cCI6MTYwNjQ1NTk2Mn0.xmrU5m4l_sCihNNmNQC9wAt3ur8TZa6lWkpC5BVCuZY
+2020-11-24 11:58:11:5811 info: USER TYPE:ADMIN
+2020-11-24 11:58:11:5811 info: Content can be accessed by:USER,ADMIN,MANAGER,DELIVERY-BOY,STORE
+2020-11-24 11:58:11:5811 info: ******AUTHENTICATION - PART --END ***************
+2020-11-24 11:58:11:5811 info: USER FOUND: { assignedWarehouse: [],
+  _id: 5fbb8a780ce8278764fb875e,
+  phoneNumber: '9901969930',
+  password:
+   '$2b$10$eH2c7i.awkmfvw75y6yJTOpSc.44bVk5jl3WQbq6fc1P889sMcMyW',
+  name: 'Admin',
+  userType: 'ADMIN',
+  dob: 1999-09-19T00:00:00.000Z,
+  createdAt: 2020-11-13T10:10:00.257Z,
+  updatedAt: 2020-11-23T10:10:00.257Z,
+  __v: 0 }
+2020-11-24 11:58:11:5811 info: Request sent back
+2020-11-24 11:58:11:5811 info: 
+********REQUEST_STARTED*********
+GET /api/user/getUserDetails 201 198.810 ms - 348
+2020-11-24 11:58:11:5811 info: 
+********REQUEST_STARTED*********
+OPTIONS /api/dashboard/analytics/getDetails 204 0.354 ms - 0
+2020-11-24 11:58:11:5811 info: ******AUTHENTICATION - PART ***************
+2020-11-24 11:58:11:5811 info: TOKEN:eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiI1ZmJiOGE3ODBjZTgyNzg3NjRmYjg3NWUiLCJpYXQiOjE2MDYxOTY3NjIsImV4cCI6MTYwNjQ1NTk2Mn0.xmrU5m4l_sCihNNmNQC9wAt3ur8TZa6lWkpC5BVCuZY
+2020-11-24 11:58:11:5811 info: USER TYPE:ADMIN
+2020-11-24 11:58:11:5811 info: Content can be accessed by:ADMIN,MANAGER
+2020-11-24 11:58:11:5811 info: ******AUTHENTICATION - PART --END ***************
+2020-11-24 11:58:12:5812 info: GET DETAILS: Response sent back to user
+2020-11-24 11:58:12:5812 info: 
+********REQUEST_STARTED*********
+GET /api/dashboard/analytics/getDetails 201 387.672 ms - 9633
+2020-11-24 12:03:47:347 info: 
+**********************REQUEST_STARTED*********************
+OPTIONS /api/user/getUserDetails 204 37.849 ms - 0
+2020-11-24 12:03:47:347 info: TOKEN:eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiI1ZmJiOGE3ODBjZTgyNzg3NjRmYjg3NWUiLCJpYXQiOjE2MDYxOTY3NjIsImV4cCI6MTYwNjQ1NTk2Mn0.xmrU5m4l_sCihNNmNQC9wAt3ur8TZa6lWkpC5BVCuZY
+2020-11-24 12:03:47:347 info: USER TYPE:ADMIN
+2020-11-24 12:03:47:347 info: Content can be accessed by:USER,ADMIN,MANAGER,DELIVERY-BOY,STORE
+2020-11-24 12:03:47:347 info: USER FOUND: { assignedWarehouse: [],
+  _id: 5fbb8a780ce8278764fb875e,
+  phoneNumber: '9901969930',
+  password:
+   '$2b$10$eH2c7i.awkmfvw75y6yJTOpSc.44bVk5jl3WQbq6fc1P889sMcMyW',
+  name: 'Admin',
+  userType: 'ADMIN',
+  dob: 1999-09-19T00:00:00.000Z,
+  createdAt: 2020-11-13T10:10:00.257Z,
+  updatedAt: 2020-11-23T10:10:00.257Z,
+  __v: 0 }
+2020-11-24 12:03:47:347 info: Request sent back
+2020-11-24 12:03:47:347 info: 
+**********************REQUEST_STARTED*********************
+GET /api/user/getUserDetails 201 298.092 ms - 348
+2020-11-24 12:03:47:347 info: 
+**********************REQUEST_STARTED*********************
+OPTIONS /api/dashboard/analytics/getDetails 204 0.917 ms - 0
+2020-11-24 12:03:47:347 info: TOKEN:eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiI1ZmJiOGE3ODBjZTgyNzg3NjRmYjg3NWUiLCJpYXQiOjE2MDYxOTY3NjIsImV4cCI6MTYwNjQ1NTk2Mn0.xmrU5m4l_sCihNNmNQC9wAt3ur8TZa6lWkpC5BVCuZY
+2020-11-24 12:03:48:348 info: USER TYPE:ADMIN
+2020-11-24 12:03:48:348 info: Content can be accessed by:ADMIN,MANAGER
+2020-11-24 12:03:48:348 info: GET DETAILS: Response sent back to user
+2020-11-24 12:03:48:348 info: 
+**********************REQUEST_STARTED*********************
+GET /api/dashboard/analytics/getDetails 201 531.010 ms - 9633
+2020-11-24 12:07:13:713 info: 
+**********************REQUEST_STARTED*********************
+OPTIONS /api/user/getUserDetails 204 33.512 ms - 0
+2020-11-24 12:07:14:714 info: TOKEN:eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiI1ZmJiOGE3ODBjZTgyNzg3NjRmYjg3NWUiLCJpYXQiOjE2MDYxOTY3NjIsImV4cCI6MTYwNjQ1NTk2Mn0.xmrU5m4l_sCihNNmNQC9wAt3ur8TZa6lWkpC5BVCuZY
+2020-11-24 12:07:14:714 info: USER TYPE:ADMIN
+2020-11-24 12:07:14:714 info: Content can be accessed by:USER,ADMIN,MANAGER,DELIVERY-BOY,STORE
+2020-11-24 12:07:14:714 info: USER FOUND: { assignedWarehouse: [],
+  _id: 5fbb8a780ce8278764fb875e,
+  phoneNumber: '9901969930',
+  password:
+   '$2b$10$eH2c7i.awkmfvw75y6yJTOpSc.44bVk5jl3WQbq6fc1P889sMcMyW',
+  name: 'Admin',
+  userType: 'ADMIN',
+  dob: 1999-09-19T00:00:00.000Z,
+  createdAt: 2020-11-13T10:10:00.257Z,
+  updatedAt: 2020-11-23T10:10:00.257Z,
+  __v: 0 }
+2020-11-24 12:07:14:714 info: Request sent back
+2020-11-24 12:07:14:714 info: 
+**********************REQUEST_STARTED*********************
+GET /api/user/getUserDetails 201 308.452 ms - 348
+2020-11-24 12:07:14:714 info: 
+**********************REQUEST_STARTED*********************
+OPTIONS /api/dashboard/analytics/getDetails 204 0.360 ms - 0
+2020-11-24 12:07:14:714 info: TOKEN:eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiI1ZmJiOGE3ODBjZTgyNzg3NjRmYjg3NWUiLCJpYXQiOjE2MDYxOTY3NjIsImV4cCI6MTYwNjQ1NTk2Mn0.xmrU5m4l_sCihNNmNQC9wAt3ur8TZa6lWkpC5BVCuZY
+2020-11-24 12:07:14:714 info: USER TYPE:ADMIN
+2020-11-24 12:07:14:714 info: Content can be accessed by:ADMIN,MANAGER
+2020-11-24 12:07:14:714 info: GET DETAILS: Response sent back to user
+2020-11-24 12:07:14:714 info: 
+**********************REQUEST_STARTED*********************
+GET /api/dashboard/analytics/getDetails 201 335.857 ms - 9633
