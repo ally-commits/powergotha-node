@@ -3,7 +3,6 @@ const logger = require("../logger/logger")
 
 module.exports.checkPermission = (permission) => {
     return async (req, res, next) => {
-        logger.info("\n\n**********************REQUEST_STARTED*********************")
         const token = req.headers.authorization;
         if(token) {  
             logger.info("TOKEN:" + token);
