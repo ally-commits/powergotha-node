@@ -3,7 +3,14 @@ const logger = require("../../logger/logger")
 
 module.exports.getAllProduct = async (req, res) => {
     try {
-        const product = await Product.find();
+        let categoryId = req.query.categoryId;
+        let product;
+        if(categoryId && categoryId.length == 24) 
+            product = await Product.find({categoryId});
+        else 
+            product = await Product.find();
+
+
         if(product) {
             res.status(201).json({ product});
         } else
@@ -11,6 +18,7 @@ module.exports.getAllProduct = async (req, res) => {
     }
     catch(err) { 
         logger.error("GET ALL PRODUCT:" + err)
+        console.log(err)
         let error = err.message 
         res.status(400).json({ error: error });
     }   
