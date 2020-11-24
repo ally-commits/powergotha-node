@@ -1,6 +1,9 @@
 const express = require('express');
 const mongoose = require('mongoose'); 
 
+const httpLogger = require('./middleware/httpLogger.js');
+// const logger = require('./logger/logger');
+
 const authRoute = require("./routes/allUserRoutes/authRoute") 
 const userDetialRoute = require("./routes/allUserRoutes/userDetailRoute")
 
@@ -22,6 +25,8 @@ const cors = require('cors');
 const { checkPermission } = require('./middleware/checkPermission');
 const app = express();
 
+
+app.use(httpLogger);
 app.use(cors())
 app.use(express.static('public'));
 app.use(express.json()); 

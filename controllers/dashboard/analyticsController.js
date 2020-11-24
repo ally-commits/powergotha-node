@@ -1,9 +1,11 @@
 const User = require("../../models/User");  
 const Order = require("../../models/Order");  
 const Product = require("../../models/Product")
+const logger = require("../../logger/logger");
 
 module.exports.getDetails = async (req, res) => {
-    try {
+    try { 
+
         const users = await User.find({}, 'createdAt').sort("createdAt");
         const orders = await Order.find({}, 'createdAt').sort("createdAt");
         const ordersDelv = await Order.find({orderStatus: "DELIVERED"}, 'createdAt').sort("createdAt");
@@ -23,10 +25,14 @@ module.exports.getDetails = async (req, res) => {
         ]);
 
         const warehouse = await Product.find().populate("warehouseId").select("warehouseId")
-         
+
+        logger.info("GET DETAILS: Response sent back to user")
+        
         res.status(201).json({ warehouse, currentMonthData,users,orders,ordersDelv}); 
     }
     catch(err) { 
+        logger.error(err);
+
         let error = err.message 
         res.status(400).json({ error: error });
     }   

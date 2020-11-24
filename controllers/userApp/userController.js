@@ -4,6 +4,7 @@ const Order = require("../../models/Order");
 const Cart = require("../../models/Cart")
 const Product = require("../../models/Product");
 const { body, validationResult } = require('express-validator');
+const logger = require("../../logger/logger")
 
 module.exports.getUserDetails = async (req, res) => {
     const userId = req.user._id;
@@ -19,6 +20,7 @@ module.exports.getUserDetails = async (req, res) => {
         }
     }
     catch(err) { 
+        logger.error("Get USer Details:" + err)
         let error = err.message 
         res.status(400).json({ error: error });
     }   
@@ -44,6 +46,7 @@ module.exports.addAddress = [
             res.status(201).json({ address, message: "Address Added Successfully"}); 
         }
         catch(err) { 
+            logger.error("Add Address:" + err)
             let error = err.message 
             res.status(400).json({ error: error });
         }   
@@ -76,6 +79,7 @@ module.exports.updateAddress = [
             }
         }
         catch(err) { 
+            logger.error("Edit Address:" + err)
             let error = err.message 
             res.status(400).json({ error: error });
         }   
@@ -102,6 +106,7 @@ module.exports.deleteAddress = [
             }
         }
         catch(err) { 
+            logger.error("Delete Address:" + err)
             let error = err.message 
             res.status(400).json({ error: error });
         }   
@@ -155,11 +160,12 @@ module.exports.productRecommendations = async (req,res) => {
             res.status(201).json({ products });                     
 
         }).catch(err => {
-            console.log(err)
+            logger.error("Product Recom:" + err)
             res.status(400).json({ error: "Something went wrong Try Again" });
         })
     }
     catch(err) {
+        logger.error("Product Recom:" + err)
         let error = err.message 
         res.status(400).json({ error: error });
     }

@@ -3,6 +3,7 @@ const Cart = require("../../models/Cart");
 const { body, validationResult } = require('express-validator');
 const mongooose = require("mongoose");
 const Product = require("../../models/Product");
+const logger = require("../../logger/logger");
 
 module.exports.getAllOrder = async (req, res) => {
     const userId = req.user._id;
@@ -14,6 +15,7 @@ module.exports.getAllOrder = async (req, res) => {
             throw Error("Orders Not Found");
     }
     catch(err) { 
+        logger.error("GET ORDERS: " + err)
         let error = err.message 
         res.status(400).json({ error: error });
     }   
@@ -46,6 +48,10 @@ module.exports.addOrder = [
                     if(product.stockLeft < item.quantity) {
                         await session.abortTransaction();
 
+                        logger.info("OUT OF STOCK: ")
+                        logger.info(product)
+                        logger.info(item)
+
                         res.status(400).json({ error: product.productName + " Not available" });
                         return;
                     } else {
@@ -64,7 +70,7 @@ module.exports.addOrder = [
                         }
                         catch(err) { 
                             await session.abortTransaction();
-                            console.log(err)
+                            logger.error("Add ORDER: " + err)
                             let error = err.message 
                             res.status(400).json({ error: error });
                         }  
@@ -74,7 +80,7 @@ module.exports.addOrder = [
         }
         catch(err) { 
             await session.abortTransaction();
-
+            logger.error("Add ORDER: " + err)
             let error = err.message 
             res.status(400).json({ error: error });
         }   
@@ -100,6 +106,7 @@ module.exports.cancelOrder = [
             const orderData = await Order.findOne({_id: orderId,userId}).populate("addressId").session(session);
             if(orderData) {
                 if(orderData.orderStatus == "CANCELLED") {
+                    logger.info("Order Was already cancelled" + orderData)
                     res.status(400).json({ error: "Order Already Cancelled" });
                 } else {
                     orderData.orderItems.forEach(async (item,itemIndex) => {
@@ -117,13 +124,14 @@ module.exports.cancelOrder = [
                                     res.status(201).json({ message: "Order Cancelled"}); 
                                 } else {
                                     await session.abortTransaction();
+                                    logger.error("Cannot Update Order Status: " + order)
                                     res.status(400).json({ error: "Cannot Update Order Status"});
                                 }
                             }
                         }
                         catch(err) { 
                             await session.abortTransaction();
-                            console.log(err)
+                            logger.error("Cancel ORDER: " + err)
                             let error = err.message 
                             res.status(400).json({ error: error });
                         }   
@@ -135,7 +143,7 @@ module.exports.cancelOrder = [
         }
         catch(err) { 
             await session.abortTransaction();
-
+            logger.error("Cancel ORDER: " + err)
             let error = err.message 
             res.status(400).json({ error: error });
         }   

@@ -3,21 +3,25 @@ const User = require("../../models/User");
 const Cart = require("../../models/Cart") 
 const { body, validationResult } = require('express-validator');
 const bcrypt = require('bcrypt');
+const logger = require("../../logger/logger")
 
 module.exports.getUserDetails = async (req, res) => {
     const userId = req.user._id;
     try {
         const user = await User.findById(userId).populate("assignedWarehouse");
         if(user) {
+            logger.info("USER FOUND: " + user)
             const address = await Address.find({userId});
             const cartItems = await Cart.find({userId}).populate("productId");
 
+            logger.info("Request sent back")
             res.status(201).json({ user, address,cartItems});
         } else {
             throw Error("User Not Found");
         }
     }
     catch(err) { 
+        logger.error("GET_USER_DETAILS: " + err)
         let error = err.message 
         res.status(400).json({ error: error });
     }   
@@ -40,11 +44,13 @@ module.exports.updateUserDetails = [
             const user = await User.findByIdAndUpdate({_id: userId},{ phoneNumber,name,dob}); 
             if(user) {
                 const userN = await User.findById(userId);
+                logger.info("User details updated")
                 res.status(201).json({ message: "User Updated Successfully",user: userN}); 
             } else 
                 throw Error("No User Data Found")
         }
         catch(err) { 
+            logger.error("UPDATE USER DETAILS: " + err)
             let error = err.message ;
             if(err.code == 11000) {
                 error = "Phone Number already exists"
@@ -78,6 +84,7 @@ module.exports.changePassword = [
                     const user = await User.findByIdAndUpdate({_id: userId},{ password: newPassword}); 
                     if(user) {
                         const userN = await User.findById(userId);
+                        logger.info("Password changed:" + userN)
                         res.status(201).json({ message: "Password Updated Successfully",user: userN}); 
                     } else 
                         throw Error("No User Data Found")
@@ -89,6 +96,7 @@ module.exports.changePassword = [
                 
         }
         catch(err) { 
+            logger.error("CHANGE PASSWORD: " + err)
             let error = err.message; 
             res.status(400).json({ error: error });
         }   
