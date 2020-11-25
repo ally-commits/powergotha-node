@@ -1,4 +1,6 @@
 const mongoose = require('mongoose'); 
+var mongoose_delete = require('mongoose-delete');
+
 
 const orderSchema = new mongoose.Schema({
   orderDate: {
@@ -33,6 +35,7 @@ const orderSchema = new mongoose.Schema({
   }
 },{ timestamps: true });
   
+orderSchema.plugin(mongoose_delete,{ overrideMethods: ['find', 'findOne','findOneAndUpdate', 'update']});
 
 const Order = mongoose.model('Order', orderSchema);
 

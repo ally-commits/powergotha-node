@@ -7,9 +7,11 @@ module.exports.getAllUsers = async (req, res) => {
         const user = req.user;
         let users = [];
         if(user.userType == "ADMIN") 
-            users = await User.find({userType: "DELIVERY-BOY"}).populate("assignedWarehouse");
+            users = await User.find({userType: "DELIVERY-BOY"})
+                .populate({path: "assignedWarehouse",options: { withDeleted: true }});
         else
-            users = await User.find({userType: "DELIVERY-BOY",assignedWarehouse: {$in: req.user.assignedWarehouse}}).populate("assignedWarehouse");
+            users = await User.find({userType: "DELIVERY-BOY",assignedWarehouse: {$in: req.user.assignedWarehouse}})
+            .populate({path: "assignedWarehouse",options: { withDeleted: true }});
 
         if(users) {
             res.status(201).json({ users});
@@ -93,7 +95,7 @@ module.exports.deleteUser = [
         
         const { userId } = req.body;
         try {
-            const user = await User.findByIdAndRemove(userId); 
+            const user = await User.delete({_id: userId}); 
             if(user) {
                 res.status(201).json({ message: "User Removed Successfully"}); 
             } else 

@@ -4,7 +4,10 @@ const logger = require("../../logger/logger")
 module.exports.getAllOrder = async (req, res) => {
     const {userId} = req.body;
     try {
-        const orders = await Order.find({userId: userId}).populate("addressId").populate("orderedProducts.product");
+        const orders = await Order.find({userId: userId})
+            .populate({path: "addressId",options: { withDeleted: true }})
+            .populate({path: "orderItems.productId",options: { withDeleted: true }});
+            
         if(orders) {
             logger.info("ADMIN ORDER DETAILS: Response sent back to user")
             res.status(201).json({ orders});

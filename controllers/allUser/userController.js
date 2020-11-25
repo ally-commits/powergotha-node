@@ -8,13 +8,16 @@ const logger = require("../../logger/logger")
 module.exports.getUserDetails = async (req, res) => {
     const userId = req.user._id;
     try {
-        const user = await User.findById(userId).populate("assignedWarehouse");
+        const user = await User.findById(userId)
+            .populate({path: "assignedWarehouse",options: { withDeleted: true }})
+
         if(user) {
             logger.info("USER FOUND: " + user)
             const address = await Address.find({userId});
-            const cartItems = await Cart.find({userId}).populate("productId");
+            const cartItems = await Cart.find({userId})
+                .populate({path: "productId",options: { withDeleted: true }})
 
-            logger.info("Request sent back")
+            logger.info("Request sent back");
             res.status(201).json({ user, address,cartItems});
         } else {
             throw Error("User Not Found");
@@ -88,8 +91,7 @@ module.exports.changePassword = [
                         logger.info("Password changed:" + userN)
                         res.status(201).json({ message: "Password Updated Successfully",user: userN}); 
                     } else 
-                        throw Error("No User Data Found")
-                         
+                        throw Error("No User Data Found") 
                 } else 
                     throw Error('Incorrect Password');
             } else

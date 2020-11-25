@@ -4,7 +4,9 @@ const { body, validationResult } = require('express-validator');
 
 module.exports.getAllManagers = async (req, res) => {
     try {
-        const managers = await User.find({userType: "MANAGER"}).populate("assignedWarehouse");
+        const managers = await User.find({userType: "MANAGER"})
+            .populate({path: "assignedWarehouse",options: { withDeleted: true }});
+            
         if(managers) {
             res.status(201).json({ managers});
         } else 
@@ -60,7 +62,7 @@ module.exports.editManager = [
 
         try { 
 
-            const user = await User.findByIdAndUpdate({_id: userId},{ phoneNumber,name,userType: "MANAGER",dob,assignedWarehouse}); 
+            const user = await User.findByIdAndUpdate({_id: userId},{ phoneNumber,name,dob,assignedWarehouse}); 
             if(user) {
                 const userN = await User.findById(userId);
                 res.status(201).json({ message: "Manager Updated Successfully",user: userN}); 
@@ -88,7 +90,7 @@ module.exports.deleteManager = [
         
         const { userId } = req.body;
         try {
-            const user = await User.findByIdAndRemove(userId); 
+            const user = await User.delete({_id: userId}); 
             if(user) {
                 res.status(201).json({ message: "User Removed Successfully"}); 
             } else 

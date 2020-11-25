@@ -1,5 +1,6 @@
 const mongoose = require('mongoose');
 const bcrypt = require('bcrypt');
+var mongoose_delete = require('mongoose-delete');
 
 const userSchema = new mongoose.Schema({
   phoneNumber: {
@@ -38,7 +39,8 @@ const userSchema = new mongoose.Schema({
   }]
 },{ timestamps: true });
 
- 
+userSchema.plugin(mongoose_delete,{ overrideMethods: ['find', 'findOne','findOneAndUpdate', 'update']});
+
 userSchema.pre('save', async function(next) {
   const salt = await bcrypt.genSalt();
   this.password = await bcrypt.hash(this.password, salt);

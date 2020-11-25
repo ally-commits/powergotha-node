@@ -5,7 +5,9 @@ const logger = require("../../logger/logger");
 module.exports.getCartItems = async (req, res) => {
     const userId = req.user._id;
     try {
-        const cart = await Cart.find({userId}).populate("productId");
+        const cart = await Cart.find({userId})
+            .populate({path: "productId",options: { withDeleted: true }});
+
         if(cart) {
             logger.info("Cart items found" + cart)
             res.status(201).json({ cart});
@@ -95,7 +97,7 @@ module.exports.removeFromCart = [
         const userId = req.user._id;
         const { cartId } = req.body;
         try {
-            const cart = await Cart.findOneAndRemove({_id: cartId,userId}); 
+            const cart = await Cart.delete({_id: cartId,userId}); 
             if(cart) {
                 logger.info("Cart item deleted:" + cartId)
                 res.status(201).json({ message: "Cart Item Removed Successfully"}); 

@@ -1,4 +1,5 @@
 const mongoose = require('mongoose');
+var mongoose_delete = require('mongoose-delete');
 
 const cartSchema = new mongoose.Schema({
   productId: {
@@ -18,7 +19,7 @@ const cartSchema = new mongoose.Schema({
   }
 },{ timestamps: true });
 
-
+cartSchema.plugin(mongoose_delete,{ overrideMethods: ['find', 'findOne','findOneAndUpdate', 'update']});
 const Cart = mongoose.model('Cart', cartSchema);
 
 module.exports = Cart;

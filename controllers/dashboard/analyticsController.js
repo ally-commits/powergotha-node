@@ -24,7 +24,9 @@ module.exports.getDetails = async (req, res) => {
             {$match: { month: new Date().getMonth() + 1, orderStatus: "DELIVERED"}},
         ]);
 
-        const warehouse = await Product.find().populate("warehouseId").select("warehouseId")
+        const warehouse = await Product.find()
+            .populate({path: "warehouseId",options: {withDeleted: true}})
+            .select("warehouseId")
 
         logger.info("GET DETAILS: Response sent back to user")
         

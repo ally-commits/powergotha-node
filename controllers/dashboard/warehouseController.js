@@ -76,7 +76,7 @@ module.exports.deleteWarehouse = [
         
         const { warehouseId } = req.body;
         try {
-            const warehouse = await Warehouse.findByIdAndRemove(warehouseId); 
+            const warehouse = await Warehouse.delete({_id: warehouseId}); 
             if(warehouse) {
                 res.status(201).json({ message: "Warehouse Removed Successfully"}); 
             } else 

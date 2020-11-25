@@ -1,4 +1,5 @@
 const mongoose = require('mongoose');
+var mongoose_delete = require('mongoose-delete');
 
 const categorySchema = new mongoose.Schema({
   categoryName: {
@@ -16,7 +17,7 @@ const categorySchema = new mongoose.Schema({
   }, 
 },{ timestamps: true });
 
-
+categorySchema.plugin(mongoose_delete,{ overrideMethods: ['find', 'findOne','findOneAndUpdate', 'update']});
 const Category = mongoose.model('Category', categorySchema);
 
 module.exports = Category;

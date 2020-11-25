@@ -45,7 +45,7 @@ module.exports.editCategory = async (req, res) => {
 module.exports.deleteCategory = async (req, res) => {
     const { categoryId } = req.body;
     try {
-        const category = await Category.findByIdAndRemove(categoryId); 
+        const category = await Category.delete({_id: categoryId}); 
         if(category) {
             res.status(201).json({ message: "Category Removed Successfully"}); 
         } else

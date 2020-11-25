@@ -1,4 +1,5 @@
 const mongoose = require('mongoose'); 
+var mongoose_delete = require('mongoose-delete');
 
 const addressSchema = new mongoose.Schema({
   addressType: {
@@ -34,6 +35,7 @@ const addressSchema = new mongoose.Schema({
 },{ timestamps: true });
 
   
+addressSchema.plugin(mongoose_delete ,{ overrideMethods: ['find', 'findOne','findOneAndUpdate', 'update']});
 
 const Address = mongoose.model('Address', addressSchema);
 module.exports = Address;

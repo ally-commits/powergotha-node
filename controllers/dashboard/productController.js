@@ -8,9 +8,15 @@ module.exports.getAllProduct = async (req, res) => {
         let product = [];
 
         if(user.userType == "ADMIN") 
-            product = await Product.find().populate("categoryId").populate("warehouseId").populate("addedBy");
+            product = await Product.find()
+                .populate({path: "categoryId",options: { withDeleted: true }})
+                .populate({path: "warehouseId",options: { withDeleted: true }})
+                .populate({path: "addedBy",options: { withDeleted: true }})
         else
-            product = await Product.find({addedBy: user._id}).populate("categoryId").populate("warehouseId").populate("addedBy");
+            product = await Product.find({addedBy: user._id})
+            .populate({path: "categoryId",options: { withDeleted: true }})
+            .populate({path: "warehouseId",options: { withDeleted: true }})
+            .populate({path: "addedBy",options: { withDeleted: true }})
 
         if(product) {
             res.status(201).json({ product});
@@ -75,7 +81,7 @@ module.exports.editProduct = [
 module.exports.deleteProduct = async (req, res) => {
     const { productId } = req.body;
     try {
-        const product = await Product.findByIdAndRemove(productId); 
+        const product = await Product.delete({_id: productId}); 
         if(product) {
             res.status(201).json({ message: "Product Removed Successfully"}); 
         } else 

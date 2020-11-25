@@ -8,7 +8,10 @@ const logger = require("../../logger/logger");
 module.exports.getAllOrder = async (req, res) => {
     const userId = req.user._id;
     try {
-        const orders = await Order.find({userId: userId}).populate("addressId").populate("orderItems.productId");
+        const orders = await Order.find({userId: userId})
+            .populate({path: "addressId",options: { withDeleted: true }})
+            .populate({path: "orderItems.productId",options: { withDeleted: true }});
+            
         if(orders) {
             res.status(201).json({ orders});
         } else

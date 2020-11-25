@@ -11,7 +11,7 @@ module.exports.getUser = async (token,next) => {
             next("INVALID_TOKEN")
         } else {
             User.findById(user.userId, function(err,userData) {
-                if(err) {
+                if(err || userData == null) {
                     logger.error("GET_USER_DB_NOT USER_FOUND_ERROR:" + err)
                     next("INVALID_TOKEN")
                 } else {

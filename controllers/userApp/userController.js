@@ -12,7 +12,8 @@ module.exports.getUserDetails = async (req, res) => {
         const user = await User.findById(userId);
         if(user) {
             const address = await Address.find({userId});
-            const cartItems = await Cart.find({userId}).populate("productId");
+            const cartItems = await Cart.find({userId})
+                .populate({path: "productId",options: { withDeleted: true }});
 
             res.status(201).json({ user, address,cartItems});
         } else {
@@ -98,7 +99,7 @@ module.exports.deleteAddress = [
         const userId = req.user._id;
         const {addressId} = req.body;
         try {
-            const address = await Address.findOneAndRemove({_id:addressId,userId}); 
+            const address = await Address.delete({_id:addressId,userId}); 
             if(address) {
                 res.status(201).json({ message: "Address Removed Successfully"}); 
             } else {
