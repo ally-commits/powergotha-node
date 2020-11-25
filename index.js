@@ -1,6 +1,6 @@
 const express = require('express');
 const mongoose = require('mongoose'); 
-
+require('dotenv').config()
 const httpLogger = require('./middleware/httpLogger.js');
 // const logger = require('./logger/logger');
 
@@ -22,9 +22,11 @@ const ordersRoute = require("./routes/dashboardRoutes/ordersRoute");
 const analyticsRoute = require("./routes/dashboardRoutes/analyticsRoute");
 
 const cors = require('cors');
+
+
+
 const { checkPermission } = require('./middleware/checkPermission');
 const app = express();
-
 
 app.use(httpLogger);
 app.use(cors())

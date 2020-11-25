@@ -5,6 +5,10 @@ const moment = require("moment")
 const { body, validationResult } = require('express-validator');
 const logger = require("../../logger/logger");
 const Otp = require("../../models/Otp");
+const accountSid = process.env.TWILIO_ACCOUNT_SID;
+const authToken = process.env.TWILIO_AUTH_TOKEN;
+const client = require('twilio')(accountSid, authToken);
+
 
 module.exports.register = [
     body('name').not().isEmpty(),
@@ -106,10 +110,25 @@ module.exports.sendOtp = [
                 if(user) {
                     logger.info("USER FOUND: " + user);
                     await Otp.deleteMany({userId: user._id});
-                    const otp  = await Otp.create({otpValue: "123123",userId: user._id})
+                    let otpValue = Math.floor(Math.random() * 899999 + 100000);
 
-                    logger.info("Otp created: " + user);
-                    res.status(200).json({message: "otp sent successfully"});
+                    client.messages
+                        .create({
+                            body: 'Your Otp Code'+ otpValue,
+                            from: '+17039351845',
+                            to: '+91' + user.phoneNumber
+                        })
+                        .then(async message => {  
+                            logger.info("Otp Sent "+ message);                          
+                            const otp  = await Otp.create({otpValue: otpValue,userId: user._id})
+
+                            logger.info("Otp created: " + user);
+                            res.status(200).json({message: "otp sent successfully"});
+                        })
+                        .catch(err => {
+                            logger.error("Error while sending otp:"+ err)
+                            res.status(400).json({ error: "couldn't send message !Try Again"});
+                        })
                 } else { 
                     throw Error('User Not Found');
                 }
