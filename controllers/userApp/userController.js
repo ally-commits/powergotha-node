@@ -29,8 +29,8 @@ module.exports.getUserDetails = async (req, res) => {
 
 module.exports.addAddress = [
     body('addressType').not().isEmpty().withMessage("addressType is required"),
-    body('address1').not().isEmpty().withMessage("address1 is required"),
-    body('address2').not().isEmpty().withMessage("address2 is required"),
+    body('city').not().isEmpty().withMessage("city is required"),
+    body('address').not().isEmpty().withMessage("address is required"),
     body('phoneNumber').not().isEmpty().withMessage("phoneNumber is required"),
     body('pincode').not().isEmpty().withMessage("pincode is required"),
 
@@ -41,10 +41,10 @@ module.exports.addAddress = [
         }
 
         const userId = req.user._id;
-        const {addressType,address1,address2, pincode,phoneNumber } = req.body;
+        const {addressType,address,city,other, pincode,phoneNumber } = req.body;
         try {
-            const address = await Address.create({userId, addressType,address1,address2, pincode,phoneNumber}); 
-            res.status(201).json({ address, message: "Address Added Successfully"}); 
+            const addressData = await Address.create({userId, addressType,address,city,other, pincode,phoneNumber}); 
+            res.status(201).json({ address: addressData, message: "Address Added Successfully"}); 
         }
         catch(err) { 
             logger.error("Add Address:" + err)
@@ -56,8 +56,8 @@ module.exports.addAddress = [
 
 module.exports.updateAddress = [
     body('addressType').not().isEmpty().withMessage("addressType is required"),
-    body('address1').not().isEmpty().withMessage("address1 is required"),
-    body('address2').not().isEmpty().withMessage("address2 is required"),
+    body('address').not().isEmpty().withMessage("address is required"),
+    body('city').not().isEmpty().withMessage("city is required"),
     body('phoneNumber').not().isEmpty().withMessage("phoneNumber is required"),
     body('pincode').not().isEmpty().withMessage("pincode is required"),
     body('addressId').not().isEmpty().withMessage("addressId is required"),
@@ -69,10 +69,10 @@ module.exports.updateAddress = [
         }
 
         const userId = req.user._id;
-        const {addressType,address1,address2, pincode,phoneNumber,addressId} = req.body;
+        const {addressType,address,city, pincode,phoneNumber,addressId,other} = req.body;
         try {
-            const address = await Address.findOneAndUpdate({_id: addressId,userId},{userId, addressType,address1,address2, pincode,phoneNumber}); 
-            if(address) {
+            const addressData = await Address.findOneAndUpdate({_id: addressId,userId},{userId, addressType,address,city,other,pincode,phoneNumber}); 
+            if(addressData) {
                 const adr = await Address.findById(addressId);
                 res.status(201).json({ message: "Address Updated Successfully",address: adr}); 
             } else {

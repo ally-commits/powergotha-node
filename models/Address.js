@@ -7,14 +7,17 @@ const addressSchema = new mongoose.Schema({
     required: [true, 'Please enter an Address Type'], 
     enum: ["HOME","WORK","OTHERS"]
   }, 
-  address1: {
+  address: {
     type: String,
-    required: [true, 'Please enter an Address 1'], 
-  }, 
-  address2: {
+    required: [true, 'Please enter an Address'], 
+  },  
+  other: {
+    type: String 
+  },
+  city: {
     type: String,
-    required: [true, 'Please enter an Address 2'], 
-  }, 
+    required: [true, 'Please enter a City'], 
+  },
   pincode: {
     type: Number,
     min: [100000,"Enter Valid 6 digit Pincode"],
