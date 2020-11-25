@@ -11,6 +11,7 @@ const userRoute = require("./routes/userAppRoutes/userRoute")
 const productRoute = require("./routes/userAppRoutes/productRoute")
 const orderRoute = require("./routes/userAppRoutes/orderRoute")
 const cartRoute = require("./routes/userAppRoutes/cartRoute")
+const cardRoute = require("./routes/userAppRoutes/cardRoute")
 const categoryRoute = require("./routes/userAppRoutes/categoryRoute")
 
 const dashboardProductRoute = require("./routes/dashboardRoutes/productRoute")
@@ -55,6 +56,7 @@ app.use("/api/product", checkPermission(["USER"]), productRoute)
 app.use("/api/category", checkPermission(["USER"]), categoryRoute)
 app.use("/api/order", checkPermission(["USER"]), orderRoute)
 app.use("/api/cart", checkPermission(["USER"]), cartRoute)
+app.use("/api/card", checkPermission(["USER"]), cardRoute)
  
 // ONLY ADMIN ACCESSS
 app.use("/api/admin/warehouse", checkPermission(["ADMIN"]), warehouseRoute)
