@@ -4,7 +4,7 @@ const { createToken } = require("../../middleware/createToken");
 const moment = require("moment")
 const { body, validationResult } = require('express-validator');
 const logger = require("../../logger/logger");
-const Otp = require("../../models/Otp");
+
 const accountSid = process.env.TWILIO_ACCOUNT_SID;
 const authToken = process.env.TWILIO_AUTH_TOKEN;
 const client = require('twilio')(accountSid, authToken);
@@ -109,26 +109,33 @@ module.exports.sendOtp = [
                 const user = await User.findOne({ phoneNumber });
                 if(user) {
                     logger.info("USER FOUND: " + user);
-                    await Otp.deleteMany({userId: user._id});
-                    let otpValue = Math.floor(Math.random() * 899999 + 100000);
+                    
+                    client.verify.services.create({friendlyName: 'YoPaan'})
+                        .then(service => {
+                            logger.info(service.sid)  
 
-                    client.messages
-                        .create({
-                            body: 'Your Otp Code'+ otpValue,
-                            from: '+17039351845',
-                            to: '+91' + user.phoneNumber
-                        })
-                        .then(async message => {  
-                            logger.info("Otp Sent "+ message);                          
-                            const otp  = await Otp.create({otpValue: otpValue,userId: user._id})
+                            var contact = '+91'+ user.phoneNumber;
 
-                            logger.info("Otp created: " + user);
-                            res.status(200).json({message: "otp sent successfully"});
+                            logger.info("Contact number"+ contact); 
+
+                            client.verify.services(service.sid)
+                                .verifications
+                                .create({to: contact, channel: 'sms'})
+                                .then(verification => {
+                                    logger.info("verification code" + verification.status);
+                                    
+                                    res.json({message:"Otp Sent Successfully",sId:service.sid});
+                                }).catch(err => {
+                                    logger.error(err)
+                                    res.status(400).json({ error: "Could'nt Send Otp" });
+                                })
                         })
                         .catch(err => {
-                            logger.error("Error while sending otp:"+ err)
-                            res.status(400).json({ error: "couldn't send message !Try Again"});
-                        })
+                            logger.error(err)
+                            res.status(400).json({ error: "Could'nt Send Otp" });
+                        });
+
+
                 } else { 
                     throw Error('User Not Found');
                 }
@@ -146,6 +153,7 @@ module.exports.sendOtp = [
 module.exports.verifyOtp = [
     body('phoneNumber').not().isEmpty().withMessage("phoneNumber Feild is required"),
     body('otpValue').not().isEmpty().withMessage("otpValue Feild is required"),
+    body('sId').not().isEmpty().withMessage("sId Feild is required"),
     
     async (req,res) => {
         const errors = validationResult(req);
@@ -153,27 +161,40 @@ module.exports.verifyOtp = [
             return res.status(400).json({ errors: errors.array()});
         }
         try {
-            const { phoneNumber,otpValue} = req.body;
+            let { phoneNumber,otpValue,sId} = req.body;
             if(phoneNumber.length != 10) {
                 throw Error("Enter Valid Phone Number");
             } else {
                 logger.info("VERIFY OTP: " + phoneNumber);
                 const user = await User.findOne({ phoneNumber });
                 if(user) {
-                    logger.info("USER FOUND: " + user); 
-                    let otp = await Otp.findOne({userId: user._id});
-                    if(otp) {
-                        logger.info("OTP PRESENT IN DB: " + otp); 
-                        if(otp.otpValue == otpValue) {
-                            await Otp.deleteMany({userId: user._id});
-                            const token = await createToken(user);
-                            res.status(200).json({ user,message: "Logged In",token});
-                        } else {
-                            throw Error("Invalid Otp value")    
-                        }
-                    } else {
-                        throw Error("Invalid Password reset call")
-                    } 
+                    logger.info("USER FOUND: " + user);  
+                    
+                    phoneNumber = "+91" + phoneNumber;
+
+                    logger.info("Phone Number:" + phoneNumber);
+                    logger.info("OTP VALUE:" + otpValue)
+                    logger.info("SID:" + sId)
+
+                    client.verify.services(sId)
+                        .verificationChecks
+                        .create({to: phoneNumber, code: otpValue})
+                        .then(async verification_check => {
+                            logger.info(verification_check)
+                            logger.info(verification_check.status);
+
+                            if(verification_check.status == "approved") {
+                                logger.info("Otp Verified")
+                                const token = await createToken(user);
+                                res.json({message:"Otp Verified Successfully",token});
+                            }else{
+                                logger.error("Invalid Otp:" + verification_check.status)
+                                res.status(400).json({ error: "Invalid Otp Value"});
+                            }
+                        }).catch(err => {
+                            logger.error(err)
+                            res.status(400).json({ error: "Something went wrong Try again"});
+                        })
                 } else { 
                     throw Error('User Not Found');
                 }
@@ -186,5 +207,3 @@ module.exports.verifyOtp = [
         }
     }
 ]
-
-
