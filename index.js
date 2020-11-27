@@ -55,10 +55,10 @@ app.use("/api/user", checkPermission(["USER","ADMIN","MANAGER","DELIVERY-BOY","S
 // /GUEST LEVEL ACCESS
 
 app.use("/api/product", checkGuestAccess(), productRoute)
-
+app.use("/api/category", checkGuestAccess(), categoryRoute)
 // USER - END-USER-LEVEL - ROUTES
 app.use("/api/user", checkPermission(["USER"]), userRoute);
-app.use("/api/category", checkPermission(["USER"]), categoryRoute)
+
 app.use("/api/order", checkPermission(["USER"]), orderRoute)
 app.use("/api/cart", checkPermission(["USER"]), cartRoute)
 app.use("/api/card", checkPermission(["USER"]), cardRoute)
