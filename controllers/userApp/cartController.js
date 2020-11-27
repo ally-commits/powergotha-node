@@ -35,7 +35,7 @@ module.exports.addToCart = [
         const userId = req.user._id;
         const {productId,quantity} = req.body;
         try {
-            const cartItem = await Cart.findOne({productId});
+            const cartItem = await Cart.findOne({productId,userId});
             if(cartItem) {
                 throw Error("Product Already exists in Cart")
             } else {

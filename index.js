@@ -38,6 +38,7 @@ const PORT = 9000;
  
 // const dbURI = 'mongodb://root:BqYtiYJDgtA9@52.66.209.53:27017/yopaan-node?authSource=admin';
 const dbURI = "mongodb+srv://root:Asd@1234@cluster0.3dpaa.mongodb.net/yopaan-version-1?retryWrites=true&w=majority"
+
 mongoose.connect(dbURI, { useNewUrlParser: true, useUnifiedTopology: true, useCreateIndex:true ,useFindAndModify: false})
     .then((result) => {
         app.listen(PORT,() => {
