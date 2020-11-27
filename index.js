@@ -24,15 +24,16 @@ const analyticsRoute = require("./routes/dashboardRoutes/analyticsRoute");
 
 const cors = require('cors');
 
-
-
+const { checkGuestAccess } = require("./middleware/checkGuestAccess");
 const { checkPermission } = require('./middleware/checkPermission');
+
 const app = express();
 
 app.use(httpLogger);
 app.use(cors())
 app.use(express.static('public'));
 app.use(express.json()); 
+
  
 const PORT = 9000;
  
@@ -51,9 +52,12 @@ mongoose.connect(dbURI, { useNewUrlParser: true, useUnifiedTopology: true, useCr
 app.use("/api/auth", authRoute);
 app.use("/api/user", checkPermission(["USER","ADMIN","MANAGER","DELIVERY-BOY","STORE"]), userDetialRoute);
 
+// /GUEST LEVEL ACCESS
+
+app.use("/api/product", checkGuestAccess(), productRoute)
+
 // USER - END-USER-LEVEL - ROUTES
 app.use("/api/user", checkPermission(["USER"]), userRoute);
-app.use("/api/product", checkPermission(["USER"]), productRoute)
 app.use("/api/category", checkPermission(["USER"]), categoryRoute)
 app.use("/api/order", checkPermission(["USER"]), orderRoute)
 app.use("/api/cart", checkPermission(["USER"]), cartRoute)
