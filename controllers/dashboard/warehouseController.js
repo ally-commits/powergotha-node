@@ -19,6 +19,7 @@ module.exports.getAllWarehouse = async (req, res) => {
 module.exports.addWarehouse = [
     body('coordinates').not().isEmpty().withMessage("coordinates field is required"),
     body('warehouseName').not().isEmpty().withMessage("warehouseName field is required"),
+    body('address').not().isEmpty().withMessage("address field is required"),
 
     async (req, res) => {
         const errors = validationResult(req);
@@ -26,9 +27,9 @@ module.exports.addWarehouse = [
             return res.status(400).json({ errors: errors.array() });
         }
 
-        const {coordinates,warehouseName} = req.body;
+        const {coordinates,warehouseName,address} = req.body;
         try {
-            const warehouse = await Warehouse.create({coordinates,warehouseName}); 
+            const warehouse = await Warehouse.create({coordinates,warehouseName,address}); 
             res.status(201).json({ warehouse, message: "Warehouse Added Successfully"}); 
         }
         catch(err) { 
@@ -42,6 +43,7 @@ module.exports.editWarehouse = [
     body('coordinates').not().isEmpty().withMessage("coordinates field is required"),
     body('warehouseName').not().isEmpty().withMessage("warehouseName field is required"),
     body('warehouseId').not().isEmpty().withMessage("warehouseId field is required"),
+    body('address').not().isEmpty().withMessage("address field is required"),
 
     async (req, res) => {
         const errors = validationResult(req);
@@ -49,9 +51,9 @@ module.exports.editWarehouse = [
             return res.status(400).json({ errors: errors.array() });
         }
 
-        const {coordinates,warehouseName,warehouseId} = req.body;
+        const {coordinates,warehouseName,warehouseId,address} = req.body;
         try {
-            const warehouse = await Warehouse.findByIdAndUpdate({_id: warehouseId},{coordinates,warehouseName}); 
+            const warehouse = await Warehouse.findByIdAndUpdate({_id: warehouseId},{coordinates,warehouseName,address}); 
             if(warehouse) {
                 const wareH = await Warehouse.findById(warehouseId);
                 res.status(201).json({ message: "Warehouse Updated Successfully",warehouse: wareH}); 

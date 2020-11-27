@@ -10,6 +10,10 @@ const warehouseSchema = new mongoose.Schema({
         type: String,
         required: true
     },
+    address: {
+        type: String,
+        required: true
+    }
 },{ timestamps: true });
 
 warehouseSchema.plugin(mongoose_delete,{ overrideMethods: ['find','findById','findOne','findOneAndUpdate','findByIdAndUpdate','update']});  
