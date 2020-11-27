@@ -156,7 +156,12 @@ module.exports.productRecommendations = async (req,res) => {
             let arr1 = await Object.keys(orderProducts).sort((a,b)=>orderProducts[a]>orderProducts[b]?1:-1).reduce((a,b)=> {a[b]=orderProducts[b]; return a},{})
             let arr2 = await Object.keys(mostOrdered).sort((a,b)=>mostOrdered[a]>mostOrdered[b]?1:-1).reduce((a,b)=> {a[b]=mostOrdered[b]; return a},{})
 
-            const products = await Product.find().where('_id').in([...Object.keys(arr1),...Object.keys(arr2)]).exec();
+            let products = await Product.find().where('_id').in([...Object.keys(arr1),...Object.keys(arr2)]).exec();
+
+
+            if(products.length < 5) {
+                products = await Product.aggregate([{ $sample: { size: 5 } }])
+            }
 
             res.status(201).json({ products });                     
 
