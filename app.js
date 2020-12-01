@@ -8,11 +8,14 @@ const cors = require('cors');
 const dashboardAuthRoute = require("./routes/dashboardRoutes/authRoute")
 const dashboardUserRoute = require("./routes/dashboardRoutes/userRoute");
 const dashboardAnimalCategoryRoute = require("./routes/dashboardRoutes/animalCategoryRoute");
+const dashboardBlogPostRoute = require("./routes/dashboardRoutes/blogPostRoute");
+const dashboardEndUserRoute = require("./routes/dashboardRoutes/endUserRoute");
 
 const userAuthRoute = require("./routes/userRoutes/authRoute")
 const userFarmRoute = require("./routes/userRoutes/farmRoute")
 const userAnimalCategoryRoute = require("./routes/userRoutes/animalCategoryRoute");
 const userAnimalRoute = require("./routes/userRoutes/animalRoute");
+const userFeedbackRoute = require("./routes/userRoutes/feedbackRoute");
 
 const { checkDashboardPermission } = require('./middleware/dashboard/checkDashboardPermission.js');
 const { checkUserPermission } = require('./middleware/user/checkUserPermission.js');
@@ -39,12 +42,15 @@ mongoose.connect(dbURI, { useNewUrlParser: true, useUnifiedTopology: true, useCr
 // - DASHBOARD - ROUTES
 app.use("/api/dashboard/auth", dashboardAuthRoute);
 app.use("/api/dashboard/user", checkDashboardPermission(["ADMIN","CSE"]), dashboardUserRoute)
-
 app.use("/api/dashboard/animal-category", checkDashboardPermission(["ADMIN"]), dashboardAnimalCategoryRoute)
+app.use("/api/dashboard/blog-post", checkDashboardPermission(["ADMIN"]), dashboardBlogPostRoute)
+app.use("/api/dashboard/end-user", checkDashboardPermission(["ADMIN"]), dashboardEndUserRoute)
+
 
 //END_USER APP ROUTES 
 app.use("/api/user/auth", userAuthRoute)
 app.use("/api/user/farm", checkUserPermission(), userFarmRoute)
 app.use("/api/user/animal-category", checkUserPermission(), userAnimalCategoryRoute)
 app.use("/api/user/animal",checkUserPermission(), userAnimalRoute)
+app.use("/api/user/feedback", checkUserPermission(), userFeedbackRoute)
  
