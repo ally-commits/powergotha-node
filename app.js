@@ -10,6 +10,8 @@ const dashboardUserRoute = require("./routes/dashboardRoutes/userRoute");
 const dashboardAnimalCategoryRoute = require("./routes/dashboardRoutes/animalCategoryRoute");
 const dashboardBlogPostRoute = require("./routes/dashboardRoutes/blogPostRoute");
 const dashboardEndUserRoute = require("./routes/dashboardRoutes/endUserRoute");
+const dashboardAnimalRoute = require("./routes/dashboardRoutes/animalRoute");
+const dashboardFarmRoute = require("./routes/dashboardRoutes/farmRoute");
 
 const userAuthRoute = require("./routes/userRoutes/authRoute")
 const userFarmRoute = require("./routes/userRoutes/farmRoute")
@@ -45,6 +47,8 @@ app.use("/api/dashboard/user", checkDashboardPermission(["ADMIN","CSE"]), dashbo
 app.use("/api/dashboard/animal-category", checkDashboardPermission(["ADMIN"]), dashboardAnimalCategoryRoute)
 app.use("/api/dashboard/blog-post", checkDashboardPermission(["ADMIN"]), dashboardBlogPostRoute)
 app.use("/api/dashboard/end-user", checkDashboardPermission(["ADMIN"]), dashboardEndUserRoute)
+app.use("/api/dashboard/animal", checkDashboardPermission(["ADMIN"]), dashboardAnimalRoute)
+app.use("/api/dashboard/farm", checkDashboardPermission(["ADMIN"]), dashboardFarmRoute)
 
 
 //END_USER APP ROUTES 

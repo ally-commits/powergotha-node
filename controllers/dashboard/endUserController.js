@@ -1,14 +1,29 @@
 const User = require("../../models/User"); 
 const { body, validationResult } = require('express-validator');
 const Farm = require("../../models/Farm");
+const Animal = require("../../models/Animal");
 
 
 module.exports.getAllUsers = async (req, res) => {
     try {  
         let users = await User.find(); 
-        let farmCount = await Farm.aggregate([{$group: {_id: "$userId",farmCount: {$sum: 1}}}])
+        let farmCount = await Farm.aggregate([
+            {$match: { "deleted": { $eq: false } }},
+            {$group: {_id: "$userId",count: {$sum: 1}}},
+        ]);
+        let animalCount = await Animal.aggregate([
+            {$match: { "deleted": { $eq: false } }},
+            {$group: {_id: "$userId",count: {$sum: 1}}},
+        ]);
+        
+        let farmMap = {};
+        let animalMap = {};
+
+        farmCount.forEach(val => farmMap[val._id] = val.count )
+        animalCount.forEach(val => animalMap[val._id] = val.count )
+
         if(users) {
-            res.status(201).json({ users,farmCount});
+            res.status(201).json({ users,farmMap,animalMap});
         } else 
             throw Error("Users Not Found");
     }
