@@ -1,12 +1,14 @@
 const User = require("../../models/User"); 
 const { body, validationResult } = require('express-validator');
+const Farm = require("../../models/Farm");
 
 
 module.exports.getAllUsers = async (req, res) => {
     try {  
         let users = await User.find(); 
+        let farmCount = await Farm.aggregate([{$group: {_id: "$userId",farmCount: {$sum: 1}}}])
         if(users) {
-            res.status(201).json({ users});
+            res.status(201).json({ users,farmCount});
         } else 
             throw Error("Users Not Found");
     }
