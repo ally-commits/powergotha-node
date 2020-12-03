@@ -16,9 +16,7 @@ module.exports.getAllBlogPost = async (req, res) => {
     }   
 }
 
-module.exports.addBlogPost = [
-    body('addedBy').not().isEmpty().withMessage("addedBy field is required"),
-    body('userType').not().isEmpty().withMessage("userType field is required"), 
+module.exports.addBlogPost = [  
     body('title').not().isEmpty().withMessage("title field is required"),
     body('postContent').not().isEmpty().withMessage("postContent field is required"),
     body('image').not().isEmpty().withMessage("image field is required"),
@@ -32,7 +30,7 @@ module.exports.addBlogPost = [
         const addedBy = req.user._id;
         const {userType,title,postContent,image} = req.body;
         try {
-            const blogPost = await BlogPost.create({userType,title,postContent,image,addedBy}); 
+            const blogPost = await BlogPost.create({userType: "DashboardUser",title,postContent,image,addedBy}); 
             res.status(201).json({ blogPost, message: "Blog Post Added Successfully"}); 
         }
         catch(err) { 
@@ -43,9 +41,7 @@ module.exports.addBlogPost = [
     }
 ];
 
-module.exports.editBlogPost = [
-    body('addedBy').not().isEmpty().withMessage("addedBy field is required"),
-    body('userType').not().isEmpty().withMessage("userType field is required"), 
+module.exports.editBlogPost = [  
     body('title').not().isEmpty().withMessage("title field is required"),
     body('postContent').not().isEmpty().withMessage("postContent field is required"),
     body('image').not().isEmpty().withMessage("image field is required"),
@@ -57,11 +53,11 @@ module.exports.editBlogPost = [
             return res.status(400).json({ errors: errors.array() });
         }
         const addedBy = req.user._id;
-        const {userType,title,postContent,image} = req.body;
+        const {userType,title,postContent,image,blogId} = req.body;
         try {
-            const blogPost = await BlogPost.findByIdAndUpdate({_id: blogId,addedBy},{userType,title,postContent,image}); 
+            const blogPost = await BlogPost.findByIdAndUpdate({_id: blogId,addedBy},{userType:"DashboardUser",title,postContent,image}); 
             if(blogPost) {
-                const blogPostH = await BlogPost.findById(blogPostId);
+                const blogPostH = await BlogPost.findById(blogId);
                 res.status(201).json({ message: "Blog Post Updated Successfully",blogPost: blogPostH}); 
             } else 
                 throw Error("No BlogPost Found")

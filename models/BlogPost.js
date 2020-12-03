@@ -10,7 +10,7 @@ const blogPostSchema = new mongoose.Schema({
     userType: {
         type: String,
         required: true,
-        enum: ["User","Doctor"]
+        enum: ["DashboardUser","Doctor"]
     },
     title: {
         type: String,
