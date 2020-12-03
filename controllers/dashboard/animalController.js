@@ -3,7 +3,7 @@ const User = require("../../models/User");
 const { body, validationResult } = require('express-validator');
 const logger = require("../../logger/logger"); 
 
-module.exports.getAllAnimalList = async (req, res) => {
+module.exports.getAllList = async (req, res) => {
     try {
         let users = await User.find(); 
          
@@ -28,6 +28,28 @@ module.exports.getAllAnimalList = async (req, res) => {
 
         if(users) {
             res.status(201).json({ users, animalMap});
+        } else 
+            throw Error("animal Not Found");
+    }
+    catch(err) { 
+        logger.error(err.message)
+        let error = err.message 
+        res.status(400).json({ error: error });
+    }   
+}
+
+
+module.exports.getAllAnimalList = async (req, res) => {
+    try {
+        let userId = req.query.userId;
+
+        logger.info("USER ID:" + userId)
+        let animals = await Animal.find({userId})
+            .populate({path: "farm",options: { withDeleted: true }})
+            .populate({path: "category",options: { withDeleted: true }})
+
+        if(animals) {
+            res.status(201).json({ animals});
         } else 
             throw Error("animal Not Found");
     }

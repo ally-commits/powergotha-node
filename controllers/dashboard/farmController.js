@@ -34,6 +34,23 @@ module.exports.getAllFarmList = async (req, res) => {
     }   
 }
 
+module.exports.getFarmDetails = async (req, res) => {
+    try {
+        let userId = req.query.userId;
+        let farms = await Farm.find({userId: userId});  
+ 
+        if(farms) {
+            res.status(201).json({ farms});
+        } else 
+            throw Error("Contents Not Found");
+    }
+    catch(err) { 
+        logger.error(err.message)
+        let error = err.message 
+        res.status(400).json({ error: error });
+    }   
+}
+
 module.exports.addFarm = [
     body('pincode').not().isEmpty().withMessage("pincode field is required"),
     body('totalArea').not().isEmpty().withMessage("totalArea field is required"), 
