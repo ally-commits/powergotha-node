@@ -3,9 +3,9 @@ const { body, validationResult } = require('express-validator');
 const logger = require("../../logger/logger"); 
 
 module.exports.getAllFeedback = async (req, res) => {
-    const userId = req.user._id;
+    const addedBy = req.user._id;
     try {
-        const feedback = await Feedback.find({userId});
+        const feedback = await Feedback.find({addedBy});
         if(feedback) {
             res.status(201).json({ feedback });
         } else 

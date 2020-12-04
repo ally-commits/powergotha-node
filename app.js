@@ -12,6 +12,7 @@ const dashboardBlogPostRoute = require("./routes/dashboardRoutes/blogPostRoute")
 const dashboardEndUserRoute = require("./routes/dashboardRoutes/endUserRoute");
 const dashboardAnimalRoute = require("./routes/dashboardRoutes/animalRoute");
 const dashboardFarmRoute = require("./routes/dashboardRoutes/farmRoute");
+const dashboardFeedbackRoute = require("./routes/dashboardRoutes/feedbackRoute");
 
 const userAuthRoute = require("./routes/userRoutes/authRoute")
 const userFarmRoute = require("./routes/userRoutes/farmRoute")
@@ -45,10 +46,11 @@ mongoose.connect(dbURI, { useNewUrlParser: true, useUnifiedTopology: true, useCr
 app.use("/api/dashboard/auth", dashboardAuthRoute);
 app.use("/api/dashboard/user", checkDashboardPermission(["ADMIN","CSE"]), dashboardUserRoute)
 app.use("/api/dashboard/animal-category", checkDashboardPermission(["ADMIN"]), dashboardAnimalCategoryRoute)
-app.use("/api/dashboard/blog-post", checkDashboardPermission(["ADMIN"]), dashboardBlogPostRoute)
+app.use("/api/dashboard/blog-post", checkDashboardPermission(["ADMIN","CSE"]), dashboardBlogPostRoute)
 app.use("/api/dashboard/end-user", checkDashboardPermission(["ADMIN"]), dashboardEndUserRoute)
 app.use("/api/dashboard/animal", checkDashboardPermission(["ADMIN"]), dashboardAnimalRoute)
 app.use("/api/dashboard/farm", checkDashboardPermission(["ADMIN"]), dashboardFarmRoute)
+app.use("/api/dashboard/feedback", checkDashboardPermission(["ADMIN","CSE"]), dashboardFeedbackRoute)
 
 
 //END_USER APP ROUTES 
