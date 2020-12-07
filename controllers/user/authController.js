@@ -110,14 +110,16 @@ module.exports.loginWithPhoneNumber = [
         catch(err) {
             logger.error(err);
             let error = err.message 
+            if(err.code == 11000) {
+                error = Object.keys(err.keyValue)[0] + " already exists"
+            }
             res.status(400).json({ error: error });
         }
     }
 ] 
 module.exports.registerWithPhoneNumber = [
     body('phoneNumber').not().isEmpty().withMessage("phoneNumber Field is required"),
-    body('name').not().isEmpty().withMessage("name Field is required"),
-    body('email').not().isEmpty().withMessage("email Field is required"),
+    body('name').not().isEmpty().withMessage("name Field is required"), 
     body('otpValue').not().isEmpty().withMessage("otpValue Field is required"),
     body('sId').not().isEmpty().withMessage("sId Field is required"),
     
@@ -161,13 +163,24 @@ module.exports.registerWithPhoneNumber = [
                         }
                     }).catch(err => {
                         logger.error(err)
-                        res.status(400).json({ error: err.message});
+                        console.log("-----------------")
+                        console.log(err)
+                        console.log(err.code)
+                        let error = err.message 
+                        if(err.code == 11000) {
+                            error = Object.keys(err.keyValue)[0] + " already exists"
+                        }
+                        res.status(400).json({ error: error});
                     })
             }
         }
         catch(err) {
             logger.error(err);
+
             let error = err.message 
+            if(err.code == 11000) {
+                error = Object.keys(err.keyValue)[0] + " already exists"
+            }
             res.status(400).json({ error: error });
         }
     }
