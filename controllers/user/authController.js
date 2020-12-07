@@ -133,8 +133,9 @@ module.exports.registerWithPhoneNumber = [
             if(phoneNumber.length != 10) {
                 throw Error("Enter Valid Phone Number");
             } else { 
-                const newUser = User.findOne({phoneNumber});
+                const newUser = await User.findOne({phoneNumber});
 
+                console.log(newUser);
                 if(newUser) {
                     res.status(400).json({ error: "User already exists"});
                 } else {
