@@ -4,7 +4,7 @@ const logger = require("../../logger/logger");
 
 module.exports.getAllBlogPost = async (req, res) => {
     try {
-        const blogPosts = await BlogPost.find();
+        const blogPosts = await BlogPost.find().populate("addedBy");
         if(blogPosts) {
             res.status(201).json({ blogPosts });
         } else 
