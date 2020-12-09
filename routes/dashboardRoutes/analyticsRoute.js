@@ -4,6 +4,6 @@ const analyticsController = require('../../controllers/dashboard/analyticsContro
 const router = Router();
  
 // ADMIN ACCESS
-router.get("/getDetails",analyticsController.getDetails) 
+router.get("/getAllDetails",analyticsController.getAllDetails) 
 
 module.exports = router;

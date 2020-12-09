@@ -13,7 +13,8 @@ const dashboardEndUserRoute = require("./routes/dashboardRoutes/endUserRoute");
 const dashboardAnimalRoute = require("./routes/dashboardRoutes/animalRoute");
 const dashboardFarmRoute = require("./routes/dashboardRoutes/farmRoute");
 const dashboardFeedbackRoute = require("./routes/dashboardRoutes/feedbackRoute");
-const dashboardCseRouter = require("./routes/dashboardRoutes/cseRoute");
+const dashboardCseRoute = require("./routes/dashboardRoutes/cseRoute");
+const dashboardAnalyticsRoute = require("./routes/dashboardRoutes/analyticsRoute");
 
 const userAuthRoute = require("./routes/userRoutes/authRoute")
 const userFarmRoute = require("./routes/userRoutes/farmRoute")
@@ -52,7 +53,8 @@ app.use("/api/dashboard/end-user", checkDashboardPermission(["ADMIN","CSE"]), da
 app.use("/api/dashboard/animal", checkDashboardPermission(["ADMIN"]), dashboardAnimalRoute)
 app.use("/api/dashboard/farm", checkDashboardPermission(["ADMIN"]), dashboardFarmRoute)
 app.use("/api/dashboard/feedback", checkDashboardPermission(["ADMIN","CSE"]), dashboardFeedbackRoute)
-app.use("/api/dashboard/cse", checkDashboardPermission(["ADMIN","CSE"]), dashboardCseRouter)
+app.use("/api/dashboard/cse", checkDashboardPermission(["ADMIN","CSE"]), dashboardCseRoute)
+app.use("/api/dashboard/analytics", checkDashboardPermission(["ADMIN","CSE"]), dashboardAnalyticsRoute)
 
 
 //END_USER APP ROUTES 
