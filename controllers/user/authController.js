@@ -171,7 +171,7 @@ module.exports.registerWithPhoneNumber = [
             return res.status(400).json({ errors: errors.array()});
         }
         try {
-            let { phoneNumber,otpValue,sId,name,email} = req.body;
+            let { phoneNumber,otpValue,sId,name,email,password} = req.body;
             if(phoneNumber.length != 10) {
                 throw Error("Enter Valid Phone Number");
             } else { 
