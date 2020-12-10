@@ -4,15 +4,13 @@ const logger = require("../../logger/logger")
  
 
 module.exports.getFeedReport = [
-    query('date').not().isEmpty().withMessage("date parameter is required"),
-    query('type').not().isEmpty().withMessage("type parameter is required"),
+    query('date').not().isEmpty().withMessage("date parameter is required"), 
 
     async (req, res) => {
         const userId = req.user._id;
         let date = req.query.date; 
-        try {  
-            let newDate = await new Date(date);
-            const report = await AnimalFeed.findOne({date:  {"$gte": new Date(newDate),"$lte": new Date(newDate)} });
+        try {   
+            const report = await AnimalFeed.findOne({userId,date:  {"$gte": new Date(date),"$lte": new Date(date)} });
 
             if(report) { 
                 logger.info("Request sent back");
