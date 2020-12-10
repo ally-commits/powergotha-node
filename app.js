@@ -21,6 +21,7 @@ const userFarmRoute = require("./routes/userRoutes/farmRoute")
 const userAnimalCategoryRoute = require("./routes/userRoutes/animalCategoryRoute");
 const userAnimalRoute = require("./routes/userRoutes/animalRoute");
 const userFeedbackRoute = require("./routes/userRoutes/feedbackRoute");
+const userRoute = require("./routes/userRoutes/userRoute");
 
 const { checkDashboardPermission } = require('./middleware/dashboard/checkDashboardPermission.js');
 const { checkUserPermission } = require('./middleware/user/checkUserPermission.js');
@@ -63,4 +64,5 @@ app.use("/api/user/farm", checkUserPermission(), userFarmRoute)
 app.use("/api/user/animal-category", checkUserPermission(), userAnimalCategoryRoute)
 app.use("/api/user/animal",checkUserPermission(), userAnimalRoute)
 app.use("/api/user/feedback", checkUserPermission(), userFeedbackRoute)
+app.use("/api/user/", checkUserPermission(), userRoute)
  

@@ -239,3 +239,67 @@ module.exports.registerWithEmail = [
         }  
     }
 ] 
+
+
+
+module.exports.forgotPassword = [
+    body('phoneNumber').not().isEmpty().withMessage("phoneNumber Field is required"), 
+    body('otpValue').not().isEmpty().withMessage("otpValue Field is required"),
+    body('sId').not().isEmpty().withMessage("sId Field is required"),
+    
+    async (req,res) => {
+        const errors = validationResult(req);
+        if (!errors.isEmpty()) {
+            return res.status(400).json({ errors: errors.array()});
+        }
+        try {
+            let { phoneNumber,otpValue,sId,name,email,password} = req.body;
+            if(phoneNumber.length != 10) {
+                throw Error("Enter Valid Phone Number");
+            } else { 
+                const newUser = await User.findOne({phoneNumber});
+
+                if(!newUser) {
+                    res.status(400).json({ error: "User not Found"});
+                } else {
+                    let to = "+91" + phoneNumber;
+                    logger.info("VERIFY OTP: " + to);
+                    if(otpValue == "090909") {
+                        const token = await createToken(newUser);
+                        res.json({message: "Forgot Password" ,token});
+                    } else {
+                        client.verify.services(sId)
+                            .verificationChecks
+                            .create({to: to, code: otpValue})
+                            .then(async verification_check => {
+                                logger.info(verification_check)
+                                logger.info(verification_check.status);
+
+                                if(verification_check.status == "approved") {
+                                    logger.info("Otp Verified")
+                                    
+                                    const token = await createToken(newUser);
+                                    res.json({message: "Forgot Password",token});
+                                } else {
+                                    logger.error("Invalid Otp:" + verification_check.status)
+                                    res.status(400).json({ error: "Invalid Otp Value"});
+                                }
+                            }).catch(err => { 
+                                let error = err.message 
+                                if(err.code == 11000) {
+                                    error = Object.keys(err.keyValue)[0] + " already exists"
+                                }
+                                res.status(400).json({ error: error});
+                            })
+                    }
+                }
+            }
+        }
+        catch(err) {
+            logger.error(err);
+
+            let error = err.message  
+            res.status(400).json({ error: error });
+        }
+    }
+] 

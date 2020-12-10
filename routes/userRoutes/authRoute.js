@@ -11,5 +11,6 @@ router.post("/registerWithPhoneNumber",authController.registerWithPhoneNumber);
 
 router.post("/loginWithEmail",authController.loginWithEmail);  
 router.post("/registerWithEmail",authController.registerWithEmail);  
+router.post("/forgotPassword",authController.forgotPassword);  
 
 module.exports = router;
