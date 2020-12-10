@@ -60,60 +60,37 @@ module.exports.sendOtp = [
 
 module.exports.loginWithPhoneNumber = [
     body('phoneNumber').not().isEmpty().withMessage("phoneNumber Feild is required"),
-    body('otpValue').not().isEmpty().withMessage("otpValue Feild is required"),
-    body('sId').not().isEmpty().withMessage("sId Feild is required"),
+    body('password').not().isEmpty().withMessage("password Feild is required"),
     
     async (req,res) => {
         const errors = validationResult(req);
         if (!errors.isEmpty()) {
             return res.status(400).json({ errors: errors.array()});
         }
+
+        const { phoneNumber, password } = req.body;
+
         try {
-            let { phoneNumber,otpValue,sId} = req.body;
-            if(phoneNumber.length != 10) {
-                throw Error("Enter Valid Phone Number");
-            } else {
-                logger.info("VERIFY OTP: " + phoneNumber);
-                const user = await User.findOne({ phoneNumber });
-                if(user) {
-                    logger.info("USER FOUND: " + user);  
-                    
-                    phoneNumber = "+91" + phoneNumber;
-
-                    logger.info("Phone Number:" + phoneNumber);
-                    logger.info("OTP VALUE:" + otpValue)
-                    logger.info("SID:" + sId)
-
-                    client.verify.services(sId)
-                        .verificationChecks
-                        .create({to: phoneNumber, code: otpValue})
-                        .then(async verification_check => {
-                            logger.info(verification_check)
-                            logger.info(verification_check.status);
-
-                            if(verification_check.status == "approved") {
-                                logger.info("Otp Verified")
-                                const token = await createToken(user);
-                                res.json({message:"Otp Verified Successfully",token});
-                            }else{
-                                logger.error("Invalid Otp:" + verification_check.status)
-                                res.status(400).json({ error: "Invalid Otp Value"});
-                            }
-                        }).catch(err => {
-                            logger.error(err)
-                            res.status(400).json({ error: err.message});
-                        })
-                } else { 
-                    res.status(400).json({ error: "User Not Registred"});
+            const user = await User.findOne({ phoneNumber });
+            if(user) { 
+                logger.info("LOGIN: User FOUND:" + user)
+                const auth = await bcrypt.compare(password, user.password);
+                if(auth) { 
+                    logger.info("Login: User validated ")
+                    const token = await createToken(user);
+                    res.status(200).json({ user,message: "Succesfully Logged In",token});
+                } else {
+                    logger.info("LOGIN: wrong password:" + user)
+                    throw Error('Incorrect Password');
                 }
+            } else {
+                logger.info("User Not  found")
+                throw Error('User Not Found');
             }
         }
-        catch(err) {
+        catch(err) { 
             logger.error(err);
             let error = err.message 
-            if(err.code == 11000) {
-                error = Object.keys(err.keyValue)[0] + " already exists"
-            }
             res.status(400).json({ error: error });
         }
     }
