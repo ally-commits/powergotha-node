@@ -22,6 +22,11 @@ const userAnimalCategoryRoute = require("./routes/userRoutes/animalCategoryRoute
 const userAnimalRoute = require("./routes/userRoutes/animalRoute");
 const userFeedbackRoute = require("./routes/userRoutes/feedbackRoute");
 const userRoute = require("./routes/userRoutes/userRoute");
+const userMilkReportRoute = require("./routes/userRoutes/milkReportRoute");
+const userFeedReportRoute = require("./routes/userRoutes/feedReportRoute");
+const userBreedingRecordRoute = require("./routes/userRoutes/breedingRecordRoute");
+const userHealthRecordRoute = require("./routes/userRoutes/healthRecordRoute");
+
 
 const { checkDashboardPermission } = require('./middleware/dashboard/checkDashboardPermission.js');
 const { checkUserPermission } = require('./middleware/user/checkUserPermission.js');
@@ -65,4 +70,10 @@ app.use("/api/user/animal-category", checkUserPermission(), userAnimalCategoryRo
 app.use("/api/user/animal",checkUserPermission(), userAnimalRoute)
 app.use("/api/user/feedback", checkUserPermission(), userFeedbackRoute)
 app.use("/api/user/", checkUserPermission(), userRoute)
+
+// REPORTS
+app.use("/api/user/milkreport", checkUserPermission(), userMilkReportRoute)
+app.use("/api/user/feedreport", checkUserPermission(), userFeedReportRoute)
+app.use("/api/user/breeding-record", checkUserPermission(), userBreedingRecordRoute)
+app.use("/api/user/health-record", checkUserPermission(), userHealthRecordRoute)
  

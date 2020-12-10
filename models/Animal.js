@@ -23,6 +23,7 @@ const animalSchema = new mongoose.Schema({
     },
     tagNumber: {
         type: String,
+        unique: true,
         required: [true,"Enter valid tag Number"]
     },
     dob: {
