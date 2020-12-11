@@ -25,7 +25,8 @@ module.exports.getUserDetails = async (req, res) => {
 
 module.exports.updateUserDetails = [
     body('phoneNumber').not().isEmpty().withMessage("phoneNumber Feild is required"),
-    body('name').not().isEmpty().withMessage("name Feild is required"),  
+    body('name').not().isEmpty().withMessage("name Feild is required"),
+    body('email').not().isEmpty().withMessage("email Feild is required"),  
     
     async (req, res) => {
         const errors = validationResult(req);
@@ -33,10 +34,10 @@ module.exports.updateUserDetails = [
             return res.status(400).json({ errors: errors.array()});
         }
         const userId = req.user._id;
-        let {phoneNumber ,name} = req.body;
+        let {phoneNumber ,name,email} = req.body;
          
         try { 
-            const user = await DashboardUser.findByIdAndUpdate({_id: userId},{ phoneNumber,name}); 
+            const user = await DashboardUser.findByIdAndUpdate({_id: userId},{ phoneNumber,name, email}); 
             if(user) {
                 const userN = await DashboardUser.findById(userId);
                 logger.info("User details updated")
@@ -48,7 +49,7 @@ module.exports.updateUserDetails = [
             logger.error("UPDATE USER DETAILS: " + err)
             let error = err.message ;
             if(err.code == 11000) {
-                error = "Phone Number already exists"
+                error = Object.keys(err.keyValue)[0] + " already exists"
             }
             res.status(400).json({ error: error });
         }   

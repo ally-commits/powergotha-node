@@ -15,6 +15,8 @@ const dashboardFarmRoute = require("./routes/dashboardRoutes/farmRoute");
 const dashboardFeedbackRoute = require("./routes/dashboardRoutes/feedbackRoute");
 const dashboardCseRoute = require("./routes/dashboardRoutes/cseRoute");
 const dashboardAnalyticsRoute = require("./routes/dashboardRoutes/analyticsRoute");
+const dashboardDoctorRoute = require("./routes/dashboardRoutes/doctorRoute");
+const dashboardSubscriptionRoute = require("./routes/dashboardRoutes/subscriptionRoute");
 
 const userAuthRoute = require("./routes/userRoutes/authRoute")
 const userFarmRoute = require("./routes/userRoutes/farmRoute")
@@ -61,6 +63,8 @@ app.use("/api/dashboard/farm", checkDashboardPermission(["ADMIN"]), dashboardFar
 app.use("/api/dashboard/feedback", checkDashboardPermission(["ADMIN","CSE"]), dashboardFeedbackRoute)
 app.use("/api/dashboard/cse", checkDashboardPermission(["ADMIN","CSE"]), dashboardCseRoute)
 app.use("/api/dashboard/analytics", checkDashboardPermission(["ADMIN","CSE"]), dashboardAnalyticsRoute)
+app.use("/api/dashboard/doctor", checkDashboardPermission(["ADMIN"]), dashboardDoctorRoute)
+app.use("/api/dashboard/subscription", checkDashboardPermission(["ADMIN"]), dashboardSubscriptionRoute)
 
 
 //END_USER APP ROUTES 

@@ -10,6 +10,10 @@ const userSchema = new mongoose.Schema({
     min: [1000000000, "Enter valid 10 digit phonenumber"],
     max: [9999999999, "Enter valid 10 digit phonenumber"],
   },
+  email: {
+    type:String,
+    required: [true, "Enter va valid email"]
+  },
   password: {
     type: String,
     required: [true, 'Please enter a password'],
