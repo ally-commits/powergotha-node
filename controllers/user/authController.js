@@ -253,7 +253,7 @@ module.exports.forgotPassword = [
             return res.status(400).json({ errors: errors.array()});
         }
         try {
-            let { phoneNumber,otpValue,sId,name,email,password} = req.body;
+            let { phoneNumber,otpValue,sId} = req.body;
             if(phoneNumber.length != 10) {
                 throw Error("Enter Valid Phone Number");
             } else { 

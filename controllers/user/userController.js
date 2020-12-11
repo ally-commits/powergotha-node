@@ -98,3 +98,40 @@ module.exports.changePassword = [
         }   
     } 
 ];
+
+module.exports.updatePassword = [ 
+    body('newPassword').isLength({ min: 8 }).withMessage("Password must be atleast 8 Characters"),
+    
+    async (req, res) => {
+        const errors = validationResult(req);
+        if (!errors.isEmpty()) {
+            return res.status(400).json({ errors: errors.array()});
+        }
+
+        const userId = req.user._id;
+        let {newPassword} = req.body;
+        
+        const salt = await bcrypt.genSalt();
+        newPassword = await bcrypt.hash(newPassword, salt);
+
+        try { 
+            const user = await User.findById(userId);
+            if(user) { 
+                const user = await User.findByIdAndUpdate({_id: userId},{ password: newPassword}); 
+                if(user) {
+                    const userN = await User.findById(userId);
+                    logger.info("Password changed:" + userN)
+                    res.status(201).json({ message: "Password Updated Successfully",user: userN}); 
+                } else 
+                    throw Error("No User Data Found")  
+            } else
+                throw Error('User Not Found');
+                
+        }
+        catch(err) { 
+            logger.error("CHANGE PASSWORD: " + err)
+            let error = err.message; 
+            res.status(400).json({ error: error });
+        }   
+    } 
+];
