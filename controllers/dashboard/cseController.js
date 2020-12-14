@@ -1,6 +1,13 @@
 const DashboardUser = require("../../models/DashboardUser"); 
 const { body, validationResult } = require('express-validator');
+const axios = require("axios")
+const logger = require("../../logger/logger");
 
+
+const service_id = process.env.SERVICE_ID;
+const template_id = process.env.TEMPLATE_ID_CSE;
+const user_id = process.env.USER_ID;
+ 
 
 module.exports.getAllUsers = async (req, res) => {
     try {
@@ -32,7 +39,30 @@ module.exports.addUser = [
         const {phoneNumber, password ,name,userType,email} = req.body;
         try {
             const user = await DashboardUser.create({ phoneNumber, password,name,userType,email});
-            res.status(201).json({ user: user, message: "User Added Successfully"});
+            axios({
+                method: "post",
+                url: "https://api.emailjs.com/api/v1.0/email/send",
+                data: {
+                    service_id,
+                    template_id,
+                    user_id,
+                    template_params: {
+                        'from_name': 'Agrowon Animal Care', 
+                        'to_name': name, 
+                        'phoneNumber': phoneNumber, 
+                        'password': password,
+                        'reply_to': '.', 
+                        'send_to': email
+                    }
+                }
+            }).then(res => {
+                logger.info("EMAIL SEND AND USER ADDED")
+                res.status(201).json({ user: user, message: "User Added Successfully",emailSent: true});
+            }).catch(err => {
+                logger.info("EMAIL SEND ERROR:")
+                logger.error(err)
+                res.status(201).json({ user: user, message: "User Added Successfully",emailSent: false});
+            })
         }
         catch(err) { 
             let error = err.message

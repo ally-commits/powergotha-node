@@ -1,6 +1,12 @@
 const Doctor = require("../../models/Doctor"); 
 const { body, validationResult } = require('express-validator');
+const axios = require("axios");
+const logger = require("../../logger/logger");
 
+const service_id = process.env.SERVICE_ID;
+const template_id = process.env.TEMPLATE_ID_DOCTOR;
+const user_id = process.env.USER_ID;
+ 
 
 module.exports.getAllDoctors = async (req, res) => {
     try {
@@ -31,7 +37,30 @@ module.exports.addDoctor = [
         const {phoneNumber, password ,name,email} = req.body;
         try {
             const doctor = await Doctor.create({ phoneNumber, password,name,email});
-            res.status(201).json({ doctor: doctor, message: "Doctor Added Successfully"});
+            axios({
+                method: "post",
+                url: "https://api.emailjs.com/api/v1.0/email/send",
+                data: {
+                    service_id,
+                    template_id,
+                    user_id,
+                    template_params: {
+                        'from_name': 'Agrowon Animal Care', 
+                        'to_name': name, 
+                        'phoneNumber': phoneNumber, 
+                        'password': password,
+                        'reply_to': '.', 
+                        'send_to': email
+                    }
+                }
+            }).then(res => {
+                logger.info("EMAIL SEND AND DOCTOR ADDED")
+                res.status(201).json({ doctor: doctor, message: "Doctor Added Successfully",emailSent: true});
+            }).catch(err => {
+                logger.info("EMAIL SEND ERROR:")
+                logger.error(err)
+                res.status(201).json({ doctor: doctor, message: "Doctor Added Successfully",emailSent: false});
+            })
         }
         catch(err) { 
             let error = err.message
