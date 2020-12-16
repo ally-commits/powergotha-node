@@ -17,9 +17,9 @@ const feedbackSchema = new mongoose.Schema({
         min: [1,"Minimum rating is 1"],
         max: [5, "Maximum rating is 5"]
     },
-    reply: {
+    reply: [{
         type: String
-    }
+    }]
 },{ timestamps: true });
 
 feedbackSchema.plugin(mongoose_delete,{ overrideMethods: ['find', 'findOne','findOneAndUpdate', 'update']});
