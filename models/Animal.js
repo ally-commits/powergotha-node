@@ -8,9 +8,8 @@ const animalSchema = new mongoose.Schema({
         ref: "User"
     },
     category: {
-        type: mongoose.Schema.Types.ObjectId,
+        type: String,
         required: [true, "Enter a valid animal category"],
-        ref: "AnimalCategory"
     },
     farm: {
         type: mongoose.Schema.Types.ObjectId,
