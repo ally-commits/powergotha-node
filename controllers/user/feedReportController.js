@@ -10,7 +10,7 @@ module.exports.getFeedReport = [
         const userId = req.user._id;
         let date = req.query.date; 
         try {   
-            const report = await AnimalFeed.findOne({userId,date:  {"$gte": new Date(date),"$lte": new Date(date)} });
+            const report = await AnimalFeed.find({userId,date:  {"$gte": new Date(date),"$lte": new Date(date)} });
 
             if(report) { 
                 logger.info("Request sent back");
