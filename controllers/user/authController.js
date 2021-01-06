@@ -303,3 +303,95 @@ module.exports.forgotPassword = [
         }
     }
 ] 
+
+module.exports.googleAuth = [
+    body('accessToken').not().isEmpty().withMessage("accessToken Feild is required"),
+    async (req,res) => {
+        const errors = validationResult(req);
+        if (!errors.isEmpty()) {
+            return res.status(400).json({ errors: errors.array()});
+        }
+        const {accessToken} = req.body;
+        const ticket = await client.verifyIdToken({
+            idToken: accessToken,
+            audience: GOOGLE_O_AUTH_CLIENT_ID
+        }).then(async data => {
+            const {email,name} = data.payload;
+            try {
+                const user = await EndUser.findOne({ email });
+                if(user) {
+                    if(user.verificationType == "GOOGLE") {
+                        logger.info("LOGIN end user: end-User FOUND:" + user)
+                        const token = await createToken(user);
+                        res.status(200).json({ user,message: "Succesfully Logged In",token});
+                    } else {
+                        res.status(400).json({ error: "Please use " + user.verificationType + " to Login"});
+                    }
+                } else {
+                    const user = await EndUser.create({ email, password: Math.random(),name,verificationType: "GOOGLE",isVerified: true,userType: "END-USER"});
+                    const token = await createToken(user);
+                    logger.info("REGISTER: User Created:" + user)
+                    logger.info("REGISTER: Token Created:" + token)
+                    res.status(201).json({ user: user, message: "Succesfully Registered",token,completeProfile: true});
+                }
+            }
+            catch(err) {
+                logger.error(err);
+                let error = err.message
+                res.status(400).json({ error: error });
+            }
+        }).catch(err => {
+            console.log(err);
+            res.status(400).json({ error: "Invalid Google auth request"});
+        })
+    }
+]
+
+module.exports.facebookAuth = [
+    body('accessToken').not().isEmpty().withMessage("accessToken Feild is required"),
+    async (req,res) => {
+        const errors = validationResult(req);
+        if (!errors.isEmpty()) {
+            return res.status(400).json({ errors: errors.array()});
+        }
+        const {accessToken} = req.body;
+        axios({
+            method: "get",
+            url: "https://graph.facebook.com/me?access_token=" + accessToken + "&fields=name,email"
+        })
+        .then(async response => {
+            console.log(response.data)
+            const {email,name} = response.data;
+            try {
+                const user = await EndUser.findOne({ email });
+                if(user) {
+                    if(user.verificationType == "FACEBOOK") {
+                        logger.info("LOGIN end user: end-User FOUND:" + user)
+                        const token = await createToken(user);
+                        res.status(200).json({ user,message: "Succesfully Logged In",token});
+                    } else {
+                        res.status(400).json({ error: "Please use " + user.verificationType + " to Login"});
+                    }
+                } else {
+                    const user = await EndUser.create({ email, password: Math.random(),name,verificationType: "FACEBOOK",isVerified: true,userType: "END-USER"});
+                    const token = await createToken(user);
+                    logger.info("REGISTER: User Created:" + user)
+                    logger.info("REGISTER: Token Created:" + token)
+                    res.status(201).json({ user: user, message: "Succesfully Registered",token,completeProfile: true});
+                }
+            }
+            catch(err) {
+                logger.error(err);
+                let error = err.message
+                res.status(400).json({ error: error });
+            }
+        }).catch(err => {
+            console.log(err);
+            res.status(400).json({ error: "Invalid Facebook auth request"});
+        })
+    }
+]
+//CODE FOR FACEBOOK AND GOOGLE LOGIN
+
+const GOOGLE_O_AUTH_CLIENT_ID = process.env.GOOGLE_O_AUTH_CLIENT_ID
+//const client = new OAuth2Client(GOOGLE_O_AUTH_CLIENT_ID);

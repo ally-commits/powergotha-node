@@ -29,6 +29,10 @@ const userFeedReportRoute = require("./routes/userRoutes/feedReportRoute");
 const userBreedingRecordRoute = require("./routes/userRoutes/breedingRecordRoute");
 const userHealthRecordRoute = require("./routes/userRoutes/healthRecordRoute");
 
+const milkRoute = require("./routes/reportsRoutes/milkRoute");
+const animalRoute = require("./routes/reportsRoutes/animalRoute");
+const expenditureRoute = require("./routes/reportsRoutes/expenditureRoute");
+
 
 const { checkDashboardPermission } = require('./middleware/dashboard/checkDashboardPermission.js');
 const { checkUserPermission } = require('./middleware/user/checkUserPermission.js');
@@ -80,4 +84,7 @@ app.use("/api/user/milkreport", checkUserPermission(), userMilkReportRoute)
 app.use("/api/user/feedreport", checkUserPermission(), userFeedReportRoute)
 app.use("/api/user/breeding-record", checkUserPermission(), userBreedingRecordRoute)
 app.use("/api/user/health-record", checkUserPermission(), userHealthRecordRoute)
- 
+
+app.use("/api/user/report", checkUserPermission(), milkRoute)
+app.use("/api/user/report", checkUserPermission(), animalRoute)
+app.use("/api/user/report", checkUserPermission(), expenditureRoute)

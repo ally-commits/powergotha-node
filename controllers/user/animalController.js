@@ -25,6 +25,7 @@ module.exports.addAnimal = [
     body('dob').not().isEmpty().withMessage("dob field is required"),
     body('weight').not().isEmpty().withMessage("weight field is required"),
     body('animalType').not().isEmpty().withMessage("animalType field is required"),
+    body('date').not().isEmpty().withMessage("date field is required"),
 
     async (req, res) => {
         const errors = validationResult(req);
@@ -33,9 +34,9 @@ module.exports.addAnimal = [
         }
         logger.info("add animal")
         const userId = req.user._id;
-        const {category,farm,animalBreed,tagNumber,dob,weight,animalType,pregnant,loctating,bornInDairyFarm,purchasingPrice} = req.body;
+        const {category,date,farm,animalBreed,tagNumber,dob,weight,animalType,pregnant,loctating,bornInDairyFarm,purchasingPrice} = req.body;
         try {
-            const animal = await Animal.create({category,farm,animalBreed,tagNumber,dob,weight,animalType,pregnant,loctating,bornInDairyFarm,purchasingPrice,userId}); 
+            const animal = await Animal.create({category,date,farm,animalBreed,tagNumber,dob,weight,animalType,pregnant,loctating,bornInDairyFarm,purchasingPrice,userId}); 
             res.status(201).json({ animal, message: "Animal Added Successfully"}); 
         }
         catch(err) { 
