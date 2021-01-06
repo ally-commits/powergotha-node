@@ -34,7 +34,8 @@ module.exports.addHealthRecord = [
     body('lossOfMilk').not().isEmpty().withMessage("lossOfMilk Feild is required"),   
     body('treatmentDetails').not().isEmpty().withMessage("treatmentDetails Feild is required"),   
     body('drugDetails').not().isEmpty().withMessage("drugDetails Feild is required"),   
-    
+    body('price').not().isEmpty().withMessage("price Feild is required"),   
+
     
     async (req, res) => {
         const errors = validationResult(req);
@@ -42,10 +43,10 @@ module.exports.addHealthRecord = [
             return res.status(400).json({ errors: errors.array()});
         }
         const userId = req.user._id;
-        let {animal, date,illness,lossOfMilk,treatmentDetails,drugDetails} = req.body;
+        let {animal,price, date,illness,lossOfMilk,treatmentDetails,drugDetails} = req.body;
          
         try { 
-            const report = await HealthRecord.create({animal, date,illness,lossOfMilk,treatmentDetails,drugDetails,userId}); 
+            const report = await HealthRecord.create({animal,price, date,illness,lossOfMilk,treatmentDetails,drugDetails,userId}); 
             if(report) {  
                 res.status(201).json({ message: "Record Added Successfully",report}); 
             } else 

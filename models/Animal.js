@@ -11,6 +11,10 @@ const animalSchema = new mongoose.Schema({
         type: String,
         required: [true, "Enter a valid animal category"],
     },
+    date: {
+        type: Date,
+        required: true
+    },
     farm: {
         type: mongoose.Schema.Types.ObjectId,
         required: [true, "Enter a valid farm"],

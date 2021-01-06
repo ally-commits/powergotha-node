@@ -16,6 +16,11 @@ const healthRecordSchema = new mongoose.Schema({
         type: Date,
         required: true
     },
+    price: {
+        type: Number,
+        required: true
+
+    },
     illness: {
         type: String,
         required: true
