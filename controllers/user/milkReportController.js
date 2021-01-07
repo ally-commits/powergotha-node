@@ -61,3 +61,37 @@ module.exports.addMilkReport = [
         }   
     } 
 ];
+
+module.exports.editMilkReport = [
+    body('animal').not().isEmpty().withMessage("animal Feild is required"),
+    body('date').not().isEmpty().withMessage("date Feild is required"),   
+    body('time').not().isEmpty().withMessage("time Feild is required"),   
+    body('milkInLiters').not().isEmpty().withMessage("milkInLiters Feild is required"),   
+    body('price').not().isEmpty().withMessage("price Feild is required"),   
+    body('fat').not().isEmpty().withMessage("fat Feild is required"),   
+    body('SNF').not().isEmpty().withMessage("SNF Feild is required"),   
+    body('numberOfBacteria').not().isEmpty().withMessage("numberOfBacteria Feild is required"),
+    body('MilkReportId').not().isEmpty().withMessage("MilkReportId Feild is required"),
+
+    async (req, res) => {
+        const errors = validationResult(req);
+        if (!errors.isEmpty()) {
+            return res.status(400).json({ errors: errors.array() });
+        }
+        const userId = req.user._id;
+        const {animal,date,time,milkInLiters,price,fat,SNF,numberOfBacteria,MilkReportId} = req.body;
+        try {
+            const milkR = await MilkReport.findByIdAndUpdate({_id: MilkReportId, userId},{animal,date,time,milkInLiters,price,fat,SNF,numberOfBacteria}); 
+            if(milkR) {
+                const Report = await MilkReport.findById({_id: MilkReportId, userId});
+                res.status(201).json({ message: "Milk Report Updated Successfully", milkReport: Report}); 
+            } else 
+                throw Error("No Milk Report Found")
+        }
+        catch(err) { 
+            logger.error(err.message)
+            let error = err.message 
+            res.status(400).json({ error: error });
+        }   
+    }
+]

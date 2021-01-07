@@ -6,5 +6,6 @@ const router = Router();
 // USER ACCESS
 router.get("/getMilkReport",milkReportController.getMilkReport);     
 router.post("/addMilkReport",milkReportController.addMilkReport);     
+router.put("/editMilkReport",milkReportController.editMilkReport);     
 
 module.exports = router;

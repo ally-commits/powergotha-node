@@ -56,3 +56,35 @@ module.exports.addFeedReport = [
         }   
     } 
 ];
+
+
+module.exports.editFeedReport = [
+    body('date').not().isEmpty().withMessage("date Feild is required"),   
+    body('feedType').not().isEmpty().withMessage("feedType Feild is required"),   
+    body('feedName').not().isEmpty().withMessage("feedName Feild is required"),   
+    body('quantity').not().isEmpty().withMessage("quantity Feild is required"),   
+    body('price').not().isEmpty().withMessage("price Feild is required"),  
+    body('feedReportId').not().isEmpty().withMessage("feedReportId Feild is required"),  
+
+    async (req, res) => {
+        const errors = validationResult(req);
+        if (!errors.isEmpty()) {
+            return res.status(400).json({ errors: errors.array() });
+        }
+        const userId = req.user._id;
+        const {date, feedType, feedName, quantity, price,feedReportId} = req.body;
+        try {
+            const feedR = await AnimalFeed.findByIdAndUpdate({_id: feedReportId, userId},{date, feedType, feedName, quantity, price}); 
+            if(feedR) {
+                const Report = await AnimalFeed.findById({_id: feedReportId, userId});
+                res.status(201).json({ message: "Feed Report Updated Successfully", feedReport: Report}); 
+            } else 
+                throw Error("No Feed Report Found")
+        }
+        catch(err) { 
+            logger.error(err.message)
+            let error = err.message 
+            res.status(400).json({ error: error });
+        }   
+    }
+]
