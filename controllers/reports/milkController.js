@@ -17,84 +17,97 @@ module.exports.totalMilkProduction = [
         try {   
 
             if(filter === "today"){
+                
                 var now = moment().format('YYYY-MM-DD');
-
-                const today = await MilkReport.find({userId, date : now} , "date milkInLiters" );
-                 if(today) { 
+               
+                const data = await MilkReport.aggregate([
+                    {$match: {
+                        "userId": new mongoose.Types.ObjectId(userId),
+                        "date": {$gte: new Date((new Date().getTime() - ( 24 * 60 * 60 * 1000)))},
+                    }},
+                    {$group: {
+                        _id : {key : "$date"},
+                        milkInLiters : {$sum : "$milkInLiters"},    
+                     }}
+                ])
+                 if(data) { 
                 logger.info("Request sent back");
-                res.status(201).json({ today });
+                res.status(201).json({ data });
             } else { 
                 throw Error("Report Not Found");
             }
             }
 
             if(filter === "daily"){
-                const daily = await MilkReport.aggregate([
+                
+                const data = await MilkReport.aggregate([
                     {$match: {
                         "userId": new mongoose.Types.ObjectId(userId),
+                        "date": {$gte:  new Date((new Date().getTime() - (7 * 24 * 60 * 60 * 1000)))}
                     }},
                     {$group: {
-                        _id : {date: "$date",time : "$time"},
-                        milkInLiters : {$sum : "$milkInLiters"},
-                     }}
-                    ]);
-                 if(daily) { 
+                        _id : {key : "$date"},
+                        milkInLiters : {$sum : "$milkInLiters"},    
+                    }}
+                ]).sort({ "date": -1 });
+            
+                 if(data) { 
                 logger.info("Request sent back");
-                res.status(201).json({ daily });
+                res.status(201).json({ data });
             } else { 
                 throw Error("Report Not Found");
             }
             }
 
             if(filter === "weekly"){
-                const week = await MilkReport.aggregate([
+                const data = await MilkReport.aggregate([
                     {$match: {
                         "userId": new mongoose.Types.ObjectId(userId),
                     }},
                     {$group: {
-                        _id : {week: { $week : "$date" },time : "$time"},
+                        _id : {key: { $week : "$date" },time : "$time"},
                         milkInLiters : {$sum : "$milkInLiters"},
                      }}
                     ]);
-                 if(week) { 
+                 if(data) { 
                 logger.info("Request sent back");
-                res.status(201).json({ week });
+                res.status(201).json({ data });
             } else { 
                 throw Error("Report Not Found");
             }
             }
 
             if(filter === "monthly"){
-                const month = await MilkReport.aggregate([
+                const data = await MilkReport.aggregate([
                     {$match: {
                         "userId": new mongoose.Types.ObjectId(userId),
                     }},
                     {$group: {
-                        _id : {month: { $month : "$date" }},
+                        _id : {key: { $month : "$date" }},
                         milkInLiters : {$sum : "$milkInLiters"}
                                 }}
                             ]);
-                 if(month) { 
+                 if(data) { 
                 logger.info("Request sent back");
-                res.status(201).json({ month });
+                res.status(201).json({ data });
             } else { 
                 throw Error("Report Not Found");
             }
             }
 
             if(filter === "yearly"){
-                const year = await MilkReport.aggregate([
+                const data = await MilkReport.aggregate([
                     {$match: {
                         "userId": new mongoose.Types.ObjectId(userId),
                     }},
                     {$group: {
-                        _id : {year: { $year : "$date" }},
+                        _id : {key: { $year : "$date" }},
                         milkInLiters : {$sum : "$milkInLiters"}
                                 }}
                             ]);
-                 if(year) { 
+                 if(data) { 
                 logger.info("Request sent back");
-                res.status(201).json({ year });
+                res.status(201).json({ data });
             } else { 
                 throw Error("Report Not Found");
             }
@@ -125,82 +138,95 @@ module.exports.averageFat = [
 
             if(filter === "today"){
                 var now = moment().format('YYYY-MM-DD');
-                const today = await MilkReport.find({userId, date: now} , "date time fat" );
-                 if(today) { 
+               
+                const data = await MilkReport.aggregate([
+                    {$match: {
+                        "userId": new mongoose.Types.ObjectId(userId),
+                        "date": {$gte: new Date((new Date().getTime() - ( 24 * 60 * 60 * 1000)))}
+                    }},
+                    {$group: {
+                        _id : {key : "$date"},
+                        fat : {$avg : "$fat"},
+                     }}
+                ])
+                 if(data) { 
                 logger.info("Request sent back");
-                res.status(201).json({ today });
+                res.status(201).json({ data });
             } else { 
                 throw Error("Report Not Found");
             }
             }
 
             if(filter === "daily"){
-                const daily = await MilkReport.aggregate([
+                
+                const data = await MilkReport.aggregate([
                     {$match: {
                         "userId": new mongoose.Types.ObjectId(userId),
+                        "date": {$gte:  new Date((new Date().getTime() - (7 * 24 * 60 * 60 * 1000)))}
                     }},
                     {$group: {
-                        _id : {date: "$date",time : "$time"},
+                        _id : {key : "$date"},
                         fat : {$avg : "$fat"},
-                     }}
-                    ]);
-                 if(daily) { 
+                    }}
+                ]).sort({ "date": -1 });
+            
+                 if(data) { 
                 logger.info("Request sent back");
-                res.status(201).json({ daily });
+                res.status(201).json({ data });
             } else { 
                 throw Error("Report Not Found");
             }
             }
 
             if(filter === "weekly"){
-                const week = await MilkReport.aggregate([
+                const data = await MilkReport.aggregate([
                     {$match: {
                         "userId": new mongoose.Types.ObjectId(userId),
                     }},
                     {$group: {
-                        _id : {week: { $week : "$date" },time : "$time"},
+                        _id : {key: { $week : "$date" },time : "$time"},
                         fat : {$avg : "$fat"},
                      }}
                     ]);
-                 if(week) { 
+                 if(data) { 
                 logger.info("Request sent back");
-                res.status(201).json({ week });
+                res.status(201).json({ data });
             } else { 
                 throw Error("Report Not Found");
             }
             }
 
             if(filter === "monthly"){
-                const month = await MilkReport.aggregate([
+                const data = await MilkReport.aggregate([
                     {$match: {
                         "userId": new mongoose.Types.ObjectId(userId),
                     }},
                     {$group: {
-                        _id : {month: { $month : "$date" },time : "$time"},
+                        _id : {key: { $month : "$date" },time : "$time"},
                         fat : {$avg : "$fat"}
                                 }}
                             ]);
-                 if(month) { 
+                 if(data) { 
                 logger.info("Request sent back");
-                res.status(201).json({ month });
+                res.status(201).json({ data });
             } else { 
                 throw Error("Report Not Found");
             }
             }
 
             if(filter === "yearly"){
-                const year = await MilkReport.aggregate([
+                const data = await MilkReport.aggregate([
                     {$match: {
                         "userId": new mongoose.Types.ObjectId(userId),
                     }},
                     {$group: {
-                        _id : {year: { $year : "$date" },time : "$time"},
+                        _id : {key: { $year : "$date" },time : "$time"},
                         fat : {$avg : "$fat"}
                                 }}
                             ]);
-                 if(year) { 
+                 if(data) { 
                 logger.info("Request sent back");
-                res.status(201).json({ year });
+                res.status(201).json({ data });
             } else { 
                 throw Error("Report Not Found");
             }
@@ -231,82 +257,95 @@ module.exports.averageSnf = [
 
             if(filter === "today"){
                 var now = moment().format('YYYY-MM-DD');
-                const today = await MilkReport.find({userId, date : now} , "date time SNF" );
-                 if(today) { 
+               
+                const data = await MilkReport.aggregate([
+                    {$match: {
+                        "userId": new mongoose.Types.ObjectId(userId),
+                        "date": {$gte: new Date((new Date().getTime() - ( 24 * 60 * 60 * 1000)))}
+                    }},
+                    {$group: {
+                        _id : {key : "$date"},
+                        SNF : {$avg : "$SNF"},
+                    }}
+                ])
+                 if(data) { 
                 logger.info("Request sent back");
-                res.status(201).json({ today });
+                res.status(201).json({ data });
             } else { 
                 throw Error("Report Not Found");
             }
             }
 
             if(filter === "daily"){
-                const daily = await MilkReport.aggregate([
+               
+                const data = await MilkReport.aggregate([
                     {$match: {
                         "userId": new mongoose.Types.ObjectId(userId),
+                        "date": {$gte:  new Date((new Date().getTime() - (7 * 24 * 60 * 60 * 1000)))}
                     }},
                     {$group: {
-                        _id : {date: "$date",time : "$time"},
+                        _id : {key : "$date"},
                         SNF : {$avg : "$SNF"},
                      }}
-                    ]);
-                 if(daily) { 
+                ]).sort({ "date": -1 });
+            
+                 if(data) { 
                 logger.info("Request sent back");
-                res.status(201).json({ daily });
+                res.status(201).json({ data });
             } else { 
                 throw Error("Report Not Found");
             }
             }
 
             if(filter === "weekly"){
-                const week = await MilkReport.aggregate([
+                const data = await MilkReport.aggregate([
                     {$match: {
                         "userId": new mongoose.Types.ObjectId(userId),
                     }},
                     {$group: {
-                        _id : {week: { $week : "$date" },time : "$time"},
+                        _id : {key: { $week : "$date" },time : "$time"},
                         SNF : {$avg : "$SNF"},
                      }}
                     ]);
-                 if(week) { 
+                 if(data) { 
                 logger.info("Request sent back");
-                res.status(201).json({ week });
+                res.status(201).json({ data });
             } else { 
                 throw Error("Report Not Found");
             }
             }
 
             if(filter === "monthly"){
-                const month = await MilkReport.aggregate([
+                const data = await MilkReport.aggregate([
                     {$match: {
                         "userId": new mongoose.Types.ObjectId(userId),
                     }},
                     {$group: {
-                        _id : {month: { $month : "$date" },time : "$time"},
+                        _id : {key: { $month : "$date" },time : "$time"},
                         SNF : {$avg : "$SNF"}
                                 }}
                             ]);
-                 if(month) { 
+                 if(data) { 
                 logger.info("Request sent back");
-                res.status(201).json({ month });
+                res.status(201).json({ data });
             } else { 
                 throw Error("Report Not Found");
             }
             }
 
             if(filter === "yearly"){
-                const year = await MilkReport.aggregate([
+                const data = await MilkReport.aggregate([
                     {$match: {
                         "userId": new mongoose.Types.ObjectId(userId),
                     }},
                     {$group: {
-                        _id : {year: { $year : "$date" },time : "$time"},
+                        _id : {key: { $year : "$date" },time : "$time"},
                         SNF : {$avg : "$SNF"}
                                 }}
                             ]);
-                 if(year) { 
+                 if(data) { 
                 logger.info("Request sent back");
-                res.status(201).json({ year });
+                res.status(201).json({ data });
             } else { 
                 throw Error("Report Not Found");
             }

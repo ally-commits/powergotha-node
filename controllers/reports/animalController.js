@@ -19,12 +19,20 @@ module.exports.saleOfAnimals = [
             if(filter === "today"){
                
                 var now = moment().format('YYYY-MM-DD');
-
-                const Today = await Animal.find({userId, date : now } , "createdAt purchasingPrice" );
-
-                if(Today) { 
+               
+                const data = await Animal.aggregate([
+                    {$match: {
+                        "userId": new mongoose.Types.ObjectId(userId),
+                        "date": {$gte: new Date((new Date().getTime() - ( 24 * 60 * 60 * 1000)))}
+                    }},
+                    {$group: {
+                        _id : {key : "$date"},
+                        purchasingPrice : {$sum : "$purchasingPrice"},
+                     }}
+                ])
+                if(data) { 
                 logger.info("Request sent back");
-                res.status(201).json({ Today });
+                res.status(201).json({ data });
                 } else { 
                 throw Error("Report Not Found");
                 }
@@ -32,77 +40,77 @@ module.exports.saleOfAnimals = [
 
             if(filter === "daily"){
                 
-                const daily = await HealthRecord.find(
-                    {
-                        userId,
-                        "date": 
-                        {
-                            $gte: new Date((new Date().getTime() - (7 * 24 * 60 * 60 * 1000)))
-                        }
-                    }, "purchasingPrice"
-                    ).sort({ "date": -1 })
-
                 
-                 if(Daily) { 
-                    purchasingPrice = {$sum : "$purchasingPrice"},
+                    const data = await Animal.aggregate([
+                        {$match: {
+                            "userId": new mongoose.Types.ObjectId(userId),
+                            "date": {$gte:  new Date((new Date().getTime() - (7 * 24 * 60 * 60 * 1000)))}
+                        }},
+                        {$group: {
+                            _id : {key : "$date"},
+                            purchasingPrice : {$sum : "$purchasingPrice"},
+                         }}
+                                ]).sort({ "date": -1 });
+                
+                 if(data) { 
 
                 logger.info("Request sent back");
-                res.status(201).json({ Daily });
+                res.status(201).json({ data });
                 } else { 
                 throw Error("Report Not Found");
                 }
             }
 
             if(filter === "weekly"){
-                const Week = await Animal.aggregate([
+                const data = await Animal.aggregate([
                     {$match: {
                         "userId": new mongoose.Types.ObjectId(userId),
                     }},
                     {$group: {
-                        _id : {week: { $week : "$createdAt" }},
+                        _id : {key: { $week : "$createdAt" }},
                         purchasingPrice : {$sum : "$purchasingPrice"},
                      }}
                     ]);
-                 if(Week) { 
+                 if(data) { 
                 logger.info("Request sent back");
-                res.status(201).json({ Week });
+                res.status(201).json({ data });
                 } else { 
                 throw Error("Report Not Found");
                 }
             }
 
             if(filter === "monthly"){
-                const Month = await Animal.aggregate([
+                const data = await Animal.aggregate([
                     {$match: {
                         "userId": new mongoose.Types.ObjectId(userId),
                     }},
                     {$group: {
-                        _id : {month: { $month : "$createdAt" }},
+                        _id : {key: { $month : "$createdAt" }},
                         purchasingPrice : {$sum : "$purchasingPrice"},
                     }}
                             ]);
-                 if(Month) { 
+                 if(data) { 
                 logger.info("Request sent back");
-                res.status(201).json({ Month });
+                res.status(201).json({ data });
                 } else { 
                 throw Error("Report Not Found");
                 }
             }
 
             if(filter === "yearly"){
-                const Year = await Animal.aggregate([
+                const data = await Animal.aggregate([
                     {$match: {
                         "userId": new mongoose.Types.ObjectId(userId),
                     }},
                     {$group: {
-                        _id : {year: { $year : "$createdAt" }},
+                        _id : {key: { $year : "$createdAt" }},
                         purchasingPrice : {$sum : "$purchasingPrice"},
 
                     }}
                 ]);
-                 if(Year) { 
+                 if(data) { 
                 logger.info("Request sent back");
-                res.status(201).json({ Year });
+                res.status(201).json({ data });
                 } else { 
                 throw Error("Report Not Found");
                 }
@@ -133,11 +141,21 @@ module.exports.reproductiveReport = [
 
             if(filter === "today"){
                 var now = moment().format('YYYY-MM-DD');
-                const today = await Animal.find({userId, date : now} , "createdAt pregnant loctating" );
-
-                if(today) { 
+               
+                const data = await Animal.aggregate([
+                    {$match: {
+                        "userId": new mongoose.Types.ObjectId(userId),
+                        "date": {$gte: new Date((new Date().getTime() - ( 24 * 60 * 60 * 1000)))}
+                    }},
+                    {$group: {
+                        _id : {key : "$date"},
+                        pregnant: {$sum: {$cond: [{$eq:["$pregnant", true]}, 1, 0]}},
+                        loctating: {$sum: {$cond: [{$eq:["$loctating", true]}, 1, 0]}}
+                     }}
+                ])
+                if(data) { 
                 logger.info("Request sent back");
-                res.status(201).json({ today });
+                res.status(201).json({ data });
                 } else { 
                 throw Error("Report Not Found");
                 }
@@ -145,78 +163,80 @@ module.exports.reproductiveReport = [
 
             if(filter === "daily"){
 
-                const daily = await HealthRecord.find(
-                    {
-                        userId,
-                        "date": 
-                        {
-                            $gte: new Date((new Date().getTime() - (7 * 24 * 60 * 60 * 1000)))
-                        }
-                    }, "animal pregnant loctating"
-                    ).sort({ "date": -1 })
+                const data = await Animal.aggregate([
+                    {$match: {
+                        "userId": new mongoose.Types.ObjectId(userId),
+                        "date": {$gte:  new Date((new Date().getTime() - (7 * 24 * 60 * 60 * 1000)))}
+                    }},
+                    {$group: {
+                        _id : {key : "$date"},
+                        pregnant: {$sum: {$cond: [{$eq:["$pregnant", true]}, 1, 0]}},
+                        loctating: {$sum: {$cond: [{$eq:["$loctating", true]}, 1, 0]}},
+                     }}
+                            ]).sort({ "date": -1 });
 
                
-                 if(daily) { 
+                 if(data) { 
                     
                 logger.info("Request sent back");
-                res.status(201).json({ daily });
+                res.status(201).json({ data });
                 } else { 
                 throw Error("Report Not Found");
                 }
             }
 
             if(filter === "weekly"){
-                const week = await Animal.aggregate([
+                const data = await Animal.aggregate([
                     {$match: {
                         "userId": new mongoose.Types.ObjectId(userId),
                     }},
                     {$group: {
-                        _id : {week: { $week : "$createdAt" } },
+                        _id : {key: { $week : "$createdAt" } },
                         pregnant: {$sum: {$cond: [{$eq:["$pregnant", true]}, 1, 0]}},
                         loctating: {$sum: {$cond: [{$eq:["$loctating", true]}, 1, 0]}},
                      }}
                     ]);
-                 if(week) { 
+                 if(data) { 
                 logger.info("Request sent back");
-                res.status(201).json({ week });
+                res.status(201).json({ data });
                 } else { 
                 throw Error("Report Not Found");
                 }
             }
 
             if(filter === "monthly"){
-                const month = await Animal.aggregate([
+                const data = await Animal.aggregate([
                     {$match: {
                         "userId": new mongoose.Types.ObjectId(userId),
                     }},
                     {$group: {
-                        _id : {month: { $month : "$createdAt" }},
+                        _id : {key: { $month : "$createdAt" }},
                         pregnant: {$sum: {$cond: [{$eq:["$pregnant", true]}, 1, 0]}},
                         loctating: {$sum: {$cond: [{$eq:["$loctating", true]}, 1, 0]}},
                     }}
                             ]);
-                 if(month) { 
+                 if(data) { 
                 logger.info("Request sent back");
-                res.status(201).json({ month });
+                res.status(201).json({ data });
                 } else { 
                 throw Error("Report Not Found");
                 }
             }
 
             if(filter === "yearly"){
-                const year = await Animal.aggregate([
+                const data = await Animal.aggregate([
                     {$match: {
                         "userId": new mongoose.Types.ObjectId(userId),
                     }},
                     {$group: {
-                        _id : {year: { $year : "$createdAt" }},
+                        _id : {key: { $year : "$createdAt" }},
                         pregnant: {$sum: {$cond: [{$eq:["$pregnant", true]}, 1, 0]}},
                         loctating: {$sum: {$cond: [{$eq:["$loctating", true]}, 1, 0]}},
                     }}
                 ]);
-                 if(year) { 
+                 if(data) { 
                 logger.info("Request sent back");
-                res.status(201).json({ year });
+                res.status(201).json({ data });
                 } else { 
                 throw Error("Report Not Found");
                 }
@@ -248,12 +268,24 @@ module.exports.diseaseReport = [
 
             if(filter === "today"){
                 var now = moment().format('YYYY-MM-DD');
-                
-                const today = await HealthRecord.find({userId, date : now } , "animal price" );
-                
-                if(today) { 
+               
+                const data = await HealthRecord.aggregate([
+                    {$match: {
+                        "userId": new mongoose.Types.ObjectId(userId),
+                        "date": {$gte: new Date((new Date().getTime() - ( 24 * 60 * 60 * 1000)))}
+                    }},
+                    {
+                        $unwind: "$animal"
+                    },
+                    {$group: {
+                        _id : {key : "$date"},
+                        price: {$sum:  "$price"},
+                        count: { $sum: 1 }
+                     }}
+                ])
+                if(data) { 
                 logger.info("Request sent back");
-                res.status(201).json({ today });
+                res.status(201).json({ data });
                 } else { 
                 throw Error("Report Not Found");
                 }
@@ -261,28 +293,32 @@ module.exports.diseaseReport = [
 
             if(filter === "daily"){
 
-                
-                const daily = await HealthRecord.find(
+                const data = await HealthRecord.aggregate([
+                    {$match: {
+                        "userId": new mongoose.Types.ObjectId(userId),
+                        "date": {$gte:  new Date((new Date().getTime() - (7 * 24 * 60 * 60 * 1000)))}
+                    }},
                     {
-                        
-                        "date": 
-                        {
-                            $gte: new Date((new Date().getTime() - (7 * 24 * 60 * 60 * 1000)))
-                        }
-                    }, "animal price"
-                    ).sort({ "date": -1 })
+                        $unwind: "$animal"
+                    },
+                    {$group: {
+                        _id : {key : "$date"},
+                        price: {$sum:  "$price"},
+                        count: { $sum: 1 }
+                     }}
+                            ]).sort({ "date": -1 });
 
-                 if(daily) { 
+                 if(data) { 
                     
                 logger.info("Request sent back");
-                res.status(201).json({ daily  });
+                res.status(201).json({ data  });
                 } else { 
                 throw Error("Report Not Found");
                 }
             }
 
             if(filter === "weekly"){
-                const week = await HealthRecord.aggregate([
+                const data = await HealthRecord.aggregate([
                     {$match: {
                         "userId": new mongoose.Types.ObjectId(userId),
                     }},
@@ -290,22 +326,22 @@ module.exports.diseaseReport = [
                         $unwind: "$animal"
                     },
                     {$group: {
-                        _id : {week: { $week : "$createdAt" } },
+                        _id : {key: { $week : "$createdAt" } },
                         price: {$sum:  "$price"},
                         count: { $sum: 1 }
 
                      }}
                     ]);
-                 if(week) { 
+                 if(data) { 
                 logger.info("Request sent back");
-                res.status(201).json({ week });
+                res.status(201).json({ data });
                 } else { 
                 throw Error("Report Not Found");
                 }
             }
 
             if(filter === "monthly"){
-                const month = await HealthRecord.aggregate([
+                const data = await HealthRecord.aggregate([
                     {$match: {
                         "userId": new mongoose.Types.ObjectId(userId),
                     }},
@@ -313,23 +349,23 @@ module.exports.diseaseReport = [
                         $unwind: "$animal"
                     },
                     {$group: {
-                        _id : {month: { $month : "$createdAt" }},
+                        _id : {key: { $month : "$createdAt" }},
                         price: {$sum:  "$price"},
                         count: { $sum: 1 }
                     }},
                    
                     
                             ]);
-                 if(month) { 
+                 if(data) { 
                 logger.info("Request sent back");
-                res.status(201).json({ month });
+                res.status(201).json({ data });
                 } else { 
                 throw Error("Report Not Found");
                 }
             }
 
             if(filter === "yearly"){
-                const year = await HealthRecord.aggregate([
+                const data = await HealthRecord.aggregate([
                     {$match: {
                         "userId": new mongoose.Types.ObjectId(userId),
                     }},
@@ -337,15 +373,15 @@ module.exports.diseaseReport = [
                         $unwind: "$animal"
                     },
                     {$group: {
-                        _id : {year: { $year : "$createdAt" }},
+                        _id : {key: { $year : "$createdAt" }},
                         price: {$sum:  "$price"},
                         count: { $sum: 1 }
 
                     }}
                 ]);
-                 if(year) { 
+                 if(data) { 
                 logger.info("Request sent back");
-                res.status(201).json({ year });
+                res.status(201).json({ data });
                 } else { 
                 throw Error("Report Not Found");
                 }
