@@ -16,10 +16,16 @@ const incomeReportSchema = new mongoose.Schema({
         required: true,
         enum: ["Milk Sale Morning","Milk Sale Evening","Manure Production","Animal Selling","other"]
     },
-    quantityInLitre: {
+    quantityInLitreMorning: {
         type: Number
     },
-    pricePerLitre: {
+    pricePerLitreMorning: {
+        type: Number
+    },
+    quantityInLitreEvening: {
+        type: Number
+    },
+    pricePerLitreEvening: {
         type: Number
     },
     quantityInKg: {

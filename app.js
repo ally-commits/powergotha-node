@@ -30,6 +30,7 @@ const userBreedingRecordRoute = require("./routes/userRoutes/breedingRecordRoute
 const userHealthRecordRoute = require("./routes/userRoutes/healthRecordRoute");
 const userexpenseRoute = require("./routes/userRoutes/expenseRoute");
 const userincomeRoute = require("./routes/userRoutes/incomeRoute");
+const userprofitLossRoute = require("./routes/userRoutes/profitLossRoute");
 
 const milkRoute = require("./routes/reportsRoutes/milkRoute");
 const animalRoute = require("./routes/reportsRoutes/animalRoute");
@@ -82,6 +83,7 @@ app.use("/api/user/feedback", checkUserPermission(), userFeedbackRoute)
 app.use("/api/user/", checkUserPermission(), userRoute)
 app.use("/api/user/expense", checkUserPermission(), userexpenseRoute)
 app.use("/api/user/income", checkUserPermission(), userincomeRoute)
+app.use("/api/user/profitLoss", checkUserPermission(), userprofitLossRoute)
 
 
 

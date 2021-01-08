@@ -8,25 +8,28 @@ var moment = require('moment');
 module.exports.totalMilkProduction = [
     
     query('filter').not().isEmpty().withMessage("filter parameter is required"),
+    query('time').not().isEmpty().withMessage("time parameter is required"),
 
     async (req, res) => {
         const userId = req.user._id;
        
         let filter = req.query.filter;
+        let time = req.query.time;
 
         try {   
 
             if(filter === "today"){
                 
-                var now = moment().format('YYYY-MM-DD');
                
                 const data = await MilkReport.aggregate([
                     {$match: {
                         "userId": new mongoose.Types.ObjectId(userId),
                         "date": {$gte: new Date((new Date().getTime() - ( 24 * 60 * 60 * 1000)))},
+                        "time" : {$eq : time}
                     }},
                     {$group: {
-                        _id : {key : "$date"},
+                        _id : {key : "$date",time : "$time"},
+                        time : {$sum : "$time"},
                         milkInLiters : {$sum : "$milkInLiters"},    
                      }}
                 ])
@@ -43,10 +46,11 @@ module.exports.totalMilkProduction = [
                 const data = await MilkReport.aggregate([
                     {$match: {
                         "userId": new mongoose.Types.ObjectId(userId),
-                        "date": {$gte:  new Date((new Date().getTime() - (7 * 24 * 60 * 60 * 1000)))}
+                        "date": {$gte:  new Date((new Date().getTime() - (7 * 24 * 60 * 60 * 1000)))},
+                        "time" : {$eq : time}
                     }},
                     {$group: {
-                        _id : {key : "$date"},
+                        _id : {key : "$date", time : "$time"},
                         milkInLiters : {$sum : "$milkInLiters"},    
                     }}
                 ]).sort({ "date": -1 });
@@ -63,6 +67,7 @@ module.exports.totalMilkProduction = [
                 const data = await MilkReport.aggregate([
                     {$match: {
                         "userId": new mongoose.Types.ObjectId(userId),
+                        "time" : {$eq : time}
                     }},
                     {$group: {
                         _id : {key: { $week : "$date" },time : "$time"},
@@ -81,9 +86,10 @@ module.exports.totalMilkProduction = [
                 const data = await MilkReport.aggregate([
                     {$match: {
                         "userId": new mongoose.Types.ObjectId(userId),
+                        "time" : {$eq : time}
                     }},
                     {$group: {
-                        _id : {key: { $month : "$date" }},
+                        _id : {key: { $month : "$date" },time : "$time"},
                         milkInLiters : {$sum : "$milkInLiters"}
                                 }}
                             ]);
@@ -99,9 +105,10 @@ module.exports.totalMilkProduction = [
                 const data = await MilkReport.aggregate([
                     {$match: {
                         "userId": new mongoose.Types.ObjectId(userId),
+                        "time" : {$eq : time}
                     }},
                     {$group: {
-                        _id : {key: { $year : "$date" }},
+                        _id : {key: { $year : "$date" },time : "$time"},
                         milkInLiters : {$sum : "$milkInLiters"}
                                 }}
                             ]);
@@ -137,9 +144,22 @@ module.exports.averageFat = [
         try {   
 
             if(filter === "today"){
-                var now = moment().format('YYYY-MM-DD');
                
                 const data = await MilkReport.aggregate([
+                    {$match: {
+                        "userId": new mongoose.Types.ObjectId(userId),
+                        "date": {$gte: new Date((new Date().getTime() - ( 24 * 60 * 60 * 1000)))}
+                    }},
+                    {$group: {
+                        _id : {time : "$time"},
+                        fat : {$avg : "$fat"},
+                     }}
+
+                     
+                ])
+
+                
+                const data2 = await MilkReport.aggregate([
                     {$match: {
                         "userId": new mongoose.Types.ObjectId(userId),
                         "date": {$gte: new Date((new Date().getTime() - ( 24 * 60 * 60 * 1000)))}
@@ -148,10 +168,14 @@ module.exports.averageFat = [
                         _id : {key : "$date"},
                         fat : {$avg : "$fat"},
                      }}
+
+                     
                 ])
-                 if(data) { 
+
+                
+                 if(data && data2) { 
                 logger.info("Request sent back");
-                res.status(201).json({ data });
+                res.status(201).json({ data,data2 });
             } else { 
                 throw Error("Report Not Found");
             }
@@ -162,6 +186,18 @@ module.exports.averageFat = [
                 const data = await MilkReport.aggregate([
                     {$match: {
                         "userId": new mongoose.Types.ObjectId(userId),
+                        "date": {$gte:  new Date((new Date().getTime() - (7 * 24 * 60 * 60 * 1000)))},
+                        
+                    }},
+                    {$group: {
+                        _id : {time : "$time"},
+                        fat : {$avg : "$fat"},
+                    }}
+                ]).sort({ "date": -1 });
+            
+                const data2 = await MilkReport.aggregate([
+                    {$match: {
+                        "userId": new mongoose.Types.ObjectId(userId),
                         "date": {$gte:  new Date((new Date().getTime() - (7 * 24 * 60 * 60 * 1000)))}
                     }},
                     {$group: {
@@ -170,9 +206,9 @@ module.exports.averageFat = [
                     }}
                 ]).sort({ "date": -1 });
             
-                 if(data) { 
+                 if(data && data2) { 
                 logger.info("Request sent back");
-                res.status(201).json({ data });
+                res.status(201).json({ data, data2 });
             } else { 
                 throw Error("Report Not Found");
             }
@@ -184,13 +220,23 @@ module.exports.averageFat = [
                         "userId": new mongoose.Types.ObjectId(userId),
                     }},
                     {$group: {
-                        _id : {key: { $week : "$date" },time : "$time"},
+                        _id : {time : "$time"},
                         fat : {$avg : "$fat"},
                      }}
                     ]);
-                 if(data) { 
+
+                const data2 = await MilkReport.aggregate([
+                        {$match: {
+                            "userId": new mongoose.Types.ObjectId(userId),
+                        }},
+                        {$group: {
+                            _id : {key: { $week : "$date" }},
+                            fat : {$avg : "$fat"},
+                         }}
+                        ]);
+                 if(data && data2) { 
                 logger.info("Request sent back");
-                res.status(201).json({ data });
+                res.status(201).json({ data, data2 });
             } else { 
                 throw Error("Report Not Found");
             }
@@ -202,13 +248,22 @@ module.exports.averageFat = [
                         "userId": new mongoose.Types.ObjectId(userId),
                     }},
                     {$group: {
-                        _id : {key: { $month : "$date" },time : "$time"},
+                        _id : {time : "$time"},
                         fat : {$avg : "$fat"}
                                 }}
                             ]);
-                 if(data) { 
+                const data2 = await MilkReport.aggregate([
+                    {$match: {
+                        "userId": new mongoose.Types.ObjectId(userId),
+                    }},
+                    {$group: {
+                        _id : {key: { $month : "$date" }},
+                        fat : {$avg : "$fat"}
+                    }}
+                    ]);
+                 if(data && data2) { 
                 logger.info("Request sent back");
-                res.status(201).json({ data });
+                res.status(201).json({ data, data2 });
             } else { 
                 throw Error("Report Not Found");
             }
@@ -220,13 +275,22 @@ module.exports.averageFat = [
                         "userId": new mongoose.Types.ObjectId(userId),
                     }},
                     {$group: {
-                        _id : {key: { $year : "$date" },time : "$time"},
+                        _id : {time : "$time"},
                         fat : {$avg : "$fat"}
                                 }}
                             ]);
-                 if(data) { 
+                const data2 = await MilkReport.aggregate([
+                    {$match: {
+                        "userId": new mongoose.Types.ObjectId(userId),
+                    }},
+                    {$group: {
+                        _id : {key: { $year : "$date" }},
+                        fat : {$avg : "$fat"}
+                    }}
+                ]);
+                 if(data && data2) { 
                 logger.info("Request sent back");
-                res.status(201).json({ data });
+                res.status(201).json({ data, data2 });
             } else { 
                 throw Error("Report Not Found");
             }
@@ -256,9 +320,19 @@ module.exports.averageSnf = [
         try {   
 
             if(filter === "today"){
-                var now = moment().format('YYYY-MM-DD');
                
                 const data = await MilkReport.aggregate([
+                    {$match: {
+                        "userId": new mongoose.Types.ObjectId(userId),
+                        "date": {$gte: new Date((new Date().getTime() - ( 24 * 60 * 60 * 1000)))}
+                    }},
+                    {$group: {
+                        _id : {time : "$time"},
+                        SNF : {$avg : "$SNF"},
+                    }}
+                ])
+
+                const data2 = await MilkReport.aggregate([
                     {$match: {
                         "userId": new mongoose.Types.ObjectId(userId),
                         "date": {$gte: new Date((new Date().getTime() - ( 24 * 60 * 60 * 1000)))}
@@ -268,9 +342,9 @@ module.exports.averageSnf = [
                         SNF : {$avg : "$SNF"},
                     }}
                 ])
-                 if(data) { 
+                 if(data && data2) { 
                 logger.info("Request sent back");
-                res.status(201).json({ data });
+                res.status(201).json({ data, data2 });
             } else { 
                 throw Error("Report Not Found");
             }
@@ -284,14 +358,24 @@ module.exports.averageSnf = [
                         "date": {$gte:  new Date((new Date().getTime() - (7 * 24 * 60 * 60 * 1000)))}
                     }},
                     {$group: {
-                        _id : {key : "$date"},
+                        _id : {time : "$time"},
                         SNF : {$avg : "$SNF"},
                      }}
                 ]).sort({ "date": -1 });
             
-                 if(data) { 
+                const data2 = await MilkReport.aggregate([
+                    {$match: {
+                        "userId": new mongoose.Types.ObjectId(userId),
+                        "date": {$gte:  new Date((new Date().getTime() - (7 * 24 * 60 * 60 * 1000)))}
+                    }},
+                    {$group: {
+                        _id : {key : "$date"},
+                        SNF : {$avg : "$SNF"},
+                     }}
+                ]).sort({ "date": -1 });
+                 if(data && data2) { 
                 logger.info("Request sent back");
-                res.status(201).json({ data });
+                res.status(201).json({ data, data2 });
             } else { 
                 throw Error("Report Not Found");
             }
@@ -303,13 +387,23 @@ module.exports.averageSnf = [
                         "userId": new mongoose.Types.ObjectId(userId),
                     }},
                     {$group: {
-                        _id : {key: { $week : "$date" },time : "$time"},
+                        _id : {time : "$time"},
                         SNF : {$avg : "$SNF"},
                      }}
                     ]);
-                 if(data) { 
+
+                const data2 = await MilkReport.aggregate([
+                    {$match: {
+                        "userId": new mongoose.Types.ObjectId(userId),
+                    }},
+                    {$group: {
+                        _id : {key: { $week : "$date" }},
+                        SNF : {$avg : "$SNF"},
+                     }}
+                ]);
+                 if(data && data2) { 
                 logger.info("Request sent back");
-                res.status(201).json({ data });
+                res.status(201).json({ data, data2 });
             } else { 
                 throw Error("Report Not Found");
             }
@@ -321,13 +415,23 @@ module.exports.averageSnf = [
                         "userId": new mongoose.Types.ObjectId(userId),
                     }},
                     {$group: {
-                        _id : {key: { $month : "$date" },time : "$time"},
+                        _id : {time : "$time"},
                         SNF : {$avg : "$SNF"}
                                 }}
                             ]);
-                 if(data) { 
+
+                const data2 = await MilkReport.aggregate([
+                    {$match: {
+                        "userId": new mongoose.Types.ObjectId(userId),
+                    }},
+                    {$group: {
+                        _id : {key: { $month : "$date" }},
+                            SNF : {$avg : "$SNF"}
+                    }}
+                ]);
+                 if(data && data2) { 
                 logger.info("Request sent back");
-                res.status(201).json({ data });
+                res.status(201).json({ data, data2 });
             } else { 
                 throw Error("Report Not Found");
             }
@@ -339,13 +443,23 @@ module.exports.averageSnf = [
                         "userId": new mongoose.Types.ObjectId(userId),
                     }},
                     {$group: {
-                        _id : {key: { $year : "$date" },time : "$time"},
+                        _id : {time : "$time"},
                         SNF : {$avg : "$SNF"}
                                 }}
                             ]);
-                 if(data) { 
+
+                const data2 = await MilkReport.aggregate([
+                    {$match: {
+                        "userId": new mongoose.Types.ObjectId(userId),
+                    }},
+                    {$group: {
+                        _id : {key: { $year : "$date" }},
+                        SNF : {$avg : "$SNF"}
+                    }}
+                ]);
+                 if(data && data2) { 
                 logger.info("Request sent back");
-                res.status(201).json({ data });
+                res.status(201).json({ data, data2 });
             } else { 
                 throw Error("Report Not Found");
             }
