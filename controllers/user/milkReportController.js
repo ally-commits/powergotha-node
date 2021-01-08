@@ -12,11 +12,11 @@ module.exports.getMilkReport = [
         let date = req.query.date;
         let time = req.query.time;
         try {   
-            const report = await MilkReport.findOne({time,date:  {"$gte": new Date(date),"$lte": new Date(date)} });
+            const data = await MilkReport.findOne({time,date:  {"$gte": new Date(date),"$lte": new Date(date)} }).populate({path: "animal", select: 'tagNumber animalType'});
 
-            if(report) { 
+            if(data) { 
                 logger.info("Request sent back");
-                res.status(201).json({ report});
+                res.status(201).json({ data });
             } else { 
                 throw Error("Report Not Found");
             }

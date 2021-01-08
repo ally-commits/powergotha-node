@@ -150,7 +150,9 @@ module.exports.reproductiveReport = [
                     {$group: {
                         _id : {key : "$date"},
                         pregnant: {$sum: {$cond: [{$eq:["$pregnant", true]}, 1, 0]}},
-                        loctating: {$sum: {$cond: [{$eq:["$loctating", true]}, 1, 0]}}
+                        loctating: {$sum: {$cond: [{$eq:["$loctating", true]}, 1, 0]}},
+                        notpregnant: {$sum: {$cond: [{$eq:["$pregnant", false]}, 1, 0]}},
+                        notloctating: {$sum: {$cond: [{$eq:["$loctating", false]}, 1, 0]}}
                      }}
                 ])
                 if(data) { 
@@ -172,6 +174,8 @@ module.exports.reproductiveReport = [
                         _id : {key : "$date"},
                         pregnant: {$sum: {$cond: [{$eq:["$pregnant", true]}, 1, 0]}},
                         loctating: {$sum: {$cond: [{$eq:["$loctating", true]}, 1, 0]}},
+                        notpregnant: {$sum: {$cond: [{$eq:["$pregnant", false]}, 1, 0]}},
+                        notloctating: {$sum: {$cond: [{$eq:["$loctating", false]}, 1, 0]}}
                      }}
                             ]).sort({ "date": -1 });
 
@@ -194,6 +198,8 @@ module.exports.reproductiveReport = [
                         _id : {key: { $week : "$createdAt" } },
                         pregnant: {$sum: {$cond: [{$eq:["$pregnant", true]}, 1, 0]}},
                         loctating: {$sum: {$cond: [{$eq:["$loctating", true]}, 1, 0]}},
+                        notpregnant: {$sum: {$cond: [{$eq:["$pregnant", false]}, 1, 0]}},
+                        notloctating: {$sum: {$cond: [{$eq:["$loctating", false]}, 1, 0]}}
                      }}
                     ]);
                  if(data) { 
@@ -213,6 +219,8 @@ module.exports.reproductiveReport = [
                         _id : {key: { $month : "$createdAt" }},
                         pregnant: {$sum: {$cond: [{$eq:["$pregnant", true]}, 1, 0]}},
                         loctating: {$sum: {$cond: [{$eq:["$loctating", true]}, 1, 0]}},
+                        notpregnant: {$sum: {$cond: [{$eq:["$pregnant", false]}, 1, 0]}},
+                        notloctating: {$sum: {$cond: [{$eq:["$loctating", false]}, 1, 0]}}
                     }}
                             ]);
                  if(data) { 
@@ -232,6 +240,8 @@ module.exports.reproductiveReport = [
                         _id : {key: { $year : "$createdAt" }},
                         pregnant: {$sum: {$cond: [{$eq:["$pregnant", true]}, 1, 0]}},
                         loctating: {$sum: {$cond: [{$eq:["$loctating", true]}, 1, 0]}},
+                        notpregnant: {$sum: {$cond: [{$eq:["$pregnant", false]}, 1, 0]}},
+                        notloctating: {$sum: {$cond: [{$eq:["$loctating", false]}, 1, 0]}}
                     }}
                 ]);
                  if(data) { 

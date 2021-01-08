@@ -7,5 +7,6 @@ const router = Router();
 router.post("/addExpense",expenseController.addExpense);    
 router.get("/getAllExpense",expenseController.getAllExpense);    
 router.put("/editExpense",expenseController.editExpense);    
+router.get("/totalExpense",expenseController.totalExpense);    
 
 module.exports = router;

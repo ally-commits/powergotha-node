@@ -7,5 +7,6 @@ const router = Router();
 router.get("/getFeedReport",feedReportController.getFeedReport);     
 router.post("/addFeedReport",feedReportController.addFeedReport);     
 router.put("/editFeedReport",feedReportController.editFeedReport);     
+router.get("/totalFeed",feedReportController.totalFeed);     
 
 module.exports = router;
