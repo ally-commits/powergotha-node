@@ -4,7 +4,6 @@ const logger = require("../../logger/logger")
  
 
 module.exports.getMilkReport = [
-    query('date').not().isEmpty().withMessage("date parameter is required"),
     query('time').not().isEmpty().withMessage("time parameter is required"),
 
     async (req, res) => {
@@ -12,8 +11,8 @@ module.exports.getMilkReport = [
         let date = req.query.date;
         let time = req.query.time;
         try {   
-            const data = await MilkReport.findOne({time,date:  {"$gte": new Date(date),"$lte": new Date(date)} }).populate({path: "animal", select: 'tagNumber animalType'});
-
+            const data = await MilkReport.findOne({userId,time }).populate({path: "animal", select: 'tagNumber animalType'});
+            //date:  {"$gte": new Date(date),"$lte": new Date(date)}
             if(data) { 
                 logger.info("Request sent back");
                 res.status(201).json({ data });

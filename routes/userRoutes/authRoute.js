@@ -8,6 +8,8 @@ router.post("/sendOtp",authController.sendOtp);
 
 router.post("/loginWithPhoneNumber",authController.loginWithPhoneNumber);  
 router.post("/registerWithPhoneNumber",authController.registerWithPhoneNumber);  
+router.post("/googleAuth",authController.googleAuth);  
+router.post("/facebookAuth",authController.facebookAuth);  
 
 router.post("/loginWithEmail",authController.loginWithEmail);  
 router.post("/registerWithEmail",authController.registerWithEmail);  
