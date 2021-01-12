@@ -11,7 +11,7 @@ module.exports.getMilkReport = [
         let date = req.query.date;
         let time = req.query.time;
         try {   
-            const data = await MilkReport.findOne({userId,time }).populate({path: "animal", select: 'tagNumber animalType'});
+            const data = await MilkReport.find({userId,time }).populate({path: "animal", select: 'tagNumber animalType'});
             //date:  {"$gte": new Date(date),"$lte": new Date(date)}
             if(data) { 
                 logger.info("Request sent back");
