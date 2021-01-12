@@ -21,21 +21,41 @@ module.exports.totalMilkProduction = [
             if(filter === "today"){
                 
                
-                const data = await MilkReport.aggregate([
+                const data1 = await MilkReport.aggregate([
                     {$match: {
                         "userId": new mongoose.Types.ObjectId(userId),
                         "date": {$gte: new Date((new Date().getTime() - ( 24 * 60 * 60 * 1000)))},
-                        "time" : {$eq : time}
                     }},
                     {$group: {
-                        _id : {key : "$date",time : "$time"},
-                        time : {$sum : "$time"},
+                        _id : {key : "$date"},
                         milkInLiters : {$sum : "$milkInLiters"},    
                      }}
                 ])
-                 if(data) { 
+                const data2 = await MilkReport.aggregate([
+                    {$match: {
+                        "userId": new mongoose.Types.ObjectId(userId),
+                        "date": {$gte: new Date((new Date().getTime() - ( 24 * 60 * 60 * 1000)))},
+                        "time" : {$eq : "MORNING"}
+                    }},
+                    {$group: {
+                        _id : {key:  "$date" },
+                        milkInLitersMorning : {$sum : "$milkInLiters"},
+                     }}
+                    ]);
+                const data3 = await MilkReport.aggregate([
+                    {$match: {
+                        "userId": new mongoose.Types.ObjectId(userId),
+                        "date": {$gte: new Date((new Date().getTime() - ( 24 * 60 * 60 * 1000)))},
+                        "time" : {$eq : "EVENING"}
+                    }},
+                    {$group: {
+                        _id : {key:  "$date" },        
+                        milkInLitersEvening : {$sum : "$milkInLiters"},
+                    }}
+                ]);
+            if(data1 && data2 && data3) { 
                 logger.info("Request sent back");
-                res.status(201).json({ data });
+                res.status(201).json({ data1, data2, data3 });
             } else { 
                 throw Error("Report Not Found");
             }
@@ -43,81 +63,159 @@ module.exports.totalMilkProduction = [
 
             if(filter === "daily"){
                 
-                const data = await MilkReport.aggregate([
+                const data1 = await MilkReport.aggregate([
                     {$match: {
                         "userId": new mongoose.Types.ObjectId(userId),
                         "date": {$gte:  new Date((new Date().getTime() - (7 * 24 * 60 * 60 * 1000)))},
-                        "time" : {$eq : time}
                     }},
                     {$group: {
-                        _id : {key : "$date", time : "$time"},
+                        _id : {key : "$date"},
                         milkInLiters : {$sum : "$milkInLiters"},    
                     }}
                 ]).sort({ "date": -1 });
-            
-                 if(data) { 
+                const data2 = await MilkReport.aggregate([
+                    {$match: {
+                        "userId": new mongoose.Types.ObjectId(userId),
+                        "date": {$gte:  new Date((new Date().getTime() - (7 * 24 * 60 * 60 * 1000)))},
+                        "time" : {$eq : "MORNING"}
+                    }},
+                    {$group: {
+                        _id : 1,
+                        milkInLitersMorning : {$sum : "$milkInLiters"},
+                     }}
+                    ]);
+                const data3 = await MilkReport.aggregate([
+                    {$match: {
+                        "userId": new mongoose.Types.ObjectId(userId),
+                        "date": {$gte:  new Date((new Date().getTime() - (7 * 24 * 60 * 60 * 1000)))},
+                        "time" : {$eq : "EVENING"}
+                    }},
+                    {$group: {
+                        _id : 1,        
+                        milkInLitersEvening : {$sum : "$milkInLiters"},
+                    }}
+                ]);
+            if(data1 && data2 && data3) { 
                 logger.info("Request sent back");
-                res.status(201).json({ data });
+                res.status(201).json({ data1, data2, data3 });
             } else { 
                 throw Error("Report Not Found");
             }
+                 
             }
 
             if(filter === "weekly"){
-                const data = await MilkReport.aggregate([
+                const data1 = await MilkReport.aggregate([
                     {$match: {
                         "userId": new mongoose.Types.ObjectId(userId),
-                        "time" : {$eq : time}
                     }},
                     {$group: {
-                        _id : {key: { $week : "$date" },time : "$time"},
+                        _id : {key: { $week : "$date" }},
                         milkInLiters : {$sum : "$milkInLiters"},
                      }}
                     ]);
-                 if(data) { 
+                const data2 = await MilkReport.aggregate([
+                    {$match: {
+                        "userId": new mongoose.Types.ObjectId(userId),
+                        "time" : {$eq : "MORNING"}
+                    }},
+                    {$group: {
+                        _id : 1,
+                        milkInLitersMorning : {$sum : "$milkInLiters"},
+                     }}
+                ]);
+                const data3 = await MilkReport.aggregate([
+                    {$match: {
+                        "userId": new mongoose.Types.ObjectId(userId),
+                        "time" : {$eq : "EVENING"}
+                    }},
+                    {$group: {
+                        _id : 1,        
+                        milkInLitersEvening : {$sum : "$milkInLiters"},
+                    }}
+                ]);
+                 if(data1 && data2 && data3) { 
                 logger.info("Request sent back");
-                res.status(201).json({ data });
+                res.status(201).json({ data1, data2, data3 });
             } else { 
                 throw Error("Report Not Found");
             }
             }
 
             if(filter === "monthly"){
-                const data = await MilkReport.aggregate([
+                const data1 = await MilkReport.aggregate([
                     {$match: {
                         "userId": new mongoose.Types.ObjectId(userId),
-                        "time" : {$eq : time}
                     }},
                     {$group: {
-                        _id : {key: { $month : "$date" },time : "$time"},
+                        _id : {key: { $month : "$date" }},
                         milkInLiters : {$sum : "$milkInLiters"}
                                 }}
                             ]);
-                 if(data) { 
-                logger.info("Request sent back");
-                res.status(201).json({ data });
-            } else { 
-                throw Error("Report Not Found");
-            }
+                const data2 = await MilkReport.aggregate([
+                    {$match: {
+                        "userId": new mongoose.Types.ObjectId(userId),
+                        "time" : {$eq : "MORNING"}
+                    }},
+                    {$group: {
+                        _id : 1,
+                        milkInLitersMorning : {$sum : "$milkInLiters"},
+                    }}
+                ]);
+                const data3 = await MilkReport.aggregate([
+                    {$match: {
+                        "userId": new mongoose.Types.ObjectId(userId),
+                        "time" : {$eq : "EVENING"}
+                    }},
+                    {$group: {
+                        _id : 1,        
+                        milkInLitersEvening : {$sum : "$milkInLiters"},
+                    }}
+                ]);
+                if(data1 && data2 && data3) { 
+                    logger.info("Request sent back");
+                    res.status(201).json({ data1, data2, data3 });
+                } else { 
+                    throw Error("Report Not Found");
+                }
             }
 
             if(filter === "yearly"){
-                const data = await MilkReport.aggregate([
+                const data1 = await MilkReport.aggregate([
                     {$match: {
                         "userId": new mongoose.Types.ObjectId(userId),
-                        "time" : {$eq : time}
                     }},
                     {$group: {
-                        _id : {key: { $year : "$date" },time : "$time"},
+                        _id : {key: { $year : "$date" }},
                         milkInLiters : {$sum : "$milkInLiters"}
-                                }}
-                            ]);
-                 if(data) { 
-                logger.info("Request sent back");
-                res.status(201).json({ data });
-            } else { 
-                throw Error("Report Not Found");
-            }
+                    }}
+                ]);
+                const data2 = await MilkReport.aggregate([
+                    {$match: {
+                        "userId": new mongoose.Types.ObjectId(userId),
+                        "time" : {$eq : "MORNING"}
+                    }},
+                    {$group: {
+                        _id : 1,
+                        milkInLitersMorning : {$sum : "$milkInLiters"},
+                    }}
+                ]);
+                const data3 = await MilkReport.aggregate([
+                    {$match: {
+                        "userId": new mongoose.Types.ObjectId(userId),
+                        "time" : {$eq : "EVENING"}
+                    }},
+                    {$group: {
+                        _id : 1,        
+                        milkInLitersEvening : {$sum : "$milkInLiters"},
+                    }}
+                ]);
+                if(data1 && data2 && data3) { 
+                    logger.info("Request sent back");
+                    res.status(201).json({ data1, data2, data3 });
+                } else { 
+                    throw Error("Report Not Found");
+                }
             }
              
 

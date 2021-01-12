@@ -322,7 +322,6 @@ module.exports.totalExpense = [
                  data = await Expense.aggregate([
                     {$match: {
                         "userId": new mongoose.Types.ObjectId(userId),
-                        "date": {$gte: new Date((new Date().getTime() - ( 24 * 60 * 60 * 1000)))},
                         
                     }},
                     {$group: {
@@ -393,7 +392,6 @@ module.exports.totalExpense = [
                  data = await Expense.aggregate([
                     {$match: {
                         "userId": new mongoose.Types.ObjectId(userId),
-                        "date": {$gte: new Date((new Date().getTime() - ( 24 * 60 * 60 * 1000)))},
                         
                     }},
                     {$group: {
@@ -466,7 +464,6 @@ module.exports.totalExpense = [
                 data = await Expense.aggregate([
                     {$match: {
                         "userId": new mongoose.Types.ObjectId(userId),
-                        "date": {$gte: new Date((new Date().getTime() - ( 24 * 60 * 60 * 1000)))},
                         
                     }},
                     {$group: {

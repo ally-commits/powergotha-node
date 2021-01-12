@@ -149,9 +149,29 @@ module.exports.totalFeed = [
                 throw Error("Wrong Filter");
 
              }    
-                 if(data) { 
-                logger.info("Request sent back");
-                res.status(201).json({ data });
+                 
+             if(data) { 
+                let newData = {};
+                data.forEach((value,index) => {
+                  if(newData[value._id.key]) {
+                    newData[value._id.key].push({
+                      feedType: value._id.feedType,
+                      quantity: value.quantity,
+                      price: value.price
+                    })
+                  } else {
+                    newData[value._id.key] = [];
+                    newData[value._id.key].push({
+                      feedType: value._id.feedType,
+                      quantity: value.quantity,
+                      price: value.price
+                    })
+                  }
+                  if(index + 1 == data.length) {
+                    res.status(201).json({ data: newData });
+                    //return ur response
+                  }
+                })
                 } else { 
                 throw Error("Report Not Found");
                 }
@@ -200,9 +220,29 @@ module.exports.totalFeed = [
     
                 } 
 
-                 if(data) { 
-                logger.info("Request sent back");
-                res.status(201).json({ data });
+                
+                if(data) { 
+                    let newData = {};
+                    data.forEach((value,index) => {
+                      if(newData[value._id.key]) {
+                        newData[value._id.key].push({
+                          feedType: value._id.feedType,
+                          quantity: value.quantity,
+                          price: value.price
+                        })
+                      } else {
+                        newData[value._id.key] = [];
+                        newData[value._id.key].push({
+                          feedType: value._id.feedType,
+                          quantity: value.quantity,
+                          price: value.price
+                        })
+                      }
+                      if(index + 1 == data.length) {
+                        res.status(201).json({ data: newData });
+                        //return ur response
+                      }
+                    })
                 } else { 
                 throw Error("Report Not Found");
                 }
@@ -251,8 +291,28 @@ module.exports.totalFeed = [
             } 
 
                  if(data) { 
-                logger.info("Request sent back");
-                res.status(201).json({ data });
+                    let newData = {};
+                    data.forEach((value,index) => {
+                      if(newData[value._id.key]) {
+                        newData[value._id.key].push({
+                          feedType: value._id.feedType,
+                          quantity: value.quantity,
+                          price: value.price
+                        })
+                      } else {
+                        newData[value._id.key] = [];
+                        newData[value._id.key].push({
+                          feedType: value._id.feedType,
+                          quantity: value.quantity,
+                          price: value.price
+                        })
+                      }
+                      if(index + 1 == data.length) {
+                        res.status(201).json({ data: newData });
+                        //return ur response
+                      }
+                    })
+               
             } else { 
                 throw Error("Report Not Found");
             }
@@ -302,9 +362,31 @@ module.exports.totalFeed = [
             } 
 
 
+                 
+                     
                  if(data) { 
-                logger.info("Request sent back");
-                res.status(201).json({ data });
+                    let newData = {};
+                    data.forEach((value,index) => {
+                      if(newData[value._id.key]) {
+                        newData[value._id.key].push({
+                          feedType: value._id.feedType,
+                          quantity: value.quantity,
+                          price: value.price
+                        })
+                      } else {
+                        newData[value._id.key] = [];
+                        newData[value._id.key].push({
+                          feedType: value._id.feedType,
+                          quantity: value.quantity,
+                          price: value.price
+                        })
+                      }
+                      if(index + 1 == data.length) {
+                        res.status(201).json({ data: newData });
+                        //return ur response
+                      }
+                    })
+               
             } else { 
                 throw Error("Report Not Found");
             }
@@ -326,6 +408,7 @@ module.exports.totalFeed = [
 
                      }},
                      {$project: {
+                         
                         quantity :  "$quantity",
                         price : "$price",
                      }}
@@ -354,9 +437,28 @@ module.exports.totalFeed = [
 
             }
 
-                 if(data) { 
-                logger.info("Request sent back");
-                res.status(201).json({ data });
+            if(data) { 
+                let newData = {};
+                data.forEach((value,index) => {
+                  if(newData[value._id.key]) {
+                    newData[value._id.key].push({
+                      feedType: value._id.feedType,
+                      quantity: value.quantity,
+                      price: value.price
+                    })
+                  } else {
+                    newData[value._id.key] = [];
+                    newData[value._id.key].push({
+                      feedType: value._id.feedType,
+                      quantity: value.quantity,
+                      price: value.price
+                    })
+                  }
+                  if(index + 1 == data.length) {
+                    res.status(201).json({ data: newData });
+                    //return ur response
+                  }
+                })
             } else { 
                 throw Error("Report Not Found");
             }
