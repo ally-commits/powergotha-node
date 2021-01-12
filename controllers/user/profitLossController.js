@@ -22,7 +22,7 @@ module.exports.profitLossReport = [
             if(filter === "today"){
                 
                
-                 data = await Income.aggregate([
+                 data1 = await Income.aggregate([
                     {$match: {
                         "userId": new mongoose.Types.ObjectId(userId),
                         "date": {$gte: new Date((new Date().getTime() - ( 24 * 60 * 60 * 1000)))},
@@ -72,9 +72,10 @@ module.exports.profitLossReport = [
                      }}
                 ])
                
-                 if(data && data2) { 
+                 if(data1 && data2) { 
+                    let data3 = data1.map((item, i) => Object.assign({}, item, data2[i]));
                 logger.info("Request sent back");
-                res.status(201).json({ data, data2 });
+                res.status(201).json({ data3 });
                 } else { 
                 throw Error("Report Not Found");
                 }
@@ -82,8 +83,7 @@ module.exports.profitLossReport = [
 
             if(filter === "daily"){
                 
-               
-                data = await Income.aggregate([
+                data1 = await Income.aggregate([
                     {$match: {
                         "userId": new mongoose.Types.ObjectId(userId),
                         "date": {$gte:  new Date((new Date().getTime() - (7 * 24 * 60 * 60 * 1000)))},
@@ -102,7 +102,7 @@ module.exports.profitLossReport = [
                      }},
                      {$project: {
 
-                        totalIncome : {$sum : [{$multiply : ["$quantityInLitreMorning", "$pricePerLitreMorning"]}, {$multiply : ["$quantityInLitreEvening", "$pricePerLitreEvening"]},{$multiply : ["$quantityInKg", "$pricePerKg"]},"$animalPrice","$otherAmount"]},
+                        totalIncomeWith : {$sum : [{$multiply : ["$quantityInLitreMorning", "$pricePerLitreMorning"]}, {$multiply : ["$quantityInLitreEvening", "$pricePerLitreEvening"]},{$multiply : ["$quantityInKg", "$pricePerKg"]},"$animalPrice","$otherAmount"]},
                         totalIncomeWithout : {$sum : [{$multiply : ["$quantityInLitreMorning", "$pricePerLitreMorning"]}, {$multiply : ["$quantityInLitreEvening", "$pricePerLitreEvening"]},{$multiply : ["$quantityInKg", "$pricePerKg"]},"$otherAmount"]},
 
                      }}
@@ -127,15 +127,19 @@ module.exports.profitLossReport = [
                      }},
                      {$project: {
 
-                        totalExpense : {$sum : ["$labourCost","$doctorVisitFee","$treatmentExpense","$disinfectionExpense","$dewormingExpense","$animalPurchaseCost","$otherCost"]},
+                        totalExpenseWith : {$sum : ["$labourCost","$doctorVisitFee","$treatmentExpense","$disinfectionExpense","$dewormingExpense","$animalPurchaseCost","$otherCost"]},
                         totalExpenseWithout : {$sum : ["$labourCost","$doctorVisitFee","$treatmentExpense","$disinfectionExpense","$dewormingExpense","$otherCost"]},
 
                      }}
                 ]).sort({ "date": -1 });
 
-                if(data && data2) { 
+                
+                
+                if(data1 && data2 ) { 
+                    let data3 = data1.map((item, i) => Object.assign({}, item, data2[i]));
+
                 logger.info("Request sent back");
-                res.status(201).json({ data, data2 });
+                res.status(201).json({ data3 });
                 } else { 
                 throw Error("Report Not Found");
                 }
@@ -143,7 +147,7 @@ module.exports.profitLossReport = [
 
             if(filter === "weekly"){
                
-                data = await Income.aggregate([
+                data1 = await Income.aggregate([
                     {$match: {
                         "userId": new mongoose.Types.ObjectId(userId),
                         
@@ -192,9 +196,10 @@ module.exports.profitLossReport = [
                 ])
 
                 
-                if(data && data2) { 
+                if(data1 && data2) { 
+                    let data3 = data1.map((item, i) => Object.assign({}, item, data2[i]));
                     logger.info("Request sent back");
-                    res.status(201).json({ data, data2 });
+                    res.status(201).json({ data3 });
                 } else { 
                     throw Error("Report Not Found");
                 }
@@ -202,7 +207,7 @@ module.exports.profitLossReport = [
 
             if(filter === "monthly"){
                
-                data = await Income.aggregate([
+                data1 = await Income.aggregate([
                     {$match: {
                         "userId": new mongoose.Types.ObjectId(userId),
                         
@@ -251,9 +256,11 @@ module.exports.profitLossReport = [
                 ])
 
 
-                if(data && data2) { 
+                if(data1 && data2) { 
+                    let data3 = data1.map((item, i) => Object.assign({}, item, data2[i]));
+
                     logger.info("Request sent back");
-                    res.status(201).json({ data, data2 });
+                    res.status(201).json({ data3 });
                 } else { 
                     throw Error("Report Not Found");
                 }
@@ -262,7 +269,7 @@ module.exports.profitLossReport = [
             if(filter === "yearly"){
                 
                 
-                data = await Income.aggregate([
+                data1 = await Income.aggregate([
                     {$match: {
                         "userId": new mongoose.Types.ObjectId(userId),
                         
@@ -311,9 +318,10 @@ module.exports.profitLossReport = [
                 ])
 
                 
-                if(data && data2) { 
+                if(data1 && data2) { 
+                    let data3 = data1.map((item, i) => Object.assign({}, item, data2[i]));
                     logger.info("Request sent back");
-                    res.status(201).json({ data, data2 });
+                    res.status(201).json({ data3 });
                 } else { 
                     throw Error("Report Not Found");
                 }
