@@ -3,11 +3,22 @@ const { createToken } = require("../../middleware/createToken");
 const { body, validationResult } = require('express-validator');
 const logger = require("../../logger/logger"); 
 const bcrypt = require('bcrypt');
-
+const {OAuth2Client} = require('google-auth-library');
+const axios = require('axios');
 const accountSid = process.env.TWILIO_ACCOUNT_SID;
 const authToken = process.env.TWILIO_AUTH_TOKEN;
 const client = require('twilio')(accountSid, authToken);
- 
+const GOOGLE_KEY = {
+    ANDROID : {
+        KEY : process.env.GOOGLE_O_AUTH_CLIENT_ID_ANDROID,
+        CLIENT : new OAuth2Client(process.env.GOOGLE_O_AUTH_CLIENT_ID_ANDROID)
+    },
+    IOS : {
+        KEY : process.env.GOOGLE_O_AUTH_CLIENT_ID_IOS,
+        CLIENT : new OAuth2Client(process.env.GOOGLE_O_AUTH_CLIENT_ID_IOS)
+    }
+}
+
 
 
 module.exports.sendOtp = [
@@ -306,19 +317,21 @@ module.exports.forgotPassword = [
 
 module.exports.googleAuth = [
     body('accessToken').not().isEmpty().withMessage("accessToken Feild is required"),
+    body('type').not().isEmpty().withMessage("type Feild is required"),
+
     async (req,res) => {
         const errors = validationResult(req);
         if (!errors.isEmpty()) {
             return res.status(400).json({ errors: errors.array()});
         }
-        const {accessToken} = req.body;
-        const ticket = await client.verifyIdToken({
+        const {accessToken,type} = req.body;
+        const ticket = await GOOGLE_KEY[type].CLIENT.verifyIdToken({
             idToken: accessToken,
-            audience: GOOGLE_O_AUTH_CLIENT_ID
+            audience: GOOGLE_KEY[type].KEY
         }).then(async data => {
-            const {email,name} = data.payload;
+            const {email,name,picture} = data.payload;
             try {
-                const user = await EndUser.findOne({ email });
+                const user = await User.findOne({ email });
                 if(user) {
                     if(user.verificationType == "GOOGLE") {
                         logger.info("LOGIN end user: end-User FOUND:" + user)
@@ -328,7 +341,7 @@ module.exports.googleAuth = [
                         res.status(400).json({ error: "Please use " + user.verificationType + " to Login"});
                     }
                 } else {
-                    const user = await EndUser.create({ email, password: Math.random(),name,verificationType: "GOOGLE",isVerified: true,userType: "END-USER"});
+                    const user = await User.create({ email, password: Math.random(),name,verificationType: "GOOGLE",profilePicture: picture,phoneNumber: Math.random().toString().slice(2,12)});
                     const token = await createToken(user);
                     logger.info("REGISTER: User Created:" + user)
                     logger.info("REGISTER: Token Created:" + token)
@@ -361,9 +374,9 @@ module.exports.facebookAuth = [
         })
         .then(async response => {
             console.log(response.data)
-            const {email,name} = response.data;
+            const {email,name, picture} = response.data;
             try {
-                const user = await EndUser.findOne({ email });
+                const user = await User.findOne({ email });
                 if(user) {
                     if(user.verificationType == "FACEBOOK") {
                         logger.info("LOGIN end user: end-User FOUND:" + user)
@@ -373,7 +386,7 @@ module.exports.facebookAuth = [
                         res.status(400).json({ error: "Please use " + user.verificationType + " to Login"});
                     }
                 } else {
-                    const user = await EndUser.create({ email, password: Math.random(),name,verificationType: "FACEBOOK",isVerified: true,userType: "END-USER"});
+                    const user = await User.create({ email, password: Math.random(),name,verificationType: "FACEBOOK",profilePicture: picture ? picture.data.url : "",phoneNumber: Math.random().toString().slice(2,12) });
                     const token = await createToken(user);
                     logger.info("REGISTER: User Created:" + user)
                     logger.info("REGISTER: Token Created:" + token)
@@ -393,5 +406,3 @@ module.exports.facebookAuth = [
 ]
 //CODE FOR FACEBOOK AND GOOGLE LOGIN
 
-const GOOGLE_O_AUTH_CLIENT_ID = process.env.GOOGLE_O_AUTH_CLIENT_ID
-//const client = new OAuth2Client(GOOGLE_O_AUTH_CLIENT_ID);
