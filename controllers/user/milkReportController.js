@@ -9,7 +9,7 @@ module.exports.getMilkReport = [
     async (req, res) => {
         const userId = req.user._id;
         let time = req.query.time;
-        try {   
+        try {    
             const data = await MilkReport.find({userId, time }).populate({path: "animal", select: 'tagNumber animalType'});
             //date:  {"$gte": new Date(date),"$lte": new Date(date)}
             if(data) { 
