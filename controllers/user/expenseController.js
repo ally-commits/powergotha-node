@@ -16,7 +16,7 @@ module.exports.addExpense = [
         }
         var expense
         const userId = req.user._id;
-        let {date, expenseType, labourCost, doctorVisitFee, treatmentExpense,disinfectionExpense,productUsed,dewormingExpense,moleculeUsed,animalPurchaseCost,otherCost,about} = req.body;
+        let {date, expenseType, labourCost, doctorVisitFee, treatmentExpense,disinfectionExpense,productUsed,dewormingExpense,moleculeUsed,animalPurchaseCost,breedingPrice,otherCost,about} = req.body;
          
         try { 
             if(expenseType === "Labour Cost"){
@@ -39,13 +39,17 @@ module.exports.addExpense = [
                 
                  expense = await Expense.create({userId, date, expenseType, animalPurchaseCost}); 
 
-            }else{
+            }else if(expenseType === "Breeding Price"){
+                
+                expense = await Expense.create({userId, date, expenseType, breedingPrice}); 
+
+           }else{
                 
                  expense = await Expense.create({userId, date, expenseType, otherCost, about}); 
 
             }
 
-
+            
 
             if(expense) {  
                 res.status(201).json({ message: "Expense Added Successfully",expense}); 
@@ -87,7 +91,7 @@ module.exports.editExpense = [
         }
         var expense
         const userId = req.user._id;
-        const {expenseId, date, expenseType, labourCost, doctorVisitFee, treatmentExpense,disinfectionExpense,productUsed,dewormingExpense,moleculeUsed,animalPurchaseCost,otherCost,about} = req.body;
+        const {expenseId, date, expenseType, labourCost, doctorVisitFee, treatmentExpense,disinfectionExpense,productUsed,dewormingExpense,moleculeUsed,animalPurchaseCost,breedingPrice,otherCost,about} = req.body;
         try {
             if(expenseType === "Labour Cost"){
                 
@@ -109,7 +113,11 @@ module.exports.editExpense = [
                
                 expense = await Expense.findByIdAndUpdate({_id: expenseId,userId},{ date, expenseType, animalPurchaseCost}); 
 
-           }else{
+           }else if(expenseType === "Breeding Price"){
+               
+            expense = await Expense.findByIdAndUpdate({_id: expenseId,userId},{ date, expenseType, breedingPrice}); 
+
+            }else{
                
                 expense = await Expense.findByIdAndUpdate({_id: expenseId,userId},{ date, expenseType, otherCost, about}); 
 
@@ -162,7 +170,8 @@ module.exports.totalExpense = [
                         treatmentExpense : {$sum : "$treatmentExpense"},
                         disinfectionExpense : {$sum : "$disinfectionExpense"},    
                         dewormingExpense : {$sum : "$dewormingExpense"},    
-                        animalPurchaseCost : {$sum : "$animalPurchaseCost"},    
+                        animalPurchaseCost : {$sum : "$animalPurchaseCost"},
+                        breedingPrice : {$sum : "$breedingPrice"},        
                         otherCost : {$sum : "$otherCost"},    
                      }},
                      {$project: {
@@ -171,7 +180,8 @@ module.exports.totalExpense = [
                         treatmentExpense : "$treatmentExpense",
                         disinfectionExpense : "$disinfectionExpense",    
                         dewormingExpense : "$dewormingExpense",    
-                        animalPurchaseCost : "$animalPurchaseCost", 
+                        animalPurchaseCost : "$animalPurchaseCost",
+                        breedingPrice : "$breedingPrice",  
                         otherCost :  "$otherCost", 
                         
                      }}
@@ -191,7 +201,8 @@ module.exports.totalExpense = [
                         treatmentExpense : {$avg : "$treatmentExpense"},
                         disinfectionExpense : {$avg : "$disinfectionExpense"},    
                         dewormingExpense : {$avg : "$dewormingExpense"},    
-                        animalPurchaseCost : {$avg : "$animalPurchaseCost"},    
+                        animalPurchaseCost : {$avg : "$animalPurchaseCost"},
+                        breedingPrice : {$avg : "$breedingPrice"},                
                         otherCost : {$avg : "$otherCost"},    
                      }},
                      {$project: {
@@ -200,7 +211,8 @@ module.exports.totalExpense = [
                         treatmentExpense : "$treatmentExpense",
                         disinfectionExpense : "$disinfectionExpense",    
                         dewormingExpense : "$dewormingExpense",    
-                        animalPurchaseCost : "$animalPurchaseCost", 
+                        animalPurchaseCost : "$animalPurchaseCost",
+                        breedingPrice : "$breedingPrice",   
                         otherCost :  "$otherCost", 
                         
                      }}
@@ -233,7 +245,8 @@ module.exports.totalExpense = [
                             treatmentExpense : {$sum : "$treatmentExpense"},
                             disinfectionExpense : {$sum : "$disinfectionExpense"},    
                             dewormingExpense : {$sum : "$dewormingExpense"},    
-                            animalPurchaseCost : {$sum : "$animalPurchaseCost"},    
+                            animalPurchaseCost : {$sum : "$animalPurchaseCost"},  
+                            breedingPrice : {$sum : "$breedingPrice"},          
                             otherCost : {$sum : "$otherCost"},    
                          }},
                          {$project: {
@@ -242,7 +255,8 @@ module.exports.totalExpense = [
                             treatmentExpense : "$treatmentExpense",
                             disinfectionExpense : "$disinfectionExpense",    
                             dewormingExpense : "$dewormingExpense",    
-                            animalPurchaseCost : "$animalPurchaseCost", 
+                            animalPurchaseCost : "$animalPurchaseCost",
+                            breedingPrice : "$breedingPrice",   
                             otherCost :  "$otherCost", 
                             
                          }}
@@ -262,7 +276,8 @@ module.exports.totalExpense = [
                             treatmentExpense : {$avg : "$treatmentExpense"},
                             disinfectionExpense : {$avg : "$disinfectionExpense"},    
                             dewormingExpense : {$avg : "$dewormingExpense"},    
-                            animalPurchaseCost : {$avg : "$animalPurchaseCost"},    
+                            animalPurchaseCost : {$avg : "$animalPurchaseCost"},
+                            breedingPrice : {$avg : "$breedingPrice"},                
                             otherCost : {$avg : "$otherCost"},    
                          }},
                          {$project: {
@@ -272,6 +287,7 @@ module.exports.totalExpense = [
                             disinfectionExpense : "$disinfectionExpense",    
                             dewormingExpense : "$dewormingExpense",    
                             animalPurchaseCost : "$animalPurchaseCost", 
+                            breedingPrice : "$breedingPrice",  
                             otherCost :  "$otherCost", 
                             
                          }}
@@ -304,7 +320,8 @@ module.exports.totalExpense = [
                         treatmentExpense : {$sum : "$treatmentExpense"},
                         disinfectionExpense : {$sum : "$disinfectionExpense"},    
                         dewormingExpense : {$sum : "$dewormingExpense"},    
-                        animalPurchaseCost : {$sum : "$animalPurchaseCost"},    
+                        animalPurchaseCost : {$sum : "$animalPurchaseCost"},
+                        breedingPrice : {$sum : "$breedingPrice"},            
                         otherCost : {$sum : "$otherCost"},    
                      }},
                      {$project: {
@@ -314,6 +331,7 @@ module.exports.totalExpense = [
                         disinfectionExpense : "$disinfectionExpense",    
                         dewormingExpense : "$dewormingExpense",    
                         animalPurchaseCost : "$animalPurchaseCost", 
+                        breedingPrice : "$breedingPrice",  
                         otherCost :  "$otherCost", 
                         
                      }}
@@ -331,7 +349,8 @@ module.exports.totalExpense = [
                         treatmentExpense : {$avg : "$treatmentExpense"},
                         disinfectionExpense : {$avg : "$disinfectionExpense"},    
                         dewormingExpense : {$avg : "$dewormingExpense"},    
-                        animalPurchaseCost : {$avg : "$animalPurchaseCost"},    
+                        animalPurchaseCost : {$avg : "$animalPurchaseCost"},
+                        breedingPrice : {$avg : "$breedingPrice"},                
                         otherCost : {$avg : "$otherCost"},    
                      }},
                      {$project: {
@@ -340,7 +359,8 @@ module.exports.totalExpense = [
                         treatmentExpense : "$treatmentExpense",
                         disinfectionExpense : "$disinfectionExpense",    
                         dewormingExpense : "$dewormingExpense",    
-                        animalPurchaseCost : "$animalPurchaseCost", 
+                        animalPurchaseCost : "$animalPurchaseCost",
+                        breedingPrice : "$breedingPrice",   
                         otherCost :  "$otherCost", 
                         
                      }}
@@ -374,7 +394,8 @@ module.exports.totalExpense = [
                         treatmentExpense : {$sum : "$treatmentExpense"},
                         disinfectionExpense : {$sum : "$disinfectionExpense"},    
                         dewormingExpense : {$sum : "$dewormingExpense"},    
-                        animalPurchaseCost : {$sum : "$animalPurchaseCost"},    
+                        animalPurchaseCost : {$sum : "$animalPurchaseCost"},
+                        breedingPrice : {$sum : "$breedingPrice"},            
                         otherCost : {$sum : "$otherCost"},    
                      }},
                      {$project: {
@@ -383,7 +404,8 @@ module.exports.totalExpense = [
                         treatmentExpense : "$treatmentExpense",
                         disinfectionExpense : "$disinfectionExpense",    
                         dewormingExpense : "$dewormingExpense",    
-                        animalPurchaseCost : "$animalPurchaseCost", 
+                        animalPurchaseCost : "$animalPurchaseCost",
+                        breedingPrice : "$breedingPrice",   
                         otherCost :  "$otherCost", 
                         
                      }}
@@ -401,7 +423,8 @@ module.exports.totalExpense = [
                         treatmentExpense : {$avg : "$treatmentExpense"},
                         disinfectionExpense : {$avg : "$disinfectionExpense"},    
                         dewormingExpense : {$avg : "$dewormingExpense"},    
-                        animalPurchaseCost : {$avg : "$animalPurchaseCost"},    
+                        animalPurchaseCost : {$avg : "$animalPurchaseCost"},
+                        breedingPrice : {$avg : "$breedingPrice"},                
                         otherCost : {$avg : "$otherCost"},    
                      }},
                      {$project: {
@@ -410,7 +433,8 @@ module.exports.totalExpense = [
                         treatmentExpense : "$treatmentExpense",
                         disinfectionExpense : "$disinfectionExpense",    
                         dewormingExpense : "$dewormingExpense",    
-                        animalPurchaseCost : "$animalPurchaseCost", 
+                        animalPurchaseCost : "$animalPurchaseCost",
+                        breedingPrice : "$breedingPrice",   
                         otherCost :  "$otherCost", 
                         
                      }}
@@ -445,7 +469,8 @@ module.exports.totalExpense = [
                         treatmentExpense : {$sum : "$treatmentExpense"},
                         disinfectionExpense : {$sum : "$disinfectionExpense"},    
                         dewormingExpense : {$sum : "$dewormingExpense"},    
-                        animalPurchaseCost : {$sum : "$animalPurchaseCost"},    
+                        animalPurchaseCost : {$sum : "$animalPurchaseCost"},
+                        breedingPrice : {$sum : "$breedingPrice"},            
                         otherCost : {$sum : "$otherCost"},    
                      }},
                      {$project: {
@@ -455,6 +480,7 @@ module.exports.totalExpense = [
                         disinfectionExpense : "$disinfectionExpense",    
                         dewormingExpense : "$dewormingExpense",    
                         animalPurchaseCost : "$animalPurchaseCost", 
+                        breedingPrice : "$breedingPrice",  
                         otherCost :  "$otherCost", 
                         
                      }}
@@ -473,7 +499,8 @@ module.exports.totalExpense = [
                         treatmentExpense : {$avg : "$treatmentExpense"},
                         disinfectionExpense : {$avg : "$disinfectionExpense"},    
                         dewormingExpense : {$avg : "$dewormingExpense"},    
-                        animalPurchaseCost : {$avg : "$animalPurchaseCost"},    
+                        animalPurchaseCost : {$avg : "$animalPurchaseCost"},
+                        breedingPrice : {$avg : "$breedingPrice"},            
                         otherCost : {$avg : "$otherCost"},    
                      }},
                      {$project: {
@@ -482,7 +509,8 @@ module.exports.totalExpense = [
                         treatmentExpense : "$treatmentExpense",
                         disinfectionExpense : "$disinfectionExpense",    
                         dewormingExpense : "$dewormingExpense",    
-                        animalPurchaseCost : "$animalPurchaseCost", 
+                        animalPurchaseCost : "$animalPurchaseCost",
+                        breedingPrice : "$breedingPrice",   
                         otherCost :  "$otherCost", 
                         
                      }}

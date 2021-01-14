@@ -8,30 +8,35 @@ var moment = require('moment');
 module.exports.totalMilkProduction = [
     
     query('filter').not().isEmpty().withMessage("filter parameter is required"),
+    query('filter2').not().isEmpty().withMessage("filter2 parameter is required"),
     query('time').not().isEmpty().withMessage("time parameter is required"),
 
     async (req, res) => {
         const userId = req.user._id;
-       
+        var data1, data2, data3;
         let filter = req.query.filter;
+        let filter2 = req.query.filter2;
         let time = req.query.time;
 
         try {   
 
             if(filter === "today"){
                 
-               
-                const data1 = await MilkReport.aggregate([
-                    {$match: {
-                        "userId": new mongoose.Types.ObjectId(userId),
-                        "date": {$gte: new Date((new Date().getTime() - ( 24 * 60 * 60 * 1000)))},
-                    }},
-                    {$group: {
+                
+                if(filter2 === "AGGREGATE"){
+                    data1 = await MilkReport.aggregate([
+                       {$match: {
+                           "userId": new mongoose.Types.ObjectId(userId),
+                           "date": {$gte: new Date((new Date().getTime() - ( 24 * 60 * 60 * 1000)))},
+                           
+                       }},
+                       {$group: {
                         _id : {key : "$date"},
                         milkInLiters : {$sum : "$milkInLiters"},    
-                     }}
-                ])
-                const data2 = await MilkReport.aggregate([
+                        }}
+                   ])
+
+                   data2 = await MilkReport.aggregate([
                     {$match: {
                         "userId": new mongoose.Types.ObjectId(userId),
                         "date": {$gte: new Date((new Date().getTime() - ( 24 * 60 * 60 * 1000)))},
@@ -40,19 +45,89 @@ module.exports.totalMilkProduction = [
                     {$group: {
                         _id : {key:  "$date" },
                         milkInLitersMorning : {$sum : "$milkInLiters"},
+                        priceMorning : {$sum : "$price"},
+
+                     }},
+                     {$project: {
+                        milkInLitersMorning : "$milkInLitersMorning",
+                        priceMorning : "$priceMorning",
+                        totalMorning : {$multiply : ["$milkInLitersMorning", "$priceMorning"]},
                      }}
-                    ]);
-                const data3 = await MilkReport.aggregate([
+                    ]); 
+                    data3 = await MilkReport.aggregate([
+                        {$match: {
+                            "userId": new mongoose.Types.ObjectId(userId),
+                            "date": {$gte: new Date((new Date().getTime() - ( 24 * 60 * 60 * 1000)))},
+                            "time" : {$eq : "EVENING"}
+                        }},
+                        {$group: {
+                            _id : {key:  "$date" },        
+                            milkInLitersEvening : {$sum : "$milkInLiters"},
+                            priceEvening : {$sum : "$price"},
+    
+                        }},
+                        {$project: {
+                            milkInLitersEvening : "$milkInLitersEvening",
+                            priceEvening : "$priceEvening",
+                           totalEvening : {$multiply : ["$milkInLitersEvening", "$priceEvening"]},
+                        }}
+                    ]);  
+                }else if(filter2 === "AVERAGE"){
+   
+                    data1 = await MilkReport.aggregate([
+                       {$match: {
+                           "userId": new mongoose.Types.ObjectId(userId),
+                           "date": {$gte: new Date((new Date().getTime() - ( 24 * 60 * 60 * 1000)))},
+                           
+                       }},
+                       {$group: {
+                        _id : {key : "$date"},
+                        milkInLiters : {$avg : "$milkInLiters"},    
+                     }}
+                   ])
+                   
+                   data2 = await MilkReport.aggregate([
                     {$match: {
                         "userId": new mongoose.Types.ObjectId(userId),
                         "date": {$gte: new Date((new Date().getTime() - ( 24 * 60 * 60 * 1000)))},
-                        "time" : {$eq : "EVENING"}
+                        "time" : {$eq : "MORNING"}
                     }},
                     {$group: {
-                        _id : {key:  "$date" },        
-                        milkInLitersEvening : {$sum : "$milkInLiters"},
-                    }}
-                ]);
+                        _id : {key:  "$date" },
+                        milkInLitersMorning : {$avg : "$milkInLiters"},
+                        priceMorning : {$avg : "$price"},
+
+                     }},
+                     {$project: {
+                        milkInLitersMorning : "$milkInLitersMorning",
+                        priceMorning : "$priceMorning",
+                        totalMorning : {$multiply : ["$milkInLitersMorning", "$priceMorning"]},
+                     }}
+                    ]); 
+                    data3 = await MilkReport.aggregate([
+                        {$match: {
+                            "userId": new mongoose.Types.ObjectId(userId),
+                            "date": {$gte: new Date((new Date().getTime() - ( 24 * 60 * 60 * 1000)))},
+                            "time" : {$eq : "EVENING"}
+                        }},
+                        {$group: {
+                            _id : {key:  "$date" },        
+                            milkInLitersEvening : {$avg : "$milkInLiters"},
+                            priceEvening : {$avg : "$price"},
+    
+                        }},
+                        {$project: {
+                            milkInLitersEvening : "$milkInLitersEvening",
+                            priceEvening : "$priceEvening",
+                           totalEvening : {$multiply : ["$milkInLitersEvening", "$priceEvening"]},
+                        }}
+                    ]);  
+                }else{
+                   throw Error("Wrong Filter");
+   
+                }    
+                
+                
             if(data1 && data2 && data3) { 
                 logger.info("Request sent back");
                 res.status(201).json({ data1, data2, data3 });
@@ -63,38 +138,110 @@ module.exports.totalMilkProduction = [
 
             if(filter === "daily"){
                 
-                const data1 = await MilkReport.aggregate([
-                    {$match: {
-                        "userId": new mongoose.Types.ObjectId(userId),
-                        "date": {$gte:  new Date((new Date().getTime() - (7 * 24 * 60 * 60 * 1000)))},
-                    }},
-                    {$group: {
+                if(filter2 === "AGGREGATE"){
+                    data1 = await MilkReport.aggregate([
+                       {$match: {
+                           "userId": new mongoose.Types.ObjectId(userId),
+                           "date": {$gte:  new Date((new Date().getTime() - (7 * 24 * 60 * 60 * 1000)))},
+                           
+                       }},
+                       {$group: {
                         _id : {key : "$date"},
                         milkInLiters : {$sum : "$milkInLiters"},    
-                    }}
-                ]).sort({ "date": -1 });
-                const data2 = await MilkReport.aggregate([
+                        }}
+                   ]).sort({ "date": -1 });
+                   
+                   data2 = await MilkReport.aggregate([
                     {$match: {
                         "userId": new mongoose.Types.ObjectId(userId),
                         "date": {$gte:  new Date((new Date().getTime() - (7 * 24 * 60 * 60 * 1000)))},
                         "time" : {$eq : "MORNING"}
                     }},
                     {$group: {
-                        _id : 1,
+                        _id : {key:  "$date" },
                         milkInLitersMorning : {$sum : "$milkInLiters"},
+                        priceMorning : {$sum : "$price"},
+
+                     }},
+                     {$project: {
+                        milkInLitersMorning : "$milkInLitersMorning",
+                        priceMorning : "$priceMorning",
+                        totalMorning : {$multiply : ["$milkInLitersMorning", "$priceMorning"]},
                      }}
-                    ]);
-                const data3 = await MilkReport.aggregate([
+                    ]).sort({ "date": -1 }); 
+                    data3 = await MilkReport.aggregate([
+                        {$match: {
+                            "userId": new mongoose.Types.ObjectId(userId),
+                            "date": {$gte:  new Date((new Date().getTime() - (7 * 24 * 60 * 60 * 1000)))},
+                            "time" : {$eq : "EVENING"}
+                        }},
+                        {$group: {
+                            _id : {key:  "$date" },        
+                            milkInLitersEvening : {$sum : "$milkInLiters"},
+                            priceEvening : {$sum : "$price"},
+    
+                        }},
+                        {$project: {
+                            milkInLitersEvening : "$milkInLitersEvening",
+                            priceEvening : "$priceEvening",
+                           totalEvening : {$multiply : ["$milkInLitersEvening", "$priceEvening"]},
+                        }}
+                    ]).sort({ "date": -1 });
+                }else if(filter2 === "AVERAGE"){
+   
+                    data1 = await MilkReport.aggregate([
+                       {$match: {
+                           "userId": new mongoose.Types.ObjectId(userId),
+                           "date": {$gte:  new Date((new Date().getTime() - (7 * 24 * 60 * 60 * 1000)))},
+                           
+                       }},
+                       {$group: {
+                        _id : {key : "$date"},
+                        milkInLiters : {$avg : "$milkInLiters"},    
+                     }}
+                   ]).sort({ "date": -1 });
+                   
+                   data2 = await MilkReport.aggregate([
                     {$match: {
                         "userId": new mongoose.Types.ObjectId(userId),
                         "date": {$gte:  new Date((new Date().getTime() - (7 * 24 * 60 * 60 * 1000)))},
-                        "time" : {$eq : "EVENING"}
+                        "time" : {$eq : "MORNING"}
                     }},
                     {$group: {
-                        _id : 1,        
-                        milkInLitersEvening : {$sum : "$milkInLiters"},
-                    }}
-                ]);
+                        _id : {key:  "$date" },
+                        milkInLitersMorning : {$avg : "$milkInLiters"},
+                        priceMorning : {$avg : "$price"},
+
+                     }},
+                     {$project: {
+                        milkInLitersMorning : "$milkInLitersMorning",
+                        priceMorning : "$priceMorning",
+                        totalMorning : {$multiply : ["$milkInLitersMorning", "$priceMorning"]},
+                     }}
+                    ]).sort({ "date": -1 }); 
+                    data3 = await MilkReport.aggregate([
+                        {$match: {
+                            "userId": new mongoose.Types.ObjectId(userId),
+                            "date": {$gte:  new Date((new Date().getTime() - (7 * 24 * 60 * 60 * 1000)))},
+                            "time" : {$eq : "EVENING"}
+                        }},
+                        {$group: {
+                            _id : {key:  "$date" },        
+                            milkInLitersEvening : {$avg : "$milkInLiters"},
+                            priceEvening : {$avg : "$price"},
+    
+                        }},
+                        {$project: {
+                            milkInLitersEvening : "$milkInLitersEvening",
+                            priceEvening : "$priceEvening",
+                           totalEvening : {$multiply : ["$milkInLitersEvening", "$priceEvening"]},
+                        }}
+                    ]).sort({ "date": -1 });
+                }else{
+                   throw Error("Wrong Filter");
+   
+                }    
+               
             if(data1 && data2 && data3) { 
                 logger.info("Request sent back");
                 res.status(201).json({ data1, data2, data3 });
@@ -105,35 +252,104 @@ module.exports.totalMilkProduction = [
             }
 
             if(filter === "weekly"){
-                const data1 = await MilkReport.aggregate([
-                    {$match: {
-                        "userId": new mongoose.Types.ObjectId(userId),
-                    }},
-                    {$group: {
+                
+                if(filter2 === "AGGREGATE"){
+                    data1 = await MilkReport.aggregate([
+                       {$match: {
+                           "userId": new mongoose.Types.ObjectId(userId),                          
+                       }},
+                       {$group: {
                         _id : {key: { $week : "$date" }},
-                        milkInLiters : {$sum : "$milkInLiters"},
-                     }}
-                    ]);
-                const data2 = await MilkReport.aggregate([
+                        milkInLiters : {$sum : "$milkInLiters"},    
+                        }}
+                   ])
+                   
+                   data2 = await MilkReport.aggregate([
                     {$match: {
                         "userId": new mongoose.Types.ObjectId(userId),
                         "time" : {$eq : "MORNING"}
                     }},
                     {$group: {
-                        _id : 1,
+                        _id : {key: { $week : "$date" }},
                         milkInLitersMorning : {$sum : "$milkInLiters"},
+                        priceMorning : {$sum : "$price"},
+
+                     }},
+                     {$project: {
+                        milkInLitersMorning : "$milkInLitersMorning",
+                        priceMorning : "$priceMorning",
+                        totalMorning : {$multiply : ["$milkInLitersMorning", "$priceMorning"]},
                      }}
-                ]);
-                const data3 = await MilkReport.aggregate([
+                    ]); 
+                    data3 = await MilkReport.aggregate([
+                        {$match: {
+                            "userId": new mongoose.Types.ObjectId(userId),
+                            "time" : {$eq : "EVENING"}
+                        }},
+                        {$group: {
+                            _id : {key: { $week : "$date" }},
+                            milkInLitersEvening : {$sum : "$milkInLiters"},
+                            priceEvening : {$sum : "$price"},
+    
+                        }},
+                        {$project: {
+                            milkInLitersEvening : "$milkInLitersEvening",
+                            priceEvening : "$priceEvening",
+                           totalEvening : {$multiply : ["$milkInLitersEvening", "$priceEvening"]},
+                        }}
+                    ]);
+                }else if(filter2 === "AVERAGE"){
+   
+                    data1 = await MilkReport.aggregate([
+                       {$match: {
+                           "userId": new mongoose.Types.ObjectId(userId),                           
+                       }},
+                       {$group: {
+                        _id : {key: { $week : "$date" }},
+                        milkInLiters : {$avg : "$milkInLiters"},    
+                     }}
+                   ])
+                   
+                   data2 = await MilkReport.aggregate([
                     {$match: {
                         "userId": new mongoose.Types.ObjectId(userId),
-                        "time" : {$eq : "EVENING"}
+                        "time" : {$eq : "MORNING"}
                     }},
                     {$group: {
-                        _id : 1,        
-                        milkInLitersEvening : {$sum : "$milkInLiters"},
-                    }}
-                ]);
+                        _id : {key: { $week : "$date" }},
+                        milkInLitersMorning : {$avg : "$milkInLiters"},
+                        priceMorning : {$avg : "$price"},
+
+                     }},
+                     {$project: {
+                        milkInLitersMorning : "$milkInLitersMorning",
+                        priceMorning : "$priceMorning",
+                        totalMorning : {$multiply : ["$milkInLitersMorning", "$priceMorning"]},
+                     }}
+                    ]); 
+                    data3 = await MilkReport.aggregate([
+                        {$match: {
+                            "userId": new mongoose.Types.ObjectId(userId),
+                            "time" : {$eq : "EVENING"}
+                        }},
+                        {$group: {
+                            _id : {key: { $week : "$date" }},
+                            milkInLitersEvening : {$avg : "$milkInLiters"},
+                            priceEvening : {$avg : "$price"},
+    
+                        }},
+                        {$project: {
+                            milkInLitersEvening : "$milkInLitersEvening",
+                            priceEvening : "$priceEvening",
+                           totalEvening : {$multiply : ["$milkInLitersEvening", "$priceEvening"]},
+                        }}
+                    ]);
+                }else{
+                   throw Error("Wrong Filter");
+   
+                }    
+                
+                
                  if(data1 && data2 && data3) { 
                 logger.info("Request sent back");
                 res.status(201).json({ data1, data2, data3 });
@@ -143,35 +359,104 @@ module.exports.totalMilkProduction = [
             }
 
             if(filter === "monthly"){
-                const data1 = await MilkReport.aggregate([
-                    {$match: {
-                        "userId": new mongoose.Types.ObjectId(userId),
-                    }},
-                    {$group: {
+                
+                if(filter2 === "AGGREGATE"){
+                    data1 = await MilkReport.aggregate([
+                       {$match: {
+                           "userId": new mongoose.Types.ObjectId(userId),                          
+                       }},
+                       {$group: {
                         _id : {key: { $month : "$date" }},
-                        milkInLiters : {$sum : "$milkInLiters"}
-                                }}
-                            ]);
-                const data2 = await MilkReport.aggregate([
+                        milkInLiters : {$sum : "$milkInLiters"},    
+                        }}
+                   ])
+                   
+                   data2 = await MilkReport.aggregate([
                     {$match: {
                         "userId": new mongoose.Types.ObjectId(userId),
                         "time" : {$eq : "MORNING"}
                     }},
                     {$group: {
-                        _id : 1,
+                        _id : {key: { $month : "$date" }},
                         milkInLitersMorning : {$sum : "$milkInLiters"},
-                    }}
-                ]);
-                const data3 = await MilkReport.aggregate([
+                        priceMorning : {$sum : "$price"},
+
+                     }},
+                     {$project: {
+                        milkInLitersMorning : "$milkInLitersMorning",
+                        priceMorning : "$priceMorning",
+                        totalMorning : {$multiply : ["$milkInLitersMorning", "$priceMorning"]},
+                     }}
+                    ]); 
+                    data3 = await MilkReport.aggregate([
+                        {$match: {
+                            "userId": new mongoose.Types.ObjectId(userId),
+                            "time" : {$eq : "EVENING"}
+                        }},
+                        {$group: {
+                            _id : {key: { $month : "$date" }},
+                            milkInLitersEvening : {$sum : "$milkInLiters"},
+                            priceEvening : {$sum : "$price"},
+    
+                        }},
+                        {$project: {
+                            milkInLitersEvening : "$milkInLitersEvening",
+                            priceEvening : "$priceEvening",
+                           totalEvening : {$multiply : ["$milkInLitersEvening", "$priceEvening"]},
+                        }}
+                    ]);
+                }else if(filter2 === "AVERAGE"){
+   
+                    data1 = await MilkReport.aggregate([
+                       {$match: {
+                           "userId": new mongoose.Types.ObjectId(userId),                           
+                       }},
+                       {$group: {
+                        _id : {key: { $month : "$date" }},
+                        milkInLiters : {$avg : "$milkInLiters"},    
+                     }}
+                   ])
+                   
+                   data2 = await MilkReport.aggregate([
                     {$match: {
                         "userId": new mongoose.Types.ObjectId(userId),
-                        "time" : {$eq : "EVENING"}
+                        "time" : {$eq : "MORNING"}
                     }},
                     {$group: {
-                        _id : 1,        
-                        milkInLitersEvening : {$sum : "$milkInLiters"},
-                    }}
-                ]);
+                        _id : {key:  "$date" },
+                        _id : {key: { $month : "$date" }},
+                        milkInLitersMorning : {$avg : "$milkInLiters"},
+                        priceMorning : {$avg : "$price"},
+
+                     }},
+                     {$project: {
+                        milkInLitersMorning : "$milkInLitersMorning",
+                        priceMorning : "$priceMorning",
+                        totalMorning : {$multiply : ["$milkInLitersMorning", "$priceMorning"]},
+                     }}
+                    ]); 
+                    data3 = await MilkReport.aggregate([
+                        {$match: {
+                            "userId": new mongoose.Types.ObjectId(userId),
+                            "time" : {$eq : "EVENING"}
+                        }},
+                        {$group: {
+                            _id : {key: { $month : "$date" }},
+                            milkInLitersEvening : {$avg : "$milkInLiters"},
+                            priceEvening : {$avg : "$price"},
+    
+                        }},
+                        {$project: {
+                            milkInLitersEvening : "$milkInLitersEvening",
+                            priceEvening : "$priceEvening",
+                           totalEvening : {$multiply : ["$milkInLitersEvening", "$priceEvening"]},
+                        }}
+                    ]);
+                }else{
+                   throw Error("Wrong Filter");
+   
+                }    
+                
                 if(data1 && data2 && data3) { 
                     logger.info("Request sent back");
                     res.status(201).json({ data1, data2, data3 });
@@ -181,35 +466,103 @@ module.exports.totalMilkProduction = [
             }
 
             if(filter === "yearly"){
-                const data1 = await MilkReport.aggregate([
-                    {$match: {
-                        "userId": new mongoose.Types.ObjectId(userId),
-                    }},
-                    {$group: {
+                
+                if(filter2 === "AGGREGATE"){
+                    data1 = await MilkReport.aggregate([
+                       {$match: {
+                           "userId": new mongoose.Types.ObjectId(userId),                          
+                       }},
+                       {$group: {
                         _id : {key: { $year : "$date" }},
-                        milkInLiters : {$sum : "$milkInLiters"}
-                    }}
-                ]);
-                const data2 = await MilkReport.aggregate([
+                        milkInLiters : {$sum : "$milkInLiters"},    
+                        }}
+                   ])
+                   
+                   data2 = await MilkReport.aggregate([
                     {$match: {
                         "userId": new mongoose.Types.ObjectId(userId),
                         "time" : {$eq : "MORNING"}
                     }},
                     {$group: {
-                        _id : 1,
+                        _id : {key: { $year : "$date" }},
                         milkInLitersMorning : {$sum : "$milkInLiters"},
-                    }}
-                ]);
-                const data3 = await MilkReport.aggregate([
+                        priceMorning : {$sum : "$price"},
+
+                     }},
+                     {$project: {
+                        milkInLitersMorning : "$milkInLitersMorning",
+                        priceMorning : "$priceMorning",
+                        totalMorning : {$multiply : ["$milkInLitersMorning", "$priceMorning"]},
+                     }}
+                    ]); 
+                    data3 = await MilkReport.aggregate([
+                        {$match: {
+                            "userId": new mongoose.Types.ObjectId(userId),
+                            "time" : {$eq : "EVENING"}
+                        }},
+                        {$group: {
+                            _id : {key: { $year : "$date" }},
+                            milkInLitersEvening : {$sum : "$milkInLiters"},
+                            priceEvening : {$sum : "$price"},
+    
+                        }},
+                        {$project: {
+                            milkInLitersEvening : "$milkInLitersEvening",
+                            priceEvening : "$priceEvening",
+                           totalEvening : {$multiply : ["$milkInLitersEvening", "$priceEvening"]},
+                        }}
+                    ]);
+                }else if(filter2 === "AVERAGE"){
+   
+                    data1 = await MilkReport.aggregate([
+                       {$match: {
+                           "userId": new mongoose.Types.ObjectId(userId),                           
+                       }},
+                       {$group: {
+                        _id : {key: { $year : "$date" }},
+                        milkInLiters : {$avg : "$milkInLiters"},    
+                     }}
+                   ])
+                   
+                   data2 = await MilkReport.aggregate([
                     {$match: {
                         "userId": new mongoose.Types.ObjectId(userId),
-                        "time" : {$eq : "EVENING"}
+                        "time" : {$eq : "MORNING"}
                     }},
                     {$group: {
-                        _id : 1,        
-                        milkInLitersEvening : {$sum : "$milkInLiters"},
-                    }}
-                ]);
+                        _id : {key: { $year : "$date" }},
+                        milkInLitersMorning : {$avg : "$milkInLiters"},
+                        priceMorning : {$avg : "$price"},
+
+                     }},
+                     {$project: {
+                        milkInLitersMorning : "$milkInLitersMorning",
+                        priceMorning : "$priceMorning",
+                        totalMorning : {$multiply : ["$milkInLitersMorning", "$priceMorning"]},
+                     }}
+                    ]); 
+                    data3 = await MilkReport.aggregate([
+                        {$match: {
+                            "userId": new mongoose.Types.ObjectId(userId),
+                            "time" : {$eq : "EVENING"}
+                        }},
+                        {$group: {
+                            _id : {key: { $year : "$date" }},
+                            milkInLitersEvening : {$avg : "$milkInLiters"},
+                            priceEvening : {$avg : "$price"},
+    
+                        }},
+                        {$project: {
+                            milkInLitersEvening : "$milkInLitersEvening",
+                            priceEvening : "$priceEvening",
+                           totalEvening : {$multiply : ["$milkInLitersEvening", "$priceEvening"]},
+                        }}
+                    ]);
+                }else{
+                   throw Error("Wrong Filter");
+   
+                }    
+                
                 if(data1 && data2 && data3) { 
                     logger.info("Request sent back");
                     res.status(201).json({ data1, data2, data3 });
