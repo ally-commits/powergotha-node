@@ -14,7 +14,7 @@ const expenseReportSchema = new mongoose.Schema({
     expenseType: {
         type: String,
         required: true,
-        enum: ["Labour Cost","Medical Expenses","Disinfection Cost","Deworming Cost","Animal Purchase","other"]
+        enum: ["Labour Cost","Medical Expenses","Disinfection Cost","Deworming Cost","Animal Purchase","Breeding Price","other"]
     },
     labourCost: {
         type: Number
@@ -38,6 +38,9 @@ const expenseReportSchema = new mongoose.Schema({
         type: String
     },
     animalPurchaseCost: {
+        type: Number
+    },
+    breedingPrice: {
         type: Number
     },
     otherCost: {

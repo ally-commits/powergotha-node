@@ -61,13 +61,14 @@ module.exports.profitLossReport = [
                         treatmentExpense : {$sum : "$treatmentExpense"},
                         disinfectionExpense : {$sum : "$disinfectionExpense"},    
                         dewormingExpense : {$sum : "$dewormingExpense"},    
-                        animalPurchaseCost : {$sum : "$animalPurchaseCost"},    
+                        animalPurchaseCost : {$sum : "$animalPurchaseCost"},
+                        breedingPrice : {$sum : "$breedingPrice"},        
                         otherCost : {$sum : "$otherCost"}, 
                      }},
                      {$project: {
 
-                        totalExpenseWith : {$sum : ["$labourCost","$doctorVisitFee","$treatmentExpense","$disinfectionExpense","$dewormingExpense","$animalPurchaseCost","$otherCost"]},
-                        totalExpenseWithout : {$sum : ["$labourCost","$doctorVisitFee","$treatmentExpense","$disinfectionExpense","$dewormingExpense","$otherCost"]},
+                        totalExpenseWith : {$sum : ["$labourCost","$doctorVisitFee","$treatmentExpense","$disinfectionExpense","$dewormingExpense","$animalPurchaseCost","breedingPrice","$otherCost"]},
+                        totalExpenseWithout : {$sum : ["$labourCost","$doctorVisitFee","$treatmentExpense","$disinfectionExpense","$dewormingExpense","breedingPrice","$otherCost"]},
 
                      }}
                 ])
@@ -122,13 +123,14 @@ module.exports.profitLossReport = [
                         treatmentExpense : {$sum : "$treatmentExpense"},
                         disinfectionExpense : {$sum : "$disinfectionExpense"},    
                         dewormingExpense : {$sum : "$dewormingExpense"},    
-                        animalPurchaseCost : {$sum : "$animalPurchaseCost"},    
+                        animalPurchaseCost : {$sum : "$animalPurchaseCost"}, 
+                        breedingPrice : {$sum : "$breedingPrice"},           
                         otherCost : {$sum : "$otherCost"}, 
                      }},
                      {$project: {
 
-                        totalExpenseWith : {$sum : ["$labourCost","$doctorVisitFee","$treatmentExpense","$disinfectionExpense","$dewormingExpense","$animalPurchaseCost","$otherCost"]},
-                        totalExpenseWithout : {$sum : ["$labourCost","$doctorVisitFee","$treatmentExpense","$disinfectionExpense","$dewormingExpense","$otherCost"]},
+                        totalExpenseWith : {$sum : ["$labourCost","$doctorVisitFee","$treatmentExpense","$disinfectionExpense","$dewormingExpense","$animalPurchaseCost","$breedingPrice","$otherCost"]},
+                        totalExpenseWithout : {$sum : ["$labourCost","$doctorVisitFee","$treatmentExpense","$disinfectionExpense","$dewormingExpense","$breedingPrice","$otherCost"]},
 
                      }}
                 ]).sort({ "date": -1 });
@@ -184,13 +186,14 @@ module.exports.profitLossReport = [
                         treatmentExpense : {$sum : "$treatmentExpense"},
                         disinfectionExpense : {$sum : "$disinfectionExpense"},    
                         dewormingExpense : {$sum : "$dewormingExpense"},    
-                        animalPurchaseCost : {$sum : "$animalPurchaseCost"},    
+                        animalPurchaseCost : {$sum : "$animalPurchaseCost"}, 
+                        breedingPrice : {$sum : "$breedingPrice"},           
                         otherCost : {$sum : "$otherCost"}, 
                      }},
                      {$project: {
 
-                        totalExpenseWith : {$sum : ["$labourCost","$doctorVisitFee","$treatmentExpense","$disinfectionExpense","$dewormingExpense","$animalPurchaseCost","$otherCost"]},
-                        totalExpenseWithout : {$sum : ["$labourCost","$doctorVisitFee","$treatmentExpense","$disinfectionExpense","$dewormingExpense","$otherCost"]},
+                        totalExpenseWith : {$sum : ["$labourCost","$doctorVisitFee","$treatmentExpense","$disinfectionExpense","$dewormingExpense","$animalPurchaseCost","$breedingPrice","$otherCost"]},
+                        totalExpenseWithout : {$sum : ["$labourCost","$doctorVisitFee","$treatmentExpense","$disinfectionExpense","$dewormingExpense","$breedingPrice","$otherCost"]},
 
                      }}
                 ])
@@ -244,13 +247,14 @@ module.exports.profitLossReport = [
                         treatmentExpense : {$sum : "$treatmentExpense"},
                         disinfectionExpense : {$sum : "$disinfectionExpense"},    
                         dewormingExpense : {$sum : "$dewormingExpense"},    
-                        animalPurchaseCost : {$sum : "$animalPurchaseCost"},    
+                        animalPurchaseCost : {$sum : "$animalPurchaseCost"},
+                        breedingPrice : {$sum : "$breedingPrice"},            
                         otherCost : {$sum : "$otherCost"}, 
                      }},
                      {$project: {
 
-                        totalExpenseWith : {$sum : ["$labourCost","$doctorVisitFee","$treatmentExpense","$disinfectionExpense","$dewormingExpense","$animalPurchaseCost","$otherCost"]},
-                        totalExpenseWithout : {$sum : ["$labourCost","$doctorVisitFee","$treatmentExpense","$disinfectionExpense","$dewormingExpense","$otherCost"]},
+                        totalExpenseWith : {$sum : ["$labourCost","$doctorVisitFee","$treatmentExpense","$disinfectionExpense","$dewormingExpense","$animalPurchaseCost","$breedingPrice","$otherCost"]},
+                        totalExpenseWithout : {$sum : ["$labourCost","$doctorVisitFee","$treatmentExpense","$disinfectionExpense","$dewormingExpense","$breedingPrice","$otherCost"]},
 
                      }}
                 ])
@@ -306,13 +310,14 @@ module.exports.profitLossReport = [
                         treatmentExpense : {$sum : "$treatmentExpense"},
                         disinfectionExpense : {$sum : "$disinfectionExpense"},    
                         dewormingExpense : {$sum : "$dewormingExpense"},    
-                        animalPurchaseCost : {$sum : "$animalPurchaseCost"},    
+                        animalPurchaseCost : {$sum : "$animalPurchaseCost"},
+                        breedingPrice : {$sum : "$breedingPrice"},            
                         otherCost : {$sum : "$otherCost"}, 
                      }},
                      {$project: {
 
-                        totalExpenseWith : {$sum : ["$labourCost","$doctorVisitFee","$treatmentExpense","$disinfectionExpense","$dewormingExpense","$animalPurchaseCost","$otherCost"]},
-                        totalExpenseWithout : {$sum : ["$labourCost","$doctorVisitFee","$treatmentExpense","$disinfectionExpense","$dewormingExpense","$otherCost"]},
+                        totalExpenseWith : {$sum : ["$labourCost","$doctorVisitFee","$treatmentExpense","$disinfectionExpense","$dewormingExpense","$animalPurchaseCost","$breedingPrice","$otherCost"]},
+                        totalExpenseWithout : {$sum : ["$labourCost","$doctorVisitFee","$treatmentExpense","$disinfectionExpense","$dewormingExpense","$breedingPrice","$otherCost"]},
 
                      }}
                 ])
