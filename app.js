@@ -9,6 +9,7 @@ const dashboardAuthRoute = require("./routes/dashboardRoutes/authRoute")
 const dashboardUserRoute = require("./routes/dashboardRoutes/userRoute");
 const dashboardAnimalCategoryRoute = require("./routes/dashboardRoutes/animalCategoryRoute");
 const dashboardBlogPostRoute = require("./routes/dashboardRoutes/blogPostRoute");
+const dashboardNewsPostRoute = require("./routes/dashboardRoutes/newsPostRoute");
 const dashboardEndUserRoute = require("./routes/dashboardRoutes/endUserRoute");
 const dashboardAnimalRoute = require("./routes/dashboardRoutes/animalRoute");
 const dashboardFarmRoute = require("./routes/dashboardRoutes/farmRoute");
@@ -17,6 +18,10 @@ const dashboardCseRoute = require("./routes/dashboardRoutes/cseRoute");
 const dashboardAnalyticsRoute = require("./routes/dashboardRoutes/analyticsRoute");
 const dashboardDoctorRoute = require("./routes/dashboardRoutes/doctorRoute");
 const dashboardSubscriptionRoute = require("./routes/dashboardRoutes/subscriptionRoute");
+
+const doctorAuthRoute = require("./routes/doctorRoutes/authRoute")
+const doctorBlogPostRoute = require("./routes/doctorRoutes/blogPostRoutes");
+
 
 const userAuthRoute = require("./routes/userRoutes/authRoute")
 const userFarmRoute = require("./routes/userRoutes/farmRoute")
@@ -31,6 +36,8 @@ const userHealthRecordRoute = require("./routes/userRoutes/healthRecordRoute");
 const userexpenseRoute = require("./routes/userRoutes/expenseRoute");
 const userincomeRoute = require("./routes/userRoutes/incomeRoute");
 const userprofitLossRoute = require("./routes/userRoutes/profitLossRoute");
+const userBlogPostRoute = require("./routes/userRoutes/blogPostRoutes");
+const userNewsPostRoute = require("./routes/userRoutes/newsPostRoute");
 
 const milkRoute = require("./routes/reportsRoutes/milkRoute");
 const animalRoute = require("./routes/reportsRoutes/animalRoute");
@@ -38,6 +45,7 @@ const feedRoute = require("./routes/reportsRoutes/feedRoute");
 
 
 const { checkDashboardPermission } = require('./middleware/dashboard/checkDashboardPermission.js');
+const { checkDoctorPermission } = require('./middleware/doctor/checkDoctorPermissions');
 const { checkUserPermission } = require('./middleware/user/checkUserPermission.js');
 
 const app = express();
@@ -64,6 +72,7 @@ app.use("/api/dashboard/auth", dashboardAuthRoute);
 app.use("/api/dashboard/user", checkDashboardPermission(["ADMIN","CSE"]), dashboardUserRoute)
 app.use("/api/dashboard/animal-category", checkDashboardPermission(["ADMIN"]), dashboardAnimalCategoryRoute)
 app.use("/api/dashboard/blog-post", checkDashboardPermission(["ADMIN","CSE"]), dashboardBlogPostRoute)
+app.use("/api/dashboard/news-post", checkDashboardPermission(["ADMIN","CSE"]), dashboardNewsPostRoute)
 app.use("/api/dashboard/end-user", checkDashboardPermission(["ADMIN","CSE"]), dashboardEndUserRoute)
 app.use("/api/dashboard/animal", checkDashboardPermission(["ADMIN"]), dashboardAnimalRoute)
 app.use("/api/dashboard/farm", checkDashboardPermission(["ADMIN"]), dashboardFarmRoute)
@@ -84,6 +93,8 @@ app.use("/api/user/", checkUserPermission(), userRoute)
 app.use("/api/user/expense", checkUserPermission(), userexpenseRoute)
 app.use("/api/user/income", checkUserPermission(), userincomeRoute)
 app.use("/api/user/profitLoss", checkUserPermission(), userprofitLossRoute)
+app.use("/api/user/blog-post", checkUserPermission(), userBlogPostRoute)
+app.use("/api/user/news-post", checkUserPermission(), userNewsPostRoute)
 
 
 
@@ -96,3 +107,8 @@ app.use("/api/user/health-record", checkUserPermission(), userHealthRecordRoute)
 app.use("/api/user/report", checkUserPermission(), milkRoute)
 app.use("/api/user/report", checkUserPermission(), animalRoute)
 app.use("/api/user/report", checkUserPermission(), feedRoute)
+
+// DOCTOR
+app.use("/api/doctor/auth", doctorAuthRoute);
+app.use("/api/doctor/blog-post", checkDoctorPermission(), doctorBlogPostRoute)
+

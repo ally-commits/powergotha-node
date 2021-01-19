@@ -30,7 +30,7 @@ module.exports.addBlogPost = [
         const addedBy = req.user._id;
         const {userType,title,postContent,image} = req.body;
         try {
-            const blogPost = await BlogPost.create({userType: "DashboardUser",title,postContent,image,addedBy}); 
+            const blogPost = await BlogPost.create({userType: "Doctor",title,postContent,image,addedBy}); 
             res.status(201).json({ blogPost, message: "Blog Post Added Successfully"}); 
         }
         catch(err) { 
@@ -55,7 +55,7 @@ module.exports.editBlogPost = [
         const addedBy = req.user._id;
         const {userType,title,postContent,image,blogId} = req.body;
         try {
-            const blogPost = await BlogPost.findByIdAndUpdate({_id: blogId,addedBy},{userType:"DashboardUser",title,postContent,image}); 
+            const blogPost = await BlogPost.findByIdAndUpdate({_id: blogId,addedBy},{userType:"Doctor",title,postContent,image}); 
             if(blogPost) {
                 const blogPostH = await BlogPost.findById(blogId);
                 res.status(201).json({ message: "Blog Post Updated Successfully",blogPost: blogPostH}); 
@@ -96,34 +96,34 @@ module.exports.deleteBlogPost = [
 ]
 
 
-// module.exports.likeBlogPost = [
-//     body('blogId').not().isEmpty().withMessage("blogId field is required"),
+module.exports.likeBlogPost = [
+    body('blogId').not().isEmpty().withMessage("blogId field is required"),
 
-//     async (req, res) => {
-//         const errors = validationResult(req);
-//         if (!errors.isEmpty()) {
-//             return res.status(400).json({ errors: errors.array() });
-//         }
-//         const likedBy = req.user._id;
-//         const { blogId } = req.body;
-//         try { 
-//             const blogPost = await BlogPost.findOne({_id: blogId,"likes.user" : likedBy});
+    async (req, res) => {
+        const errors = validationResult(req);
+        if (!errors.isEmpty()) {
+            return res.status(400).json({ errors: errors.array() });
+        }
+        const likedBy = req.user._id;
+        const { blogId } = req.body;
+        try { 
+            const blogPost = await BlogPost.findOne({_id: blogId,"likes.user" : likedBy});
 
-//             if(blogPost){
-//                 return res.status(400).json({ msg: 'Blog already liked' });
-//             }
+            if(blogPost){
+                return res.status(400).json({ msg: 'Blog already liked' });
+            }
             
-//             const blog = await BlogPost.findByIdAndUpdate({_id : blogId},{"$push": {"likes.user" : likedBy}},{new : true,upsert : true})
-            
+            const blog = await BlogPost.findByIdAndUpdate({_id : blogId},{"$push": {"likes.user" : likedBy, "likes.userType" : "Doctor"}},{new : true,upsert : true})
+            console.log(blog)
 
-//             res.status(201).json({ message: "Blog Post Liked Successfully",likes : blog.likes}); 
+            res.status(201).json({ message: "Blog Post Liked Successfully",likes : blog.likes}); 
 
-//         }
-//         catch(err) { 
-//             logger.error(err.message)
-//             console.log(err)
-//             let error = err.message 
-//             res.status(400).json({ error: error });
-//         }   
-//     }
-// ]
+        }
+        catch(err) { 
+            logger.error(err.message)
+            console.log(err)
+            let error = err.message 
+            res.status(400).json({ error: error });
+        }   
+    }
+]
