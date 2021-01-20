@@ -22,6 +22,14 @@ const doctorSchema = new mongoose.Schema({
   name: {
     type: String,
     required: [true, "Please enter a Name"]
+  }, 
+  address: {
+    type: String,
+  },
+  pincode: {
+    type: String,
+    min: [100000, "Enter valid 6 digit pincode"],
+    max: [999999, "Enter valid 6 digit pincode"],
   }
 },{ timestamps: true });
 
