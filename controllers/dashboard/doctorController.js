@@ -27,6 +27,8 @@ module.exports.addDoctor = [
     body('name').not().isEmpty().withMessage("name field is required"),
     body('phoneNumber').not().isEmpty().withMessage("phoneNumber field is required"),
     body('email').not().isEmpty().withMessage("email field is required"),
+    body('address').not().isEmpty().withMessage("Address Feild is required"),   
+    body('pincode').isLength({ min: 6 }).withMessage("Pincode must be atleast 6 Characters"),
     body('password').isLength({ min: 8 }).withMessage("Password must be atleast 8 Characters"),
     
     async (req, res) => {
@@ -34,9 +36,9 @@ module.exports.addDoctor = [
         if (!errors.isEmpty()) {
             return res.status(400).json({ errors: errors.array() });
         }
-        const {phoneNumber, password ,name,email} = req.body;
+        const {phoneNumber, password ,name,email,address,pincode} = req.body;
         try {
-            const doctor = await Doctor.create({ phoneNumber, password,name,email});
+            const doctor = await Doctor.create({ phoneNumber, password,name,email,address,pincode});
             axios({
                 method: "post",
                 url: "https://api.emailjs.com/api/v1.0/email/send",

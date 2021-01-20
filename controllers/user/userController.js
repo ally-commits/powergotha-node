@@ -135,3 +135,35 @@ module.exports.updatePassword = [
         }   
     } 
 ];
+
+
+module.exports.updateAddress = [ 
+    body('address').not().isEmpty().withMessage("Address Feild is required"),   
+    body('pincode').isLength({ min: 6 }).withMessage("Pincode must be atleast 6 Characters"),
+    
+    async (req, res) => {
+        const errors = validationResult(req);
+        if (!errors.isEmpty()) {
+            return res.status(400).json({ errors: errors.array()});
+        }
+
+        const userId = req.user._id;
+        let {pincode} = req.body;
+        let {address} = req.body;
+
+        try { 
+            const user = await User.findById(userId);
+            if(user) { 
+                const userH = await User.findByIdAndUpdate({_id: userId},{ pincode: pincode, address : address}); 
+                res.status(201).json({ message: "Address Updated Successfully",user: userH});  
+            } else
+            throw Error("No User Data Found")  
+
+        }
+        catch(err) { 
+            logger.error("ADDRESS : " + err)
+            let error = err.message; 
+            res.status(400).json({ error: error });
+        }   
+    } 
+];
