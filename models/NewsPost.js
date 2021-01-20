@@ -1,7 +1,7 @@
 const mongoose = require('mongoose');
 var mongoose_delete = require('mongoose-delete');
 
-const blogPostSchema = new mongoose.Schema({
+const newsPostSchema = new mongoose.Schema({
     addedBy: {
         type: mongoose.Schema.Types.ObjectId,
         required: [true, "Enter a valid userId"],
@@ -10,7 +10,7 @@ const blogPostSchema = new mongoose.Schema({
     userType: {
         type: String,
         required: true,
-        enum: ["DashboardUser","Doctor"]
+        enum: ["DashboardUser"]
     },
     title: {
         type: String,
@@ -23,24 +23,11 @@ const blogPostSchema = new mongoose.Schema({
     image: {
         type: String,
         required: [true,"Enter valid post image"]
-    },
-    likes: [
-        {
-            user: {
-                type: mongoose.Schema.Types.ObjectId,
-                refPath: 'likes.userType'
-            }, 
-            userType: {
-                type: String,
-                required: true,
-                enum: ["User","Doctor"]
-            }
-        }
-    ]
+    }
 },{ timestamps: true });
 
-blogPostSchema.plugin(mongoose_delete,{ overrideMethods: ['find', 'findOne','findOneAndUpdate', 'update']});
+newsPostSchema.plugin(mongoose_delete,{ overrideMethods: ['find', 'findOne','findOneAndUpdate', 'update']});
  
-const BlogPost = mongoose.model('BlogPost', blogPostSchema);
+const NewsPost = mongoose.model('NewsPost', newsPostSchema);
 
-module.exports = BlogPost;
+module.exports = NewsPost;

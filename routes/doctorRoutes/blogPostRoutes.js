@@ -1,13 +1,13 @@
 const {Router} = require('express')
-const blogController = require('../../controllers/dashboard/blogController')
+const blogController = require('../../controllers/doctor/blogController')
 
 const router = Router();
  
-// USER ACCESS
+// DOCTOR ACCESS
 router.get("/getAllBlogPost",blogController.getAllBlogPost);    
 router.post("/addBlogPost",blogController.addBlogPost);    
 router.put("/editBlogPost",blogController.editBlogPost);    
 router.delete("/deleteBlogPost",blogController.deleteBlogPost);    
-//router.put("/likeBlogPost",blogController.likeBlogPost);    
+router.put("/likeBlogPost",blogController.likeBlogPost);    
 
 module.exports = router;
