@@ -21,6 +21,7 @@ const dashboardSubscriptionRoute = require("./routes/dashboardRoutes/subscriptio
 
 const doctorAuthRoute = require("./routes/doctorRoutes/authRoute")
 const doctorBlogPostRoute = require("./routes/doctorRoutes/blogPostRoutes");
+const doctorAppointmentRoute = require("./routes/doctorRoutes/appointmentRoute");
 
 
 const userAuthRoute = require("./routes/userRoutes/authRoute")
@@ -38,6 +39,7 @@ const userincomeRoute = require("./routes/userRoutes/incomeRoute");
 const userprofitLossRoute = require("./routes/userRoutes/profitLossRoute");
 const userBlogPostRoute = require("./routes/userRoutes/blogPostRoutes");
 const userNewsPostRoute = require("./routes/userRoutes/newsPostRoute");
+const userDoctorRoute = require("./routes/userRoutes/doctorRoute");
 
 const milkRoute = require("./routes/reportsRoutes/milkRoute");
 const animalRoute = require("./routes/reportsRoutes/animalRoute");
@@ -95,6 +97,7 @@ app.use("/api/user/income", checkUserPermission(), userincomeRoute)
 app.use("/api/user/profitLoss", checkUserPermission(), userprofitLossRoute)
 app.use("/api/user/blog-post", checkUserPermission(), userBlogPostRoute)
 app.use("/api/user/news-post", checkUserPermission(), userNewsPostRoute)
+app.use("/api/user/doctor", checkUserPermission(), userDoctorRoute)
 
 
 
@@ -111,4 +114,5 @@ app.use("/api/user/report", checkUserPermission(), feedRoute)
 // DOCTOR
 app.use("/api/doctor/auth", doctorAuthRoute);
 app.use("/api/doctor/blog-post", checkDoctorPermission(), doctorBlogPostRoute)
+app.use("/api/doctor/appointment", checkDoctorPermission(), doctorAppointmentRoute)
 
