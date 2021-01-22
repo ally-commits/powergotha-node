@@ -7,6 +7,7 @@ module.exports.checkDoctorPermission = (permission) => {
         if(token) {  
             logger.info("TOKEN:" + token);
             await getDoctor(token,(user) => { 
+                
                 if(user == "INVALID_TOKEN") {
                     logger.error("Authentication Error: Invalid Token")
 

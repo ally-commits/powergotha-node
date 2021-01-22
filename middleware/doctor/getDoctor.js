@@ -10,6 +10,7 @@ module.exports.getDoctor = async (token,next) => {
             logger.error("GET_USER_TOKEN_ERROR:" + err)
             next("INVALID_TOKEN")
         } else {
+            console.log(user)
             Doctor.findById(user.userId, function(err,userData) {
                 if(err || userData == null) {
                     logger.error("GET_USER_DB_NOT USER_FOUND_ERROR:" + err)
