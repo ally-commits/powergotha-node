@@ -38,7 +38,16 @@ const userSchema = new mongoose.Schema({
     type: String,
     min: [100000, "Enter valid 6 digit pincode"],
     max: [999999, "Enter valid 6 digit pincode"],
-  }
+  },
+  favoriteBlogs : 
+    {
+      blogId: [{
+        type: mongoose.Schema.Types.ObjectId,
+        unique: true, 
+      }
+      ]
+    }
+  
 },{ timestamps: true });
 
 userSchema.plugin(mongoose_delete,{ overrideMethods: ['find', 'findOne','findOneAndUpdate', 'update']});
