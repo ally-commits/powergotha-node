@@ -127,7 +127,7 @@ module.exports.loginWithEmail = [
                 if(auth) { 
                     logger.info("Login: User validated ")
                     const token = await createToken(user);
-                    res.status(200).json({ user,message: "Succesfully Logged In",token});
+                    res.status(200).json({ user,message: "Succesfully Logged In",token,userType:"user"});
                 } else {
                     logger.info("LOGIN: wrong password:" + user)
                     throw Error('Incorrect Password');

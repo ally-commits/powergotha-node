@@ -6,6 +6,10 @@ const router = Router();
 // DOCTOR ACCESS
 router.get("/getAllBlogPost",blogController.getAllBlogPost);    
 
-router.put("/likeBlogPost",blogController.likeBlogPost);    
+router.put("/likeBlogPost",blogController.likeBlogPost);  
+router.get("/getFavoriteBlogPost",blogController.getFavoriteBlogPost);    
+router.put("/addToFavorite",blogController.addToFavorite);    
+router.put("/removeFromFavorite",blogController.removeFromFavorite);    
+
 
 module.exports = router;
