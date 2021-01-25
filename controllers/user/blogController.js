@@ -4,43 +4,8 @@ const User = require("../../models/User");
 const { body, validationResult } = require('express-validator');
 const logger = require("../../logger/logger"); 
 
-// module.exports.getAllBlogPost = async (req, res) => {
-
-//     const userId = req.user._id;
-
-//     try {
-//         var allBlog = [];
-//         var blogPosts = await BlogPost.find({}).populate("addedBy");
-//         allBlog=blogPosts;
-//         console.log(typeof(blogPosts)+"typehere");
-//         if(blogPosts) {
-//             for(var i = 0;i<=blogPosts.length;i++){
-// console.log(i);
-//                 var id = blogPosts[i]._id
-//                console.log(id)
-//                 var data = User.findOne({_id: userId, "favoriteBlogs.blogId" : id})
-//                 if(data){
-//                     blogPosts.isFavourite = true;
-//                     console.log("here")
-//                 }else{
-//                     blogPosts.isFavourite = false;
-//                     console.log("elsehere")
-
-//                 }
-//             }
-//             res.status(201).json({ response :blogPosts });
-//         } else 
-//             throw Error("blogPost Not Found");
-//     }
-//     catch(err) { 
-//         let error = err.message 
-//         res.status(400).json({ error: error });
-//     }   
-// }
 
 module.exports.getAllBlogPost = async (req, res) => {
-
-
     try {
         var blogPosts = await BlogPost.find({}).populate("addedBy");
         if(blogPosts) {
@@ -57,6 +22,7 @@ module.exports.getAllBlogPost = async (req, res) => {
         res.status(400).json({ error: error });
     }   
 }
+
 
 module.exports.likeBlogPost = [
     body('blogId').not().isEmpty().withMessage("blogId field is required"),
