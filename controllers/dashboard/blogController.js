@@ -19,7 +19,6 @@ module.exports.getAllBlogPost = async (req, res) => {
 module.exports.addBlogPost = [  
     body('title').not().isEmpty().withMessage("title field is required"),
     body('postContent').not().isEmpty().withMessage("postContent field is required"),
-    body('image').not().isEmpty().withMessage("image field is required"),
 
     async (req, res) => {
         const errors = validationResult(req);
@@ -44,7 +43,6 @@ module.exports.addBlogPost = [
 module.exports.editBlogPost = [  
     body('title').not().isEmpty().withMessage("title field is required"),
     body('postContent').not().isEmpty().withMessage("postContent field is required"),
-    body('image').not().isEmpty().withMessage("image field is required"),
     body('blogId').not().isEmpty().withMessage("blogId field is required"),
 
     async (req, res) => {

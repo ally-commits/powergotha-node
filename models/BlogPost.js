@@ -22,17 +22,16 @@ const blogPostSchema = new mongoose.Schema({
     }, 
     image: {
         type: String,
-        required: [true,"Enter valid post image"]
     },
     likes: [
         {
             user: {
                 type: mongoose.Schema.Types.ObjectId,
+                unique: true, 
                 refPath: 'likes.userType'
             }, 
             userType: {
                 type: String,
-                required: true,
                 enum: ["User","Doctor"]
             }
         }

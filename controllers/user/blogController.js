@@ -4,33 +4,53 @@ const User = require("../../models/User");
 const { body, validationResult } = require('express-validator');
 const logger = require("../../logger/logger"); 
 
+// module.exports.getAllBlogPost = async (req, res) => {
+
+//     const userId = req.user._id;
+
+//     try {
+//         var allBlog = [];
+//         var blogPosts = await BlogPost.find({}).populate("addedBy");
+//         allBlog=blogPosts;
+//         console.log(typeof(blogPosts)+"typehere");
+//         if(blogPosts) {
+//             for(var i = 0;i<=blogPosts.length;i++){
+// console.log(i);
+//                 var id = blogPosts[i]._id
+//                console.log(id)
+//                 var data = User.findOne({_id: userId, "favoriteBlogs.blogId" : id})
+//                 if(data){
+//                     blogPosts.isFavourite = true;
+//                     console.log("here")
+//                 }else{
+//                     blogPosts.isFavourite = false;
+//                     console.log("elsehere")
+
+//                 }
+//             }
+//             res.status(201).json({ response :blogPosts });
+//         } else 
+//             throw Error("blogPost Not Found");
+//     }
+//     catch(err) { 
+//         let error = err.message 
+//         res.status(400).json({ error: error });
+//     }   
+// }
+
 module.exports.getAllBlogPost = async (req, res) => {
 
-    const userId = req.user._id;
 
     try {
-        var allBlog = [];
         var blogPosts = await BlogPost.find({}).populate("addedBy");
-        allBlog=blogPosts;
-        console.log(typeof(blogPosts)+"typehere");
         if(blogPosts) {
-            for(var i = 0;i<=blogPosts.length;i++){
-console.log(i);
-                var id = blogPosts[i]._id
-               console.log(id)
-                var data = User.findOne({_id: userId, "favoriteBlogs.blogId" : id})
-                if(data){
-                    blogPosts.isFavourite = true;
-                    console.log("here")
-                }else{
-                    blogPosts.isFavourite = false;
-                    console.log("elsehere")
 
-                }
-            }
-            res.status(201).json({ response :blogPosts });
-        } else 
+            res.status(201).json({ blogPosts});
+
+        }else{
             throw Error("blogPost Not Found");
+        }
+       
     }
     catch(err) { 
         let error = err.message 
@@ -54,8 +74,9 @@ module.exports.likeBlogPost = [
             if(blogPost){
                 return res.status(400).json({ msg: 'Blog already liked' });
             }
-            
-            const blog = await BlogPost.findByIdAndUpdate({_id : blogId},{"$push": {"likes.user" : likedBy, "likes.userType" : "User"}},{new : true,upsert : true})
+            const likes = {"user" : likedBy, "userType" : "User"}
+
+            const blog = await BlogPost.findByIdAndUpdate({_id : blogId},{$push: {likes}},{new : true,upsert : true})
             
 
             res.status(201).json({ message: "Blog Post Liked Successfully",likes : blog.likes}); 
@@ -81,8 +102,8 @@ module.exports.getFavoriteBlogPost = async (req, res) => {
         
         console.log(blogPosts[0].favoriteBlogs.blogId)
 
-        BlogPost.find({ "_id": { "$in":blogPosts[0].favoriteBlogs.blogId } }).then(blogPost =>
-            blogPosts[0].favoriteBlogs.blogId.map(e => blogPost.find(s => s._id.equals(e)))              // compare
+        BlogPost.find({ "_id": { "$in":blogPosts[0].favoriteBlogs.blogId } }).populate("addedBy").then(blogPost =>
+            blogPosts[0].favoriteBlogs.blogId.map(e => blogPost.find(s => s._id.equals(e)))              
         ).then(blogPost => {
             if(blogPost) {
                 res.status(201).json({ blogPost });

@@ -22,6 +22,7 @@ const dashboardSubscriptionRoute = require("./routes/dashboardRoutes/subscriptio
 const doctorAuthRoute = require("./routes/doctorRoutes/authRoute")
 const doctorBlogPostRoute = require("./routes/doctorRoutes/blogPostRoutes");
 const doctorAppointmentRoute = require("./routes/doctorRoutes/appointmentRoute");
+const doctorRoute = require("./routes/doctorRoutes/doctorRoute");
 
 
 const userAuthRoute = require("./routes/userRoutes/authRoute")
@@ -113,6 +114,7 @@ app.use("/api/user/report", checkUserPermission(), feedRoute)
 
 // DOCTOR
 app.use("/api/doctor/auth", doctorAuthRoute);
+app.use("/api/doctor", checkDoctorPermission(), doctorRoute)
 app.use("/api/doctor/blog-post", checkDoctorPermission(), doctorBlogPostRoute)
 app.use("/api/doctor/appointment", checkDoctorPermission(), doctorAppointmentRoute)
 

@@ -102,7 +102,7 @@ module.exports.deleteUser = [
         
         const { userId } = req.body;
         try {
-            const user = await User.delete({_id: userId}); 
+            const user = await User.deleteOne({_id: userId}); 
             if(user) {
                 res.status(201).json({ message: "User Removed Successfully"}); 
             } else 
