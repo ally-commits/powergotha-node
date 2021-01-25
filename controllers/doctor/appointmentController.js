@@ -7,7 +7,7 @@ module.exports.getAllAppointments = async (req, res) => {
 
     const userId = req.user._id;
     try {
-        const appointments = await Appointment.find({doctor : userId}) 
+        const appointments = await Appointment.find({doctor : userId}).populate("user"); 
             
         if(appointments) {
             res.status(201).json({ appointments });

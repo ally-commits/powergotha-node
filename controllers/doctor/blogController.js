@@ -112,9 +112,8 @@ module.exports.likeBlogPost = [
             if(blogPost){
                 return res.status(400).json({ msg: 'Blog already liked' });
             }
-            
-            const blog = await BlogPost.findByIdAndUpdate({_id : blogId},{"$push": {"likes.user" : likedBy, "likes.userType" : "Doctor"}},{new : true,upsert : true})
-            console.log(blog)
+            const likes = {"user" : likedBy, "userType" : "Doctor"}
+            const blog = await BlogPost.findOneAndUpdate({_id : blogId},{$push: {likes} },{new : true,upsert : true})
 
             res.status(201).json({ message: "Blog Post Liked Successfully",likes : blog.likes}); 
 

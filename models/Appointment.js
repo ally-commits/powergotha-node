@@ -5,12 +5,12 @@ const appointmentSchema = new mongoose.Schema({
     doctor: {
         type: mongoose.Schema.Types.ObjectId,
         required: [true, "Enter a valid doctorId"],
-        refPath: "Doctor"
+        ref: "Doctor"
     },
     user: {
         type: mongoose.Schema.Types.ObjectId,
         required: [true, "Enter a valid userId"],
-        refPath: "User"
+        ref: "User"
     },
     cancelled: {
         type: Boolean,
