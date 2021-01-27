@@ -6,7 +6,9 @@ const router = Router();
 // DOCTOR ACCESS
 router.get("/getAllBlogPost",blogController.getAllBlogPost);    
 
+router.put("/dislikeBlogPost",blogController.dislikeBlogPost);
 router.put("/likeBlogPost",blogController.likeBlogPost);  
+
 router.get("/getFavoriteBlogPost",blogController.getFavoriteBlogPost);    
 router.put("/addToFavorite",blogController.addToFavorite);    
 router.put("/removeFromFavorite",blogController.removeFromFavorite);    

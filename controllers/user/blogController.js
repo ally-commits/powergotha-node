@@ -57,6 +57,42 @@ module.exports.likeBlogPost = [
     }
 ]
 
+module.exports.dislikeBlogPost = [
+    body('blogId').not().isEmpty().withMessage("blogId field is required"),
+
+    async (req, res) => {
+        const errors = validationResult(req);
+        if (!errors.isEmpty()) {
+            return res.status(400).json({ errors: errors.array() });
+        }
+        const likedBy = req.user._id;
+        const { blogId } = req.body;
+        try { 
+            const blogPost = await BlogPost.findOne({_id: blogId,"likes.user" : likedBy});
+
+            if(blogPost){
+                const removeIndex = blogPost.likes.map(like => like.user.toString()).indexOf(likedBy);
+
+                blogPost.likes.splice(removeIndex, 1);
+
+                await blogPost.save();   
+
+                res.status(201).json({ message: "Blog Post Disliked Successfully",likes : blogPost.likes}); 
+    
+            }
+
+
+            res.status(400).json({ message: "Cannot dislike Blog Post"}); 
+
+        }
+        catch(err) { 
+            logger.error(err.message)
+            console.log(err)
+            let error = err.message 
+            res.status(400).json({ error: error });
+        }   
+    }
+]
 module.exports.getFavoriteBlogPost = async (req, res) => {
     
     const userId = req.user._id;
@@ -66,7 +102,7 @@ module.exports.getFavoriteBlogPost = async (req, res) => {
         const blogPosts = await User.find({_id: userId});
 
         
-        console.log(blogPosts[0].favoriteBlogs.blogId)
+        //console.log(blogPosts[0].favoriteBlogs.blogId)
 
         BlogPost.find({ "_id": { "$in":blogPosts[0].favoriteBlogs.blogId } }).populate("addedBy").then(blogPost =>
             blogPosts[0].favoriteBlogs.blogId.map(e => blogPost.find(s => s._id.equals(e)))              
