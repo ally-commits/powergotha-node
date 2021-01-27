@@ -39,14 +39,13 @@ const userSchema = new mongoose.Schema({
     min: [100000, "Enter valid 6 digit pincode"],
     max: [999999, "Enter valid 6 digit pincode"],
   },
-  favoriteBlogs : 
-    {
+  favoriteBlogs : {
       blogId: [{
         type: mongoose.Schema.Types.ObjectId,
         unique: true, 
       }
       ]
-    }
+  }
   
 },{ timestamps: true });
 
